@@ -61,7 +61,30 @@ stays green 30 s, resets itself. Game replays with no button presses.
 
 `python3 firmware/test_magiquest.py` prints `ok` if the decoder is sane.
 
-## Later (v2, not built)
+## TV hub (web app)
 
-Adventures as data files, WiFi hub enforcing station order, multiple wands
-(IDs are already logged to serial), stations that speak clues.
+```
+python3 hub/server.py
+```
+
+Then on the TV: Fire Stick / Chromecast browser (or cast a tab) to
+`http://<mac-ip>:8000/` (Mac IP: System Settings > Wi-Fi > Details).
+Tap once to turn sound on. Forest map lights up zone by zone, fairy reads
+the clue, rainbow finale. Hub enforces station order; wrong station shakes
+the map and says "not yet."
+
+Test tonight with no hardware: keys `1`-`5` fire fake station hits, `R`
+resets.
+
+New story = new JSON in `hub/adventures/` (title, opening, 5 steps with
+station/spot/clue, ending). Run `python3 hub/server.py hub/adventures/x.json`.
+
+Stations report hits with `POST /hit {"station": N, "wand_id": "..."}`.
+Hub needs WiFi stations, so this path = ESP32 build, not CPX.
+
+Dev check: `python3 hub/test_server.py`.
+
+## Later (not built)
+
+ESP32 WiFi station sketch (written when parts are ordered), multiple wands
+(IDs already logged), stations that speak clues.

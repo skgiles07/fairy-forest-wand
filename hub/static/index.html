@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fairy Forest</title>
+<style>
+  :root {
+    --night: #0b1a2b; --deep: #10311f; --dim: #1f3a2e; --dimline: #2f5543;
+    --heal: #5dff9d; --healline: #c8ffe0; --gold: #ffd166; --cream: #f4efe6; --wrong: #ff5c5c;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--night); color: var(--cream);
+    font-family: Georgia, "Times New Roman", serif; overflow: hidden; }
+  #stage { position: relative; width: 100vw; height: 100vh; }
+  #stage { background: linear-gradient(var(--night) 60%, #0c2218); }
+  svg { position: absolute; left: 0; top: 0; width: 100%; height: 74%; }
+  #title { position: absolute; top: 2vh; left: 0; right: 0; text-align: center;
+    font-size: 4vh; letter-spacing: .12em; color: var(--gold); text-shadow: 0 0 20px #ffd16688; }
+  #bubble { position: absolute; left: 50%; bottom: 4vh; transform: translateX(-50%);
+    width: min(92vw, 1400px); background: #f4efe6; color: #16261d; border-radius: 3vh;
+    padding: 2.5vh 4vw 2.5vh 14vw; font-size: 3.8vh; line-height: 1.3; min-height: 18vh; box-shadow: 0 10px 40px #0008;
+    transition: background .3s, transform .3s; }
+  #bubble::before { content: ""; position: absolute; left: 7vw; bottom: 100%;
+    border: 2vh solid transparent; border-bottom-color: #f4efe6; }
+  #bubble.wrong { background: #ffd9d9; animation: shake .5s; }
+  #bubble.done { background: #fff4c2; }
+  #fairy { position: absolute; left: 3vw; bottom: 3vh; width: 11vw; height: 11vw; z-index: 2; }
+  #fairy svg { position: static; width: 100%; height: 100%; }
+  #overlay { position: absolute; inset: 0; background: #0b1a2bee; display: grid; place-items: center;
+    font-size: 5vh; text-align: center; cursor: pointer; z-index: 10; }
+  #overlay small { display: block; font-size: 2.5vh; opacity: .7; margin-top: 2vh; }
+  #hint { position: absolute; right: 1.5vw; top: 1.5vh; font-size: 1.8vh; opacity: .35; }
+
+  .zone .fill { fill: var(--dim); stroke: var(--dimline); stroke-width: 3; transition: fill 1s, stroke 1s; }
+  .zone .glow { opacity: 0; transition: opacity 1.2s; }
+  .zone.healed .fill { fill: var(--heal); stroke: var(--healline); }
+  .zone.healed .glow { opacity: 1; animation: pulse 3s ease-in-out infinite; }
+  .zone .label { fill: #9fb3a8; font-size: 26px; text-anchor: middle; font-family: Georgia, serif; }
+  .zone.healed .label { fill: var(--cream); }
+  .zone.just { animation: pop .8s ease-out; transform-box: fill-box; transform-origin: center; }
+  #stage.shake { animation: shake .5s; }
+  #stage.done .zone.healed .fill { animation: rainbow 4s linear infinite; }
+  @keyframes pulse { 0%,100% { opacity: .6; } 50% { opacity: 1; } }
+  @keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.15); } 100% { transform: scale(1); } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-14px); } 40%,80% { transform: translateX(14px); } }
+  @keyframes rainbow { 0% { fill: #ff5c5c; } 25% { fill: #ffd166; } 50% { fill: #5dff9d; } 75% { fill: #6bb8ff; } 100% { fill: #ff5c5c; } }
+  .sparkle { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: #fff;
+    box-shadow: 0 0 12px 4px var(--gold); pointer-events: none; animation: fly 1.2s ease-out forwards; }
+  @keyframes fly { to { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; } }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="title">FAIRY FOREST</div>
+  <div id="hint">keys 1-5 = stations · R = reset</div>
+
+  <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <radialGradient id="g-glow"><stop offset="0" stop-color="#5dff9d" stop-opacity=".55"/><stop offset="1" stop-color="#5dff9d" stop-opacity="0"/></radialGradient>
+      <radialGradient id="g-moon"><stop offset="0" stop-color="#fff8dc"/><stop offset="1" stop-color="#fff8dc" stop-opacity="0"/></radialGradient>
+    </defs>
+    <!-- sky + stars -->
+    <circle cx="1350" cy="270" r="140" fill="url(#g-moon)" opacity=".5"/>
+    <circle cx="1350" cy="270" r="55" fill="#fff8dc"/>
+    <g fill="#fff" opacity=".7">
+      <circle cx="120" cy="90" r="2"/><circle cx="300" cy="160" r="1.5"/><circle cx="520" cy="70" r="2"/>
+      <circle cx="760" cy="140" r="1.5"/><circle cx="980" cy="60" r="2"/><circle cx="1120" cy="200" r="1.5"/>
+      <circle cx="220" cy="240" r="1.5"/><circle cx="640" cy="230" r="1"/><circle cx="1500" cy="300" r="2"/>
+    </g>
+    <!-- hills -->
+    <path d="M0 520 C300 420 500 480 800 440 C1100 400 1300 470 1600 420 L1600 900 L0 900Z" fill="#0e2a1c"/>
+    <path d="M0 640 C250 580 550 620 800 590 C1050 560 1350 620 1600 580 L1600 900 L0 900Z" fill="#0c2218"/>
+    <!-- background treeline -->
+    <g fill="#0a1f15">
+      <path d="M40 520 L90 380 L140 520Z"/><path d="M160 500 L220 340 L280 500Z"/><path d="M330 480 L380 360 L430 480Z"/>
+      <path d="M560 470 L620 330 L680 470Z"/><path d="M900 460 L960 310 L1020 460Z"/><path d="M1060 450 L1110 340 L1160 450Z"/>
+      <path d="M1400 440 L1460 300 L1520 440Z"/><path d="M1520 460 L1570 360 L1600 460Z"/>
+    </g>
+
+    <!-- STATION 5: Fairy Throne (top center) -->
+    <g class="zone" data-station="5">
+      <circle class="glow" cx="800" cy="330" r="170" fill="url(#g-glow)"/>
+      <ellipse class="fill" cx="800" cy="410" rx="120" ry="28"/>
+      <path class="fill" d="M740 410 L740 300 Q800 240 860 300 L860 410Z"/>
+      <path class="fill" d="M760 300 L770 250 L785 300 M815 300 L830 250 L840 300"/>
+      <text class="label" x="800" y="470">Fairy Throne</text>
+    </g>
+
+    <!-- STATION 3: Dark Cave (center-left back) -->
+    <g class="zone" data-station="3">
+      <circle class="glow" cx="470" cy="560" r="150" fill="url(#g-glow)"/>
+      <path class="fill" d="M340 620 Q470 420 600 620Z"/>
+      <path d="M400 620 Q470 500 540 620Z" fill="#05100a"/>
+      <text class="label" x="470" y="665">Dark Cave</text>
+    </g>
+
+    <!-- STATION 1: Old Oak (left front) -->
+    <g class="zone" data-station="1">
+      <circle class="glow" cx="230" cy="640" r="170" fill="url(#g-glow)"/>
+      <rect class="fill" x="205" y="660" width="50" height="130" rx="8"/>
+      <circle class="fill" cx="230" cy="620" r="110"/>
+      <circle class="fill" cx="160" cy="660" r="60"/>
+      <circle class="fill" cx="300" cy="660" r="60"/>
+      <text class="label" x="230" y="835">Old Oak</text>
+    </g>
+
+    <!-- STATION 4: Waterfall (right) -->
+    <g class="zone" data-station="4">
+      <circle class="glow" cx="1250" cy="600" r="170" fill="url(#g-glow)"/>
+      <path class="fill" d="M1130 760 L1180 480 L1320 480 L1370 760Z"/>
+      <rect class="fill" x="1215" y="480" width="70" height="280" rx="20"/>
+      <ellipse class="fill" cx="1250" cy="775" rx="150" ry="30"/>
+      <text class="label" x="1250" y="840">Waterfall</text>
+    </g>
+
+    <!-- STATION 2: Mushroom Ring (bottom center) -->
+    <g class="zone" data-station="2">
+      <circle class="glow" cx="800" cy="720" r="150" fill="url(#g-glow)"/>
+      <g class="fill">
+        <ellipse cx="700" cy="700" rx="34" ry="20"/><rect x="690" y="700" width="20" height="40" rx="6"/>
+        <ellipse cx="770" cy="740" rx="30" ry="18"/><rect x="761" y="740" width="18" height="34" rx="6"/>
+        <ellipse cx="840" cy="745" rx="30" ry="18"/><rect x="831" y="745" width="18" height="34" rx="6"/>
+        <ellipse cx="905" cy="705" rx="34" ry="20"/><rect x="895" y="705" width="20" height="40" rx="6"/>
+        <ellipse cx="800" cy="680" rx="28" ry="16"/><rect x="792" y="680" width="16" height="30" rx="6"/>
+      </g>
+      <text class="label" x="800" y="820">Mushroom Ring</text>
+    </g>
+  </svg>
+
+  <div id="fairy">
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <ellipse cx="35" cy="45" rx="22" ry="30" fill="#bfe9ff" opacity=".8" transform="rotate(-20 35 45)"/>
+      <ellipse cx="65" cy="45" rx="22" ry="30" fill="#bfe9ff" opacity=".8" transform="rotate(20 65 45)"/>
+      <ellipse cx="50" cy="62" rx="14" ry="22" fill="#ffd166"/>
+      <circle cx="50" cy="34" r="14" fill="#ffe4c4"/>
+      <path d="M36 30 Q50 10 64 30" fill="#c0392b"/>
+      <circle cx="45" cy="34" r="2" fill="#333"/><circle cx="55" cy="34" r="2" fill="#333"/>
+      <path d="M45 40 Q50 44 55 40" stroke="#333" stroke-width="1.5" fill="none"/>
+    </svg>
+  </div>
+  <div id="bubble">Connecting to the forest…</div>
+
+  <div id="overlay">Tap or press any key to wake the forest<small>(turns the sound on)</small></div>
+</div>
+
+<script>
+  const $ = s => document.querySelector(s);
+  const stage = $('#stage'), bubble = $('#bubble'), overlay = $('#overlay');
+  let seenSeq = -1, audio = null;
+
+  // --- sound: Web Audio tones, no files ---
+  function tone(freq, t0, dur, type = 'sine', gain = .25) {
+    const o = audio.createOscillator(), g = audio.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(gain, t0 + .02);
+    g.gain.exponentialRampToValueAtTime(.001, t0 + dur);
+    o.connect(g).connect(audio.destination); o.start(t0); o.stop(t0 + dur);
+  }
+  function chime() { if (!audio) return; const t = audio.currentTime;
+    [523, 659, 784, 1047].forEach((f, i) => tone(f, t + i * .12, .5)); }
+  function buzz() { if (!audio) return; tone(160, audio.currentTime, .4, 'sawtooth', .15); }
+  function fanfare() { if (!audio) return; const t = audio.currentTime;
+    [523, 523, 523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, t + i * .17, .6, 'triangle', .3)); }
+
+  function wake() {
+    if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
+    overlay.remove();
+  }
+  overlay.addEventListener('click', wake);
+
+  // --- effects ---
+  function sparkle(el, n = 24) {
+    const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    for (let i = 0; i < n; i++) {
+      const s = document.createElement('div'); s.className = 'sparkle';
+      const a = Math.random() * Math.PI * 2, d = 80 + Math.random() * 180;
+      s.style.left = cx + 'px'; s.style.top = cy + 'px';
+      s.style.setProperty('--dx', Math.cos(a) * d + 'px'); s.style.setProperty('--dy', Math.sin(a) * d + 'px');
+      stage.appendChild(s); setTimeout(() => s.remove(), 1300);
+    }
+  }
+  function say(text, cls = '') { bubble.textContent = text; bubble.className = cls; }
+
+  // --- state ---
+  function render(st) {
+    document.querySelectorAll('.zone').forEach(z => {
+      const n = +z.dataset.station;
+      z.classList.toggle('healed', st.healed.includes(n));
+    });
+    stage.classList.toggle('done', st.done);
+
+    if (st.seq !== seenSeq) {
+      const first = seenSeq === -1; seenSeq = st.seq;
+      if (!first && st.event === 'heal') {
+        const z = document.querySelector(`.zone[data-station="${st.healed.at(-1)}"]`);
+        z.classList.add('just'); setTimeout(() => z.classList.remove('just'), 900);
+        sparkle(z); chime();
+        say(`${st.spots[st.healed.at(-1)]} is healed!`);
+        setTimeout(() => say(st.clue), 2200);
+        return;
+      }
+      if (!first && st.event === 'wrong') {
+        stage.classList.add('shake'); setTimeout(() => stage.classList.remove('shake'), 600);
+        buzz(); say(st.not_yet, 'wrong');
+        setTimeout(() => say(st.clue), 3000);
+        return;
+      }
+      if (!first && st.event === 'done') {
+        document.querySelectorAll('.zone').forEach(sparkle); fanfare();
+        say(st.message, 'done');
+        return;
+      }
+    }
+    if (st.done) say(st.message, 'done');
+    else if (st.message && st.healed.length === 0) say(st.message + ' ' + st.clue);
+    else if (bubble.textContent.startsWith('Connecting')) say(st.clue);
+  }
+
+  async function poll() {
+    try { render(await (await fetch('/state')).json()); } catch (e) { say('Lost the forest… is the hub running?'); }
+    setTimeout(poll, 400);
+  }
+  poll();
+
+  // --- keyboard simulator (no hardware needed) ---
+  const post = (p, body) => fetch(p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
+  document.addEventListener('keydown', e => {
+    if (overlay.isConnected) wake();
+    if (e.key >= '1' && e.key <= '5') post('/hit', { station: +e.key, wand_id: 'keyboard' });
+    if (e.key === 'r' || e.key === 'R') { seenSeq = -1; post('/reset'); }
+  });
+</script>
+</body>
+</html>

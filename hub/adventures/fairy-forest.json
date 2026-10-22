@@ -1,0 +1,13 @@
+{
+  "title": "Fairy Forest Healing",
+  "opening": "Dark energy has crept into the Fairy Forest and the glow has gone out. Your wand still holds fairy light. Heal the five forest places one by one!",
+  "not_yet": "Not yet! That part of the forest isn't ready. Follow the clue.",
+  "steps": [
+    { "station": 1, "spot": "The Old Oak",      "clue": "Where the Old Oak sits so still, a patch of forest, cold and ill. Wave your wand and watch it gleam!" },
+    { "station": 2, "spot": "The Mushroom Ring", "clue": "The Oak is healed, but hear the plea: the Mushroom Ring needs you and me. Find where the little caps grow round." },
+    { "station": 3, "spot": "The Dark Cave",     "clue": "Two are healed, three more to go. The darkest place is the Cave, you know. Creep up quiet, hold wand high!" },
+    { "station": 4, "spot": "The Waterfall",     "clue": "Halfway home, the fairies cheer, but the Waterfall still hides fear. Bring your light where water falls." },
+    { "station": 5, "spot": "The Fairy Throne",  "clue": "One last place the darkness keeps, where the Fairy Throne silently sleeps. Heal it now with all your might!" }
+  ],
+  "ending": "The Fairy Forest is healed! Every tree and flower glows again because of you. The fairies name you Guardian of the Forest!"
+}
