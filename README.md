@@ -78,6 +78,9 @@ the map and says "not yet."
 Test tonight with no hardware: keys `1`-`5` fire fake station hits, `R`
 resets.
 
+Levels: `fairy-forest.json` (default), `dragon.json` (chase the dragon off the
+throne): `python3 hub/server.py hub/adventures/dragon.json`.
+
 New story = new JSON in `hub/adventures/` (title, opening, 5 steps with
 station/spot/clue, ending). Run `python3 hub/server.py hub/adventures/x.json`.
 

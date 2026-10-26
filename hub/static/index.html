@@ -65,6 +65,20 @@
   .mote:nth-child(3n) { animation-duration: 9s; animation-delay: -3s; }
   .mote:nth-child(3n+1) { animation-duration: 11s; animation-delay: -6s; }
 
+  /* dragon level: dragon retreats up-right as --p grows, flies off at done */
+  #dragon { display: none; transform-origin: 800px 420px; transition: transform 2.5s ease-in-out, opacity 2s;
+    transform: translate(calc(var(--p) * 620px), calc(var(--p) * -200px)) scale(calc(1 - var(--p) * .55)); }
+  #stage.scene-dragon #dragon { display: inline; }
+  #stage.done #dragon { opacity: 0; transform: translate(950px, -650px) scale(.15); }
+  #dragon .dwing { transform-box: fill-box; animation: dflap 1.6s ease-in-out infinite alternate; }
+  #dragon .dwing.l { transform-origin: right bottom; } #dragon .dwing.r { transform-origin: left bottom; }
+  #dragon .smoke { animation: smoke 3s ease-out infinite; }
+  #dragon .smoke:nth-of-type(2) { animation-delay: -1s; } #dragon .smoke:nth-of-type(3) { animation-delay: -2s; }
+  #stage.shake #dragon .head { animation: roar .5s; }
+  @keyframes dflap { from { transform: rotate(0); } to { transform: rotate(-9deg); } }
+  #dragon .dwing.r { animation-name: dflapr; } @keyframes dflapr { from { transform: rotate(0); } to { transform: rotate(9deg); } }
+  @keyframes smoke { from { transform: translate(0, 0) scale(.6); opacity: .8; } to { transform: translate(-30px, -90px) scale(1.6); opacity: 0; } }
+  @keyframes roar { 50% { transform: translateY(-12px) rotate(-4deg); } }
   @keyframes pulse { 0%,100% { opacity: .65; } 50% { opacity: 1; } }
   @keyframes bio { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
   @keyframes flow { to { stroke-dashoffset: -44; } }
@@ -200,6 +214,36 @@
         <circle cx="800" cy="318" r="10" fill="#7fe8ff" filter="url(#glowf)"/>
       </g>
       <text class="label" x="800" y="505">Fairy Throne</text>
+    </g></g>
+
+    <!-- DRAGON (dragon level only): grumpy pink dragon napping on the throne -->
+    <g id="dragon"><g transform="translate(0 45) translate(800 470) scale(.8) translate(-800 -470)">
+      <defs>
+        <radialGradient id="d-skin" cx=".4" cy=".3" r=".85"><stop offset="0" stop-color="#ffc9cf"/><stop offset=".6" stop-color="#f4869a"/><stop offset="1" stop-color="#c9506e"/></radialGradient>
+        <linearGradient id="d-wing" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bff3ee" stop-opacity=".95"/><stop offset="1" stop-color="#6fc9d6" stop-opacity=".8"/></linearGradient>
+        <linearGradient id="d-horn" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#2f8fc8"/><stop offset="1" stop-color="#b8f0ff"/></linearGradient>
+      </defs>
+      <path class="dwing l" d="M745 360 Q640 250 600 300 Q630 315 615 345 Q650 345 650 375 Q690 365 700 395Z" fill="url(#d-wing)" stroke="#5fb8c8" stroke-width="3"/>
+      <path class="dwing r" d="M855 360 Q960 250 1000 300 Q970 315 985 345 Q950 345 950 375 Q910 365 900 395Z" fill="url(#d-wing)" stroke="#5fb8c8" stroke-width="3"/>
+      <path d="M870 440 Q960 450 975 400 Q985 365 955 360" stroke="#e46f88" stroke-width="22" fill="none" stroke-linecap="round"/>
+      <path d="M962 352 L985 340 L975 366Z" fill="#7fd8f0"/>
+      <ellipse cx="800" cy="395" rx="92" ry="72" fill="url(#d-skin)"/>
+      <ellipse cx="800" cy="412" rx="52" ry="52" fill="#ffe3da"/>
+      <g fill="#f4869a"><ellipse cx="742" cy="455" rx="30" ry="16"/><ellipse cx="858" cy="455" rx="30" ry="16"/></g>
+      <g fill="#8fdcf2"><circle cx="722" cy="464" r="6"/><circle cx="736" cy="467" r="6"/><circle cx="864" cy="467" r="6"/><circle cx="878" cy="464" r="6"/></g>
+      <g class="head">
+        <path d="M762 262 Q745 215 765 180 Q768 220 785 248Z" fill="url(#d-horn)"/>
+        <path d="M838 262 Q855 215 835 180 Q832 220 815 248Z" fill="url(#d-horn)"/>
+        <ellipse cx="800" cy="285" rx="64" ry="50" fill="url(#d-skin)"/>
+        <ellipse cx="800" cy="312" rx="40" ry="25" fill="#ffc2cb"/>
+        <g fill="#a8405c"><ellipse cx="788" cy="306" rx="4" ry="3"/><ellipse cx="812" cy="306" rx="4" ry="3"/></g>
+        <g fill="#3a1a3a"><ellipse cx="772" cy="278" rx="9" ry="7"/><ellipse cx="828" cy="278" rx="9" ry="7"/></g>
+        <path d="M760 272 Q772 266 784 272 L784 278 L760 278Z M816 272 Q828 266 840 272 L840 278 L816 278Z" fill="#f4869a"/>
+        <path d="M758 262 L784 270 M842 262 L816 270" stroke="#a8405c" stroke-width="4" stroke-linecap="round"/>
+        <path d="M786 324 Q800 318 814 324" stroke="#a8405c" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <g fill="#6a5a86"><circle class="smoke" cx="790" cy="298" r="14"/><circle class="smoke" cx="812" cy="298" r="12"/><circle class="smoke" cx="800" cy="292" r="16"/></g>
+      </g>
+      <text x="880" y="230" font-size="34" font-weight="700" fill="#e9dcff" opacity=".8">z z Z</text>
     </g></g>
 
     <!-- GROUND -->
@@ -435,6 +479,11 @@
     });
     stage.style.setProperty('--p', st.healed.length / st.stations.length);
     stage.classList.toggle('done', st.done);
+    stage.classList.toggle('scene-dragon', st.scene === 'dragon');
+    $('#title').textContent = st.title;
+    document.querySelectorAll('.zone').forEach(z => {
+      const name = st.spots[z.dataset.station]; if (name) z.querySelector('.label').textContent = name.replace(/^The /, '');
+    });
 
     if (st.seq !== seenSeq) {
       const first = seenSeq === -1; seenSeq = st.seq;
@@ -442,7 +491,7 @@
         const z = document.querySelector(`.zone[data-station="${st.healed.at(-1)}"]`);
         z.classList.add('just'); setTimeout(() => z.classList.remove('just'), 900);
         sparkle(z); chime();
-        say(`${st.spots[st.healed.at(-1)]} is healed!`);
+        say(st.cheer.replace('{spot}', st.spots[st.healed.at(-1)].replace(/^The /, 'the ')).replace(/^the/, 'The'));
         setTimeout(() => say(st.clue), 2200);
         return;
       }

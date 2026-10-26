@@ -48,6 +48,8 @@ class Game:
         done = self.step >= len(steps)
         return {
             "title": self.adventure["title"],
+            "scene": self.adventure.get("scene", "forest"),
+            "cheer": self.adventure.get("cheer", "{spot} is healed!"),
             "stations": [s["station"] for s in steps],
             "spots": {s["station"]: s["spot"] for s in steps},
             "healed": self.healed,

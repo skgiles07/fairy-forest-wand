@@ -15,4 +15,8 @@ assert g.hit(5) == "done" and g.state()["done"]
 assert g.hit(1) == "done"  # ignored after finish
 g.reset()
 assert g.healed == [] and not g.state()["done"]
+for f in (Path(__file__).parent / "adventures").glob("*.json"):  # every story is a valid 1-5 walk
+    a = json.loads(f.read_text())
+    assert sorted(s["station"] for s in a["steps"]) == [1, 2, 3, 4, 5], f
+    assert all(s["clue"] and s["spot"] for s in a["steps"]) and a["ending"], f
 print("ok")
