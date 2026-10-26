@@ -1,0 +1,15 @@
+{
+  "title": "The Frozen Mountain",
+  "scene": "mountain",
+  "cheer": "{spot} is warm again!",
+  "opening": "A grumpy blizzard froze Crystal Mountain, and the mountain crystals went dark! Climb from the bottom to the very top and warm each spot with your fairy light.",
+  "not_yet": "Brrr! That spot is still frozen solid. Follow the clue!",
+  "steps": [
+    { "station": 1, "spot": "The Pine Grove",   "clue": "At the bottom where tall trees grow, the Pine Grove is buried in snow. Shake the frost off with a wave!" },
+    { "station": 2, "spot": "The Hot Springs",  "clue": "Next, a pool all frozen white. The Hot Springs need your warming light. Make the bubbly water steam!" },
+    { "station": 3, "spot": "The Ice Bridge",   "clue": "Up the trail, a bridge of ice! Wave your wand, don't slip, be nice. Melt the Ice Bridge back to wood!" },
+    { "station": 4, "spot": "The Crystal Cave", "clue": "Almost there, the climb is steep! The Crystal Cave is fast asleep. Wake the crystals, pink and blue!" },
+    { "station": 5, "spot": "The Summit Peak",  "clue": "To the very top you go, where the biggest crystal waits in the snow. Light the Summit Peak and save the mountain!" }
+  ],
+  "ending": "The Summit Crystal blazes bright! The snow melts into flowers, the sun comes up, and the sky dances with northern lights. You are the Mountain Guardian!"
+}

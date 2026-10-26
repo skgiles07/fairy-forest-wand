@@ -16,6 +16,14 @@
     font-family: "Avenir Next Rounded", "Avenir Next", "Nunito", "Trebuchet MS", sans-serif; overflow: hidden; }
   #stage { position: relative; width: 100vw; height: 100vh; --p: 0;
     background: linear-gradient(#1a0b3d, #2b1250 60%, #1b0c33); }
+  #stage.scene-mountain { background: linear-gradient(#0a1430, #1d3a6b 60%, #101c38); }
+  .flake { animation: fall 7s linear infinite; }
+  .flake:nth-child(3n) { animation-duration: 9s; animation-delay: -4s; }
+  .flake:nth-child(4n+1) { animation-duration: 6s; animation-delay: -2s; }
+  .steam { transform-box: fill-box; transform-origin: center; animation: steam 3s ease-out infinite; }
+  .steam:nth-child(2) { animation-delay: -1s; } .steam:nth-child(3) { animation-delay: -2s; }
+  @keyframes fall { from { transform: translate(0, -260px); } to { transform: translate(-80px, 420px); } }
+  @keyframes steam { from { transform: translateY(0) scale(.6); opacity: .8; } to { transform: translateY(-70px) scale(1.6); opacity: 0; } }
   #stage::before { content: ""; position: absolute; inset: 0; opacity: var(--p); transition: opacity 2.5s;
     background: linear-gradient(#c9efff, #5cc540 55%, #2a7426); }
   #scene { position: absolute; left: 0; top: 0; width: 100%; height: 76%; }
@@ -98,6 +106,46 @@
   <div id="title">FAIRY FOREST</div>
   <div id="hint">keys 1-5 = stations · R = reset</div>
 
+  <svg id="scene"></svg>
+
+  <!-- guide fairy: pastel 3D-cartoon style, feathered blue wings -->
+  <div id="fairy">
+    <svg viewBox="0 0 120 120" aria-hidden="true">
+      <defs>
+        <linearGradient id="f-wing" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#64d4ff"/><stop offset=".6" stop-color="#2f5cf0"/><stop offset="1" stop-color="#1a2fa8"/></linearGradient>
+        <radialGradient id="f-skin" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#fff2ea"/><stop offset="1" stop-color="#f3bfae"/></radialGradient>
+        <linearGradient id="f-dress" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9fd2"/><stop offset="1" stop-color="#b24fd6"/></linearGradient>
+        <linearGradient id="f-hair" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff4fb0"/><stop offset="1" stop-color="#c0208a"/></linearGradient>
+      </defs>
+      <g class="wing l" fill="url(#f-wing)">
+        <ellipse cx="38" cy="54" rx="7" ry="26" transform="rotate(-62 38 54)"/>
+        <ellipse cx="40" cy="62" rx="7" ry="24" transform="rotate(-80 40 62)"/>
+        <ellipse cx="42" cy="70" rx="6" ry="20" transform="rotate(-100 42 70)"/>
+      </g>
+      <g class="wing r" fill="url(#f-wing)">
+        <ellipse cx="82" cy="54" rx="7" ry="26" transform="rotate(62 82 54)"/>
+        <ellipse cx="80" cy="62" rx="7" ry="24" transform="rotate(80 80 62)"/>
+        <ellipse cx="78" cy="70" rx="6" ry="20" transform="rotate(100 78 70)"/>
+      </g>
+      <path d="M50 70 Q60 62 70 70 L80 100 Q60 107 40 100Z" fill="url(#f-dress)"/>
+      <circle cx="60" cy="48" r="17" fill="url(#f-skin)"/>
+      <path d="M43 47 Q42 25 60 25 Q80 25 77 47 Q73 34 60 34 Q48 34 43 47Z" fill="url(#f-hair)"/>
+      <path d="M58 26 Q66 14 76 18 Q68 20 64 30Z" fill="#4fe0ff"/>
+      <path d="M46 36 Q60 28 74 36" stroke="#ffc844" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="60" cy="31" r="3" fill="#7fe8ff"/>
+      <ellipse cx="54" cy="50" rx="3.6" ry="4.6" fill="#2a1a4a"/><ellipse cx="66" cy="50" rx="3.6" ry="4.6" fill="#2a1a4a"/>
+      <circle cx="55.2" cy="48.4" r="1.4" fill="#fff"/><circle cx="67.2" cy="48.4" r="1.4" fill="#fff"/>
+      <ellipse cx="49" cy="56" rx="3" ry="1.8" fill="#ff7fae" opacity=".5"/><ellipse cx="71" cy="56" rx="3" ry="1.8" fill="#ff7fae" opacity=".5"/>
+      <path d="M56 57 Q60 60 64 57" stroke="#8a3050" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div id="bubble">Waking up the magic…</div>
+
+  <div id="overlay">Tap or press any key to wake the forest<small>(turns the sound on)</small></div>
+</div>
+
+<template id="scene-forest">
   <svg id="scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
     <defs>
       <linearGradient id="sky-dark" x1="0" y1="0" x2="0" y2="1">
@@ -393,48 +441,210 @@
       <circle class="mote" cx="1150" cy="600" r="3"/><circle class="mote" cx="1420" cy="420" r="3.5"/><circle class="mote" cx="90" cy="560" r="3"/>
     </g>
   </svg>
+</template>
+<template id="scene-mountain">
+  <svg id="scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="m-sky-dark" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#070f2a"/><stop offset=".6" stop-color="#16305e"/><stop offset="1" stop-color="#2f5590"/></linearGradient>
+      <linearGradient id="m-sky-lit" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#6fc0ff"/><stop offset=".6" stop-color="#ffd6ec"/><stop offset="1" stop-color="#ffe2a8"/></linearGradient>
+      <linearGradient id="m-ray" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <linearGradient id="m-mtn-dark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34558f"/><stop offset="1" stop-color="#14223f"/></linearGradient>
+      <linearGradient id="m-mtn-lit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c2aef2"/><stop offset="1" stop-color="#6d5cb0"/></linearGradient>
+      <linearGradient id="m-slope" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9be060"/><stop offset="1" stop-color="#3e9a3a"/></linearGradient>
+      <linearGradient id="m-ground-dark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fb4dc"/><stop offset="1" stop-color="#3f5688"/></linearGradient>
+      <linearGradient id="m-ground-lit" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#a6e85c"/><stop offset=".5" stop-color="#5cc540"/><stop offset="1" stop-color="#2e8a30"/></linearGradient>
+      <linearGradient id="m-pine-dark" x1="0" x2="1"><stop offset="0" stop-color="#2f5080"/><stop offset="1" stop-color="#142846"/></linearGradient>
+      <linearGradient id="m-pine-lit" x1="0" x2="1"><stop offset="0" stop-color="#6fdc74"/><stop offset="1" stop-color="#1f7a3a"/></linearGradient>
+      <linearGradient id="m-ice" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2faff"/><stop offset="1" stop-color="#8fc4ec"/></linearGradient>
+      <radialGradient id="m-water" cx=".4" cy=".4" r=".8"><stop offset="0" stop-color="#c8fdff"/><stop offset=".5" stop-color="#3cc8f5"/><stop offset="1" stop-color="#1e8fc0"/></radialGradient>
+      <linearGradient id="m-crystal-lit" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd0f0"/><stop offset=".5" stop-color="#ff7fd0"/><stop offset="1" stop-color="#7fe8ff"/></linearGradient>
+      <linearGradient id="m-crystal-dark" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9fb4dc"/><stop offset="1" stop-color="#34497a"/></linearGradient>
+      <linearGradient id="m-cave-lit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd6f4"/><stop offset="1" stop-color="#8f5ad6"/></linearGradient>
+      <linearGradient id="m-aurora" x1="0" x2="1">
+        <stop offset="0" stop-color="#5fffb0"/><stop offset=".5" stop-color="#7fe8ff"/><stop offset="1" stop-color="#ff8fd8"/></linearGradient>
+      <radialGradient id="m-glow"><stop offset="0" stop-color="#fff2a8" stop-opacity=".75"/>
+        <stop offset=".5" stop-color="#ffb8e0" stop-opacity=".3"/><stop offset="1" stop-color="#ffb8e0" stop-opacity="0"/></radialGradient>
+      <radialGradient id="m-sun"><stop offset="0" stop-color="#fffbe6"/><stop offset=".3" stop-color="#ffe0b8" stop-opacity=".8"/>
+        <stop offset="1" stop-color="#ffe0b8" stop-opacity="0"/></radialGradient>
+      <filter id="m-blur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="4"/></filter>
+      <filter id="m-blur-big" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+      <filter id="m-glowf" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <path id="m-range" d="M0 540 L120 420 L210 480 L330 380 L440 480 L560 410 L680 500 L900 470 L1050 400 L1160 470 L1270 370 L1380 460 L1480 410 L1600 470 L1600 900 L0 900Z"/>
+      <path id="m-main" d="M300 660 L560 490 L640 520 L800 380 L960 520 L1040 490 L1300 660Z"/>
+      <path id="m-ground" d="M0 650 C300 620 560 640 800 630 C1060 620 1330 640 1600 625 L1600 900 L0 900Z"/>
+      <g id="pine"><path d="M0 0 L40 70 L-40 70Z"/><path d="M0 40 L55 120 L-55 120Z"/><path d="M0 85 L70 170 L-70 170Z"/></g>
+      <g id="pine-snow"><path d="M0 0 L18 32 L-18 32Z"/><path d="M0 40 L22 72 L-22 72Z"/><path d="M0 85 L26 117 L-26 117Z"/></g>
+    </defs>
 
-  <!-- guide fairy: pastel 3D-cartoon style, feathered blue wings -->
-  <div id="fairy">
-    <svg viewBox="0 0 120 120" aria-hidden="true">
-      <defs>
-        <linearGradient id="f-wing" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#64d4ff"/><stop offset=".6" stop-color="#2f5cf0"/><stop offset="1" stop-color="#1a2fa8"/></linearGradient>
-        <radialGradient id="f-skin" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#fff2ea"/><stop offset="1" stop-color="#f3bfae"/></radialGradient>
-        <linearGradient id="f-dress" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9fd2"/><stop offset="1" stop-color="#b24fd6"/></linearGradient>
-        <linearGradient id="f-hair" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff4fb0"/><stop offset="1" stop-color="#c0208a"/></linearGradient>
-      </defs>
-      <g class="wing l" fill="url(#f-wing)">
-        <ellipse cx="38" cy="54" rx="7" ry="26" transform="rotate(-62 38 54)"/>
-        <ellipse cx="40" cy="62" rx="7" ry="24" transform="rotate(-80 40 62)"/>
-        <ellipse cx="42" cy="70" rx="6" ry="20" transform="rotate(-100 42 70)"/>
+    <!-- SKY: blizzard night to pink sunrise -->
+    <rect width="1600" height="900" fill="url(#m-sky-dark)"/>
+    <g class="dark-bg" fill="#fff" opacity=".6">
+      <circle cx="140" cy="260" r="1.5"/><circle cx="420" cy="230" r="2"/><circle cx="1240" cy="240" r="1.5"/><circle cx="1500" cy="300" r="2"/>
+    </g>
+    <g class="lit-bg">
+      <rect width="1600" height="900" fill="url(#m-sky-lit)"/>
+      <circle cx="1180" cy="330" r="260" fill="url(#m-sun)"/>
+      <g filter="url(#m-blur-big)" fill="url(#m-ray)" opacity=".8">
+        <polygon points="1150,200 1210,200 1500,640 1360,640"/><polygon points="1100,200 1140,200 1050,640 960,640"/>
       </g>
-      <g class="wing r" fill="url(#f-wing)">
-        <ellipse cx="82" cy="54" rx="7" ry="26" transform="rotate(62 82 54)"/>
-        <ellipse cx="80" cy="62" rx="7" ry="24" transform="rotate(80 80 62)"/>
-        <ellipse cx="78" cy="70" rx="6" ry="20" transform="rotate(100 78 70)"/>
-      </g>
-      <path d="M50 70 Q60 62 70 70 L80 100 Q60 107 40 100Z" fill="url(#f-dress)"/>
-      <circle cx="60" cy="48" r="17" fill="url(#f-skin)"/>
-      <path d="M43 47 Q42 25 60 25 Q80 25 77 47 Q73 34 60 34 Q48 34 43 47Z" fill="url(#f-hair)"/>
-      <path d="M58 26 Q66 14 76 18 Q68 20 64 30Z" fill="#4fe0ff"/>
-      <path d="M46 36 Q60 28 74 36" stroke="#ffc844" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <circle cx="60" cy="31" r="3" fill="#7fe8ff"/>
-      <ellipse cx="54" cy="50" rx="3.6" ry="4.6" fill="#2a1a4a"/><ellipse cx="66" cy="50" rx="3.6" ry="4.6" fill="#2a1a4a"/>
-      <circle cx="55.2" cy="48.4" r="1.4" fill="#fff"/><circle cx="67.2" cy="48.4" r="1.4" fill="#fff"/>
-      <ellipse cx="49" cy="56" rx="3" ry="1.8" fill="#ff7fae" opacity=".5"/><ellipse cx="71" cy="56" rx="3" ry="1.8" fill="#ff7fae" opacity=".5"/>
-      <path d="M56 57 Q60 60 64 57" stroke="#8a3050" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-    </svg>
-  </div>
-  <div id="bubble">Connecting to the forest…</div>
+    </g>
 
-  <div id="overlay">Tap or press any key to wake the forest<small>(turns the sound on)</small></div>
-</div>
+    <!-- NORTHERN LIGHTS (finale; id shared with the forest rainbow so the same CSS fades it in) -->
+    <g id="rainbow" fill="none" filter="url(#m-blur-big)" stroke-linecap="round" opacity="0">
+      <path d="M80 300 C380 230 640 350 960 270 S1400 300 1560 240" stroke="url(#m-aurora)" stroke-width="46"/>
+      <path d="M160 360 C460 300 720 400 1020 330 S1380 360 1520 310" stroke="url(#m-aurora)" stroke-width="30" opacity=".7"/>
+    </g>
+
+    <!-- FAR RANGE -->
+    <use href="#m-range" fill="#1e3460"/>
+    <use href="#m-range" class="lit-bg" fill="#8f7fd0"/>
+    <g fill="#e8f2ff" opacity=".85">
+      <path d="M120 420 L150 450 L135 446 L120 458 L104 446 L92 448Z"/><path d="M330 380 L362 412 L345 408 L330 420 L314 408 L298 412Z"/>
+      <path d="M560 410 L590 438 L560 444 L530 438Z"/><path d="M1050 400 L1082 430 L1050 438 L1018 430Z"/>
+      <path d="M1270 370 L1306 404 L1288 400 L1270 414 L1252 400 L1236 404Z"/><path d="M1480 410 L1510 438 L1480 446 L1452 438Z"/>
+    </g>
+
+    <!-- MAIN MOUNTAIN -->
+    <use href="#m-main" fill="url(#m-mtn-dark)"/>
+    <use href="#m-main" class="lit-bg" fill="url(#m-mtn-lit)"/>
+    <path class="lit-bg" d="M300 660 L450 560 Q800 600 1150 560 L1300 660Z" fill="url(#m-slope)"/>
+    <path d="M800 380 L960 520 L1040 490 L1300 660 L800 660Z" fill="#000" opacity=".16"/>
+    <path class="dark-bg" d="M800 380 L960 520 L920 540 L880 510 L840 545 L800 510 L760 545 L720 510 L680 540 L640 520Z" fill="#dce8ff"/>
+    <path class="lit-bg" d="M800 380 L870 442 L845 456 L820 438 L800 456 L780 438 L755 456 L730 442Z" fill="#fff"/>
+
+    <!-- STATION 5: Summit Peak -->
+    <g class="zone" data-station="5">
+      <circle class="glow" cx="800" cy="345" r="160" fill="url(#m-glow)"/>
+      <g class="dark" fill="url(#m-crystal-dark)">
+        <path d="M800 300 L822 345 L800 388 L778 345Z"/><path d="M768 352 L782 372 L770 392 L756 372Z"/><path d="M832 352 L846 372 L834 392 L820 372Z"/>
+      </g>
+      <g class="lit" fill="url(#m-crystal-lit)" filter="url(#m-glowf)">
+        <path d="M800 300 L822 345 L800 388 L778 345Z"/><path d="M768 352 L782 372 L770 392 L756 372Z"/><path d="M832 352 L846 372 L834 392 L820 372Z"/>
+      </g>
+      <text class="label" x="800" y="485">Summit Peak</text>
+    </g>
+
+    <!-- STATION 4: Crystal Cave (right slope) -->
+    <g class="zone" data-station="4">
+      <circle class="glow" cx="1150" cy="600" r="150" fill="url(#m-glow)"/>
+      <g class="dark">
+        <path d="M1060 655 Q1080 540 1150 530 Q1225 540 1245 655Z" fill="#2a4070"/>
+        <path d="M1080 560 Q1150 515 1225 560 Q1150 540 1080 560Z" fill="#dce8ff"/>
+        <path d="M1100 655 Q1105 575 1150 566 Q1195 575 1200 655Z" fill="#0a1226"/>
+        <path d="M1118 590 L1124 612 L1130 586Z M1140 572 L1146 598 L1152 570Z M1166 576 L1172 600 L1178 580Z" fill="#e8f6ff"/>
+      </g>
+      <g class="lit">
+        <path d="M1060 655 Q1080 540 1150 530 Q1225 540 1245 655Z" fill="#9a86cc"/>
+        <path d="M1080 560 Q1150 515 1225 560 Q1150 540 1080 560Z" fill="#5cc540"/>
+        <path d="M1100 655 Q1105 575 1150 566 Q1195 575 1200 655Z" fill="url(#m-cave-lit)"/>
+        <g filter="url(#m-glowf)">
+          <path d="M1120 655 L1132 610 L1144 655Z" fill="#7ff6ff"/><path d="M1146 655 L1160 596 L1174 655Z" fill="#ff8fd8"/>
+          <path d="M1172 655 L1182 622 L1192 655Z" fill="#c8a0ff"/>
+        </g>
+      </g>
+      <text class="label" x="1150" y="700">Crystal Cave</text>
+    </g>
+
+    <!-- GROUND -->
+    <use href="#m-ground" fill="url(#m-ground-dark)"/>
+    <use href="#m-ground" class="lit-bg" fill="url(#m-ground-lit)"/>
+    <g class="lit-bg" filter="url(#m-blur)">
+      <ellipse cx="1080" cy="690" rx="220" ry="22" fill="#ff6fb5" opacity=".8"/>
+      <ellipse cx="520" cy="740" rx="160" ry="20" fill="#ff8fd0" opacity=".7"/>
+      <ellipse cx="1460" cy="720" rx="170" ry="22" fill="#d58cff" opacity=".7"/>
+    </g>
+
+    <!-- STATION 3: Ice Bridge (left, over a gap) -->
+    <g class="zone" data-station="3">
+      <circle class="glow" cx="507" cy="620" r="150" fill="url(#m-glow)"/>
+      <path d="M455 600 L560 600 L525 700 L490 700Z" fill="#0b1630"/>
+      <g class="dark">
+        <path d="M340 690 L360 600 L455 592 L470 690Z M545 690 L560 592 L655 600 L672 690Z" fill="#2b4372"/>
+        <path d="M360 602 L455 592 L452 606 L364 614Z M560 592 L655 600 L652 612 L560 606Z" fill="#dce8ff"/>
+        <path d="M450 598 Q507 618 565 598 L565 610 Q507 630 450 610Z" fill="url(#m-ice)"/>
+        <path d="M480 614 L485 634 L490 616Z M503 620 L508 642 L513 620Z M526 616 L531 634 L536 614Z" fill="#e8f6ff"/>
+      </g>
+      <g class="lit">
+        <path d="M340 690 L360 600 L455 592 L470 690Z M545 690 L560 592 L655 600 L672 690Z" fill="#9a86cc"/>
+        <path d="M360 602 L455 592 L452 608 L364 616Z M560 592 L655 600 L652 614 L560 608Z" fill="#5cc540"/>
+        <path d="M450 598 Q507 618 565 598 L565 610 Q507 630 450 610Z" fill="#b07a4f"/>
+        <g stroke="#7a4f2e" stroke-width="4" fill="none" stroke-linecap="round">
+          <path d="M455 600 L455 568 M560 600 L560 568"/><path d="M455 572 Q507 596 560 572"/>
+        </g>
+        <g fill="#ffd166" filter="url(#m-glowf)"><circle cx="455" cy="564" r="6"/><circle cx="560" cy="564" r="6"/></g>
+      </g>
+      <text class="label" x="507" y="740">Ice Bridge</text>
+    </g>
+
+    <!-- STATION 1: Pine Grove (left front) -->
+    <g class="zone" data-station="1">
+      <circle class="glow" cx="220" cy="690" r="190" fill="url(#m-glow)"/>
+      <g class="dark">
+        <g fill="#4a3a2e"><rect x="212" y="770" width="16" height="24"/><rect x="122" y="800" width="16" height="22"/><rect x="302" y="792" width="14" height="20"/></g>
+        <use href="#pine" transform="translate(220 560) scale(1.1)" fill="url(#m-pine-dark)"/>
+        <use href="#pine" transform="translate(130 610)" fill="url(#m-pine-dark)"/>
+        <use href="#pine" transform="translate(310 620) scale(.9)" fill="url(#m-pine-dark)"/>
+        <g fill="#e8f2ff">
+          <use href="#pine-snow" transform="translate(220 560) scale(1.1)"/><use href="#pine-snow" transform="translate(130 610)"/>
+          <use href="#pine-snow" transform="translate(310 620) scale(.9)"/>
+        </g>
+      </g>
+      <g class="lit">
+        <g fill="#8a5a3a"><rect x="212" y="770" width="16" height="24"/><rect x="122" y="800" width="16" height="22"/><rect x="302" y="792" width="14" height="20"/></g>
+        <use href="#pine" transform="translate(220 560) scale(1.1)" fill="url(#m-pine-lit)"/>
+        <use href="#pine" transform="translate(130 610)" fill="url(#m-pine-lit)"/>
+        <use href="#pine" transform="translate(310 620) scale(.9)" fill="url(#m-pine-lit)"/>
+        <g fill="#ff8fd0"><circle cx="100" cy="820" r="8"/><circle cx="165" cy="826" r="7"/><circle cx="260" cy="812" r="8"/><circle cx="345" cy="816" r="7"/></g>
+        <g fill="#ffd166" filter="url(#m-glowf)"><circle cx="205" cy="640" r="4"/><circle cx="240" cy="700" r="4"/><circle cx="120" cy="700" r="3.5"/><circle cx="320" cy="700" r="3.5"/></g>
+      </g>
+      <text class="label" x="220" y="860">Pine Grove</text>
+    </g>
+
+    <!-- STATION 2: Hot Springs (front center) -->
+    <g class="zone" data-station="2">
+      <circle class="glow" cx="820" cy="760" r="170" fill="url(#m-glow)"/>
+      <g class="dark">
+        <ellipse cx="820" cy="772" rx="152" ry="44" fill="#5a6f9c"/>
+        <ellipse cx="820" cy="768" rx="126" ry="32" fill="url(#m-ice)"/>
+        <path d="M760 760 L790 772 L812 762 M840 776 L862 764 L888 774" stroke="#8fb0d8" stroke-width="3" fill="none"/>
+      </g>
+      <g class="lit">
+        <ellipse cx="820" cy="772" rx="152" ry="44" fill="#b0a0d8"/>
+        <ellipse cx="820" cy="768" rx="126" ry="32" fill="url(#m-water)"/>
+        <g fill="#fff" opacity=".75" filter="url(#m-blur)">
+          <circle class="steam" cx="780" cy="745" r="18"/><circle class="steam" cx="830" cy="740" r="22"/><circle class="steam" cx="875" cy="748" r="16"/>
+        </g>
+        <g fill="#ff6fb5"><circle cx="680" cy="780" r="9"/><circle cx="960" cy="782" r="9"/><circle cx="700" cy="800" r="7"/><circle cx="945" cy="804" r="7"/></g>
+      </g>
+      <text class="label" x="820" y="860">Hot Springs</text>
+    </g>
+
+    <!-- snowfall (frozen) and gold motes (thawed) -->
+    <g class="dark-bg" fill="#fff" opacity=".85"><circle class="flake" cx="663" cy="277" r="3.5"/><circle class="flake" cx="1333" cy="224" r="2"/><circle class="flake" cx="1097" cy="248" r="3"/><circle class="flake" cx="1193" cy="229" r="4"/><circle class="flake" cx="439" cy="219" r="2"/><circle class="flake" cx="888" cy="414" r="2"/><circle class="flake" cx="492" cy="246" r="4"/><circle class="flake" cx="869" cy="230" r="4"/><circle class="flake" cx="253" cy="314" r="4"/><circle class="flake" cx="126" cy="495" r="4"/><circle class="flake" cx="812" cy="225" r="2.5"/><circle class="flake" cx="95" cy="485" r="2.5"/><circle class="flake" cx="593" cy="414" r="2.5"/><circle class="flake" cx="1107" cy="260" r="4"/><circle class="flake" cx="631" cy="486" r="2.5"/><circle class="flake" cx="211" cy="497" r="4"/><circle class="flake" cx="1308" cy="296" r="3"/><circle class="flake" cx="199" cy="480" r="2"/><circle class="flake" cx="1155" cy="230" r="4"/><circle class="flake" cx="421" cy="454" r="4"/><circle class="flake" cx="875" cy="597" r="3"/><circle class="flake" cx="953" cy="499" r="3.5"/><circle class="flake" cx="740" cy="353" r="2.5"/><circle class="flake" cx="368" cy="557" r="2.5"/><circle class="flake" cx="167" cy="494" r="3"/><circle class="flake" cx="1075" cy="453" r="3"/><circle class="flake" cx="1493" cy="429" r="3"/><circle class="flake" cx="1247" cy="237" r="2"/><circle class="flake" cx="1048" cy="414" r="2.5"/><circle class="flake" cx="1550" cy="375" r="2.5"/><circle class="flake" cx="1001" cy="415" r="2"/><circle class="flake" cx="1368" cy="239" r="4"/><circle class="flake" cx="1173" cy="604" r="3"/><circle class="flake" cx="696" cy="555" r="3"/><circle class="flake" cx="1217" cy="454" r="4"/><circle class="flake" cx="934" cy="235" r="2"/><circle class="flake" cx="552" cy="442" r="2"/><circle class="flake" cx="124" cy="574" r="3"/><circle class="flake" cx="1325" cy="495" r="3.5"/><circle class="flake" cx="582" cy="566" r="3.5"/></g>
+    <g class="lit-bg" fill="#fff3a8" filter="url(#m-glowf)">
+      <circle class="mote" cx="420" cy="420" r="3.5"/><circle class="mote" cx="700" cy="560" r="3"/><circle class="mote" cx="1010" cy="420" r="3.5"/>
+      <circle class="mote" cx="1150" cy="480" r="3"/><circle class="mote" cx="1420" cy="440" r="3.5"/><circle class="mote" cx="90" cy="560" r="3"/>
+    </g>
+  </svg>
+</template>
 
 <script>
   const $ = s => document.querySelector(s);
   const stage = $('#stage'), bubble = $('#bubble'), overlay = $('#overlay');
-  let seenSeq = -1, audio = null;
+  let seenSeq = -1, audio = null, sceneName = null;
+
+  // each adventure picks a scene template; dragon level reuses the forest
+  function mountScene(name) {
+    if (name === sceneName) return;
+    sceneName = name;
+    const t = document.getElementById('scene-' + name) || document.getElementById('scene-forest');
+    $('#scene').replaceWith(t.content.cloneNode(true));
+  }
 
   // --- sound: Web Audio tones, no files ---
   function tone(freq, t0, dur, type = 'sine', gain = .25) {
@@ -473,6 +683,7 @@
 
   // --- state ---
   function render(st) {
+    mountScene(st.scene === 'dragon' ? 'forest' : st.scene);
     document.querySelectorAll('.zone').forEach(z => {
       const n = +z.dataset.station;
       z.classList.toggle('healed', st.healed.includes(n));
@@ -480,6 +691,7 @@
     stage.style.setProperty('--p', st.healed.length / st.stations.length);
     stage.classList.toggle('done', st.done);
     stage.classList.toggle('scene-dragon', st.scene === 'dragon');
+    stage.classList.toggle('scene-mountain', st.scene === 'mountain');
     $('#title').textContent = st.title;
     document.querySelectorAll('.zone').forEach(z => {
       const name = st.spots[z.dataset.station]; if (name) z.querySelector('.label').textContent = name.replace(/^The /, '');
@@ -509,11 +721,11 @@
     }
     if (st.done) say(st.message, 'done');
     else if (st.message && st.healed.length === 0) say(st.message + ' ' + st.clue);
-    else if (bubble.textContent.startsWith('Connecting')) say(st.clue);
+    else if (bubble.textContent.startsWith('Waking')) say(st.clue);
   }
 
   async function poll() {
-    try { render(await (await fetch('/state')).json()); } catch (e) { say('Lost the forest… is the hub running?'); }
+    try { render(await (await fetch('/state')).json()); } catch (e) { say('Lost the magic… is the hub running?'); }
     setTimeout(poll, 400);
   }
   poll();
