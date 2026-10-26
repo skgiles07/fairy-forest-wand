@@ -5,48 +5,77 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fairy Forest</title>
 <style>
+  /* Art direction: glossy 3D-animated look. Cursed = dark violet with
+     bioluminescent cyan/magenta; healed = sunlit meadow, pink flowers. */
   :root {
-    --night: #0b1a2b; --deep: #10311f; --dim: #1f3a2e; --dimline: #2f5543;
-    --heal: #5dff9d; --healline: #c8ffe0; --gold: #ffd166; --cream: #f4efe6; --wrong: #ff5c5c;
+    --night: #120830; --gold: #ffd166; --cream: #fff8ec;
+    --glass: rgba(34, 16, 70, .74); --glassline: rgba(190, 150, 255, .55);
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: var(--night); color: var(--cream);
-    font-family: Georgia, "Times New Roman", serif; overflow: hidden; }
-  #stage { position: relative; width: 100vw; height: 100vh; }
-  #stage { background: linear-gradient(var(--night) 60%, #0c2218); }
-  svg { position: absolute; left: 0; top: 0; width: 100%; height: 74%; }
-  #title { position: absolute; top: 2vh; left: 0; right: 0; text-align: center;
-    font-size: 4vh; letter-spacing: .12em; color: var(--gold); text-shadow: 0 0 20px #ffd16688; }
-  #bubble { position: absolute; left: 50%; bottom: 4vh; transform: translateX(-50%);
-    width: min(92vw, 1400px); background: #f4efe6; color: #16261d; border-radius: 3vh;
-    padding: 2.5vh 4vw 2.5vh 14vw; font-size: 3.8vh; line-height: 1.3; min-height: 18vh; box-shadow: 0 10px 40px #0008;
-    transition: background .3s, transform .3s; }
-  #bubble::before { content: ""; position: absolute; left: 7vw; bottom: 100%;
-    border: 2vh solid transparent; border-bottom-color: #f4efe6; }
-  #bubble.wrong { background: #ffd9d9; animation: shake .5s; }
-  #bubble.done { background: #fff4c2; }
-  #fairy { position: absolute; left: 3vw; bottom: 3vh; width: 11vw; height: 11vw; z-index: 2; }
-  #fairy svg { position: static; width: 100%; height: 100%; }
-  #overlay { position: absolute; inset: 0; background: #0b1a2bee; display: grid; place-items: center;
+    font-family: "Avenir Next Rounded", "Avenir Next", "Nunito", "Trebuchet MS", sans-serif; overflow: hidden; }
+  #stage { position: relative; width: 100vw; height: 100vh; --p: 0;
+    background: linear-gradient(#1a0b3d, #2b1250 60%, #1b0c33); }
+  #stage::before { content: ""; position: absolute; inset: 0; opacity: var(--p); transition: opacity 2.5s;
+    background: linear-gradient(#c9efff, #5cc540 55%, #2a7426); }
+  #scene { position: absolute; left: 0; top: 0; width: 100%; height: 76%; }
+  #title { position: absolute; top: 2vh; left: 0; right: 0; text-align: center; z-index: 1;
+    font-size: 4.4vh; font-weight: 700; letter-spacing: .14em; color: var(--gold);
+    text-shadow: 0 0 18px #ff9de0aa, 0 3px 0 #7a3a10; }
+  #bubble { position: absolute; left: 50%; bottom: 3.5vh; transform: translateX(-50%);
+    width: min(92vw, 1400px); background: var(--glass); color: #fff; border: 2px solid var(--glassline);
+    border-radius: 3vh; padding: 2.5vh 4vw 2.5vh 15vw; font-size: 3.8vh; line-height: 1.3; min-height: 18vh;
+    box-shadow: 0 0 40px #b07aff55, 0 10px 40px #0009; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    transition: background .4s, border-color .4s; }
+  #bubble.wrong { background: rgba(110, 18, 60, .82); border-color: #ff7aa8; animation: shake .5s; }
+  #bubble.done { background: linear-gradient(90deg, rgba(255, 120, 200, .85), rgba(255, 200, 90, .85), rgba(120, 220, 255, .85));
+    color: #2a0f3a; border-color: #fff; }
+  #fairy { position: absolute; left: 1vw; bottom: 3vh; width: 15vw; height: 15vw; z-index: 2;
+    animation: float 3.4s ease-in-out infinite; filter: drop-shadow(0 0 14px #8fd8ff); }
+  #fairy svg { width: 100%; height: 100%; }
+  #fairy .wing { transform-origin: 60px 64px; animation: flap .5s ease-in-out infinite alternate; }
+  #fairy .wing.r { animation-delay: .05s; }
+  #overlay { position: absolute; inset: 0; background: #120830ee; display: grid; place-items: center;
     font-size: 5vh; text-align: center; cursor: pointer; z-index: 10; }
   #overlay small { display: block; font-size: 2.5vh; opacity: .7; margin-top: 2vh; }
-  #hint { position: absolute; right: 1.5vw; top: 1.5vh; font-size: 1.8vh; opacity: .35; }
+  #hint { position: absolute; right: 1.5vw; top: 1.5vh; font-size: 1.8vh; opacity: .35; z-index: 1; }
 
-  .zone .fill { fill: var(--dim); stroke: var(--dimline); stroke-width: 3; transition: fill 1s, stroke 1s; }
+  /* healed-ness of the whole world follows progress (--p = healed/5) */
+  .lit-bg { opacity: var(--p); transition: opacity 2.5s; }
+  .dark-bg { opacity: calc(1 - var(--p)); transition: opacity 2.5s; }
+
+  .zone .lit { opacity: 0; transition: opacity 1.4s; }
+  .zone .dark { transition: opacity 1.4s; }
+  .zone.healed .lit { opacity: 1; }
+  .zone.healed .dark { opacity: 0; }
   .zone .glow { opacity: 0; transition: opacity 1.2s; }
-  .zone.healed .fill { fill: var(--heal); stroke: var(--healline); }
   .zone.healed .glow { opacity: 1; animation: pulse 3s ease-in-out infinite; }
-  .zone .label { fill: #9fb3a8; font-size: 26px; text-anchor: middle; font-family: Georgia, serif; }
-  .zone.healed .label { fill: var(--cream); }
+  .zone .label { fill: #d9c9ff; font-size: 30px; font-weight: 700; text-anchor: middle;
+    paint-order: stroke; stroke: #1a0b3d; stroke-width: 7px; stroke-linejoin: round; }
+  .zone.healed .label { fill: #fff; stroke: #2f7d2a; }
   .zone.just { animation: pop .8s ease-out; transform-box: fill-box; transform-origin: center; }
+  .bio { animation: bio 2.6s ease-in-out infinite; }
+  .bio:nth-child(2n) { animation-delay: -1.3s; }
+  .stream { stroke-dasharray: 18 26; animation: flow .8s linear infinite; }
+  #rainbow { opacity: 0; transition: opacity 2s; }
+  #stage.done #rainbow { opacity: .8; }
+  #stage.done .zone.healed .glow { animation: rainbowglow 3s linear infinite; }
   #stage.shake { animation: shake .5s; }
-  #stage.done .zone.healed .fill { animation: rainbow 4s linear infinite; }
-  @keyframes pulse { 0%,100% { opacity: .6; } 50% { opacity: 1; } }
-  @keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.15); } 100% { transform: scale(1); } }
+  .mote { animation: drift 7s ease-in-out infinite; }
+  .mote:nth-child(3n) { animation-duration: 9s; animation-delay: -3s; }
+  .mote:nth-child(3n+1) { animation-duration: 11s; animation-delay: -6s; }
+
+  @keyframes pulse { 0%,100% { opacity: .65; } 50% { opacity: 1; } }
+  @keyframes bio { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
+  @keyframes flow { to { stroke-dashoffset: -44; } }
+  @keyframes drift { 0%,100% { transform: translate(0, 0); } 50% { transform: translate(18px, -30px); } }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-1.6vh); } }
+  @keyframes flap { from { transform: scaleX(1); } to { transform: scaleX(.82); } }
+  @keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.12); } 100% { transform: scale(1); } }
   @keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-14px); } 40%,80% { transform: translateX(14px); } }
-  @keyframes rainbow { 0% { fill: #ff5c5c; } 25% { fill: #ffd166; } 50% { fill: #5dff9d; } 75% { fill: #6bb8ff; } 100% { fill: #ff5c5c; } }
-  .sparkle { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: #fff;
-    box-shadow: 0 0 12px 4px var(--gold); pointer-events: none; animation: fly 1.2s ease-out forwards; }
+  @keyframes rainbowglow { to { filter: hue-rotate(360deg); } }
+  .sparkle { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: #fff; z-index: 3;
+    box-shadow: 0 0 12px 5px var(--c, var(--gold)); pointer-events: none; animation: fly 1.3s ease-out forwards; }
   @keyframes fly { to { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; } }
 </style>
 </head>
@@ -55,88 +84,302 @@
   <div id="title">FAIRY FOREST</div>
   <div id="hint">keys 1-5 = stations · R = reset</div>
 
-  <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+  <svg id="scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
     <defs>
-      <radialGradient id="g-glow"><stop offset="0" stop-color="#5dff9d" stop-opacity=".55"/><stop offset="1" stop-color="#5dff9d" stop-opacity="0"/></radialGradient>
-      <radialGradient id="g-moon"><stop offset="0" stop-color="#fff8dc"/><stop offset="1" stop-color="#fff8dc" stop-opacity="0"/></radialGradient>
+      <linearGradient id="sky-dark" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#0d0626"/><stop offset=".6" stop-color="#2a1352"/><stop offset="1" stop-color="#4a2270"/></linearGradient>
+      <linearGradient id="sky-lit" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#5fb8ff"/><stop offset=".55" stop-color="#c9efff"/><stop offset="1" stop-color="#fff1c4"/></linearGradient>
+      <linearGradient id="ray" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <linearGradient id="ground-dark" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#3d2163"/><stop offset="1" stop-color="#1b0d30"/></linearGradient>
+      <linearGradient id="ground-lit" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#a6e85c"/><stop offset=".5" stop-color="#5cc540"/><stop offset="1" stop-color="#2e8a30"/></linearGradient>
+      <radialGradient id="canopy-dark" cx=".35" cy=".3" r=".8">
+        <stop offset="0" stop-color="#5b4bb0"/><stop offset=".55" stop-color="#2d2166"/><stop offset="1" stop-color="#150e38"/></radialGradient>
+      <radialGradient id="canopy-lit" cx=".35" cy=".3" r=".8">
+        <stop offset="0" stop-color="#e2ff92"/><stop offset=".5" stop-color="#6fcf3f"/><stop offset="1" stop-color="#2a7426"/></radialGradient>
+      <linearGradient id="bark-dark" x1="0" x2="1"><stop offset="0" stop-color="#3f2e5e"/><stop offset="1" stop-color="#1c1230"/></linearGradient>
+      <linearGradient id="bark-lit" x1="0" x2="1"><stop offset="0" stop-color="#c08a58"/><stop offset="1" stop-color="#6a4128"/></linearGradient>
+      <radialGradient id="cap-dark" cx=".4" cy=".25" r=".9">
+        <stop offset="0" stop-color="#a456c8"/><stop offset=".5" stop-color="#5a1f78"/><stop offset="1" stop-color="#2a0d40"/></radialGradient>
+      <radialGradient id="cap-lit" cx=".4" cy=".25" r=".9">
+        <stop offset="0" stop-color="#ffe0f1"/><stop offset=".45" stop-color="#ff5fae"/><stop offset="1" stop-color="#b8226f"/></radialGradient>
+      <linearGradient id="stem-dark" x1="0" x2="1"><stop offset="0" stop-color="#9484c0"/><stop offset="1" stop-color="#4a3d70"/></linearGradient>
+      <linearGradient id="stem-lit" x1="0" x2="1"><stop offset="0" stop-color="#fffaf0"/><stop offset="1" stop-color="#e6cfb4"/></linearGradient>
+      <radialGradient id="rock-dark" cx=".4" cy=".3" r=".85">
+        <stop offset="0" stop-color="#5e4f93"/><stop offset=".55" stop-color="#2e2558"/><stop offset="1" stop-color="#160f2e"/></radialGradient>
+      <radialGradient id="rock-lit" cx=".4" cy=".3" r=".85">
+        <stop offset="0" stop-color="#e3d6ff"/><stop offset=".55" stop-color="#9a86cc"/><stop offset="1" stop-color="#5b4a8c"/></radialGradient>
+      <linearGradient id="water-dark" x1="0" x2="1">
+        <stop offset="0" stop-color="#2e2660"/><stop offset=".5" stop-color="#55479a"/><stop offset="1" stop-color="#2e2660"/></linearGradient>
+      <linearGradient id="water-lit" x1="0" x2="1">
+        <stop offset="0" stop-color="#3cc8f5"/><stop offset=".5" stop-color="#e8fcff"/><stop offset="1" stop-color="#3cc8f5"/></linearGradient>
+      <linearGradient id="cave-lit" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#ffe29a"/><stop offset="1" stop-color="#ff9a4a"/></linearGradient>
+      <radialGradient id="gold" cx=".35" cy=".3" r=".9">
+        <stop offset="0" stop-color="#fff6c2"/><stop offset=".5" stop-color="#ffc844"/><stop offset="1" stop-color="#b8740f"/></radialGradient>
+      <radialGradient id="g-glow"><stop offset="0" stop-color="#fff2a8" stop-opacity=".75"/>
+        <stop offset=".5" stop-color="#9dffb0" stop-opacity=".3"/><stop offset="1" stop-color="#9dffb0" stop-opacity="0"/></radialGradient>
+      <radialGradient id="g-sun"><stop offset="0" stop-color="#fffbe6"/><stop offset=".3" stop-color="#fff3b8" stop-opacity=".8"/>
+        <stop offset="1" stop-color="#fff3b8" stop-opacity="0"/></radialGradient>
+      <radialGradient id="g-moon"><stop offset="0" stop-color="#ffc8f4" stop-opacity=".7"/><stop offset="1" stop-color="#ffc8f4" stop-opacity="0"/></radialGradient>
+      <filter id="blur-far" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="4"/></filter>
+      <filter id="blur-ray"><feGaussianBlur stdDeviation="14"/></filter>
+      <filter id="glowf" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+
+      <!-- shared silhouettes, painted twice (dark + lit) -->
+      <g id="far-trees">
+        <circle cx="20" cy="470" r="80"/><circle cx="120" cy="440" r="70"/><circle cx="210" cy="470" r="65"/>
+        <circle cx="300" cy="430" r="80"/><circle cx="400" cy="460" r="60"/><circle cx="480" cy="430" r="75"/>
+        <circle cx="580" cy="465" r="65"/><circle cx="1000" cy="455" r="70"/><circle cx="1090" cy="425" r="80"/>
+        <circle cx="1190" cy="455" r="65"/><circle cx="1280" cy="420" r="85"/><circle cx="1380" cy="455" r="65"/>
+        <circle cx="1470" cy="425" r="80"/><circle cx="1570" cy="460" r="75"/>
+        <rect x="0" y="470" width="1600" height="120"/>
+      </g>
+      <path id="hill" d="M0 560 C260 500 520 530 800 505 C1080 480 1340 530 1600 500 L1600 900 L0 900Z"/>
+      <path id="ground" d="M0 610 C300 575 560 600 800 585 C1060 570 1330 600 1600 580 L1600 900 L0 900Z"/>
     </defs>
-    <!-- sky + stars -->
-    <circle cx="1350" cy="270" r="140" fill="url(#g-moon)" opacity=".5"/>
-    <circle cx="1350" cy="270" r="55" fill="#fff8dc"/>
-    <g fill="#fff" opacity=".7">
-      <circle cx="120" cy="90" r="2"/><circle cx="300" cy="160" r="1.5"/><circle cx="520" cy="70" r="2"/>
-      <circle cx="760" cy="140" r="1.5"/><circle cx="980" cy="60" r="2"/><circle cx="1120" cy="200" r="1.5"/>
-      <circle cx="220" cy="240" r="1.5"/><circle cx="640" cy="230" r="1"/><circle cx="1500" cy="300" r="2"/>
+
+    <!-- SKY -->
+    <rect width="1600" height="900" fill="url(#sky-dark)"/>
+    <g class="dark-bg">
+      <circle cx="1180" cy="300" r="150" fill="url(#g-moon)"/>
+      <circle cx="1180" cy="300" r="40" fill="#ffe6fb"/>
+      <g fill="#fff">
+        <circle cx="120" cy="90" r="2"/><circle cx="300" cy="160" r="1.5"/><circle cx="520" cy="70" r="2"/>
+        <circle cx="760" cy="140" r="1.5"/><circle cx="980" cy="60" r="2.5"/><circle cx="1120" cy="200" r="1.5"/>
+        <circle cx="220" cy="250" r="1.5"/><circle cx="640" cy="230" r="1"/><circle cx="1500" cy="320" r="2"/>
+      </g>
     </g>
-    <!-- hills -->
-    <path d="M0 520 C300 420 500 480 800 440 C1100 400 1300 470 1600 420 L1600 900 L0 900Z" fill="#0e2a1c"/>
-    <path d="M0 640 C250 580 550 620 800 590 C1050 560 1350 620 1600 580 L1600 900 L0 900Z" fill="#0c2218"/>
-    <!-- background treeline -->
-    <g fill="#0a1f15">
-      <path d="M40 520 L90 380 L140 520Z"/><path d="M160 500 L220 340 L280 500Z"/><path d="M330 480 L380 360 L430 480Z"/>
-      <path d="M560 470 L620 330 L680 470Z"/><path d="M900 460 L960 310 L1020 460Z"/><path d="M1060 450 L1110 340 L1160 450Z"/>
-      <path d="M1400 440 L1460 300 L1520 440Z"/><path d="M1520 460 L1570 360 L1600 460Z"/>
+    <g class="lit-bg">
+      <rect width="1600" height="900" fill="url(#sky-lit)"/>
+      <circle cx="380" cy="40" r="300" fill="url(#g-sun)"/>
+      <g filter="url(#blur-ray)" fill="url(#ray)" opacity=".85">
+        <polygon points="330,0 430,0 760,620 600,620"/>
+        <polygon points="460,0 520,0 960,560 860,560"/>
+        <polygon points="250,0 300,0 420,640 330,640"/>
+      </g>
     </g>
 
-    <!-- STATION 5: Fairy Throne (top center) -->
-    <g class="zone" data-station="5">
-      <circle class="glow" cx="800" cy="330" r="170" fill="url(#g-glow)"/>
-      <ellipse class="fill" cx="800" cy="410" rx="120" ry="28"/>
-      <path class="fill" d="M740 410 L740 300 Q800 240 860 300 L860 410Z"/>
-      <path class="fill" d="M760 300 L770 250 L785 300 M815 300 L830 250 L840 300"/>
-      <text class="label" x="800" y="470">Fairy Throne</text>
+    <!-- RAINBOW (finale) -->
+    <g id="rainbow" fill="none" stroke-width="22" stroke-linecap="round" opacity="0">
+      <path d="M180 600 A620 520 0 0 1 1420 600" stroke="#ff6b8b"/>
+      <path d="M202 600 A598 498 0 0 1 1398 600" stroke="#ffb35c"/>
+      <path d="M224 600 A576 476 0 0 1 1376 600" stroke="#ffe66b"/>
+      <path d="M246 600 A554 454 0 0 1 1354 600" stroke="#7ee08a"/>
+      <path d="M268 600 A532 432 0 0 1 1332 600" stroke="#6bc8ff"/>
+      <path d="M290 600 A510 410 0 0 1 1310 600" stroke="#b18cff"/>
+    </g>
+
+    <!-- FAR TREES + HILLS -->
+    <use href="#far-trees" fill="#24164a" filter="url(#blur-far)"/>
+    <use href="#far-trees" class="lit-bg" fill="#4f9a45" filter="url(#blur-far)"/>
+    <use href="#hill" fill="#2b1850"/>
+    <use href="#hill" class="lit-bg" fill="#78c74a"/>
+
+    <!-- STATION 5: Fairy Throne (back center) -->
+    <g class="zone" data-station="5"><g transform="translate(0 45)">
+      <circle class="glow" cx="800" cy="380" r="190" fill="url(#g-glow)"/>
+      <g class="dark">
+        <path d="M725 450 L732 350 Q800 262 868 350 L875 450Z" fill="url(#rock-dark)"/>
+        <ellipse cx="800" cy="452" rx="105" ry="24" fill="#24184a"/>
+        <path d="M740 360 Q770 330 760 300 M860 360 Q835 330 845 300" stroke="#4b3a80" stroke-width="6" fill="none"/>
+        <circle class="bio" cx="800" cy="318" r="9" fill="#6ffff0" filter="url(#glowf)"/>
+      </g>
+      <g class="lit">
+        <path d="M725 450 L732 350 Q800 262 868 350 L875 450Z" fill="url(#gold)"/>
+        <path d="M748 440 L752 360 Q800 300 848 360 L852 440Z" fill="#ff8cc6"/>
+        <ellipse cx="800" cy="452" rx="105" ry="24" fill="#d99a2b"/>
+        <path d="M735 352 Q700 320 712 285 M865 352 Q900 320 888 285" stroke="#3fae3c" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <g fill="#ff6fb5"><circle cx="712" cy="282" r="13"/><circle cx="888" cy="282" r="13"/></g>
+        <g fill="#fff6c2"><circle cx="712" cy="282" r="5"/><circle cx="888" cy="282" r="5"/></g>
+        <path d="M778 292 L788 268 L800 286 L812 268 L822 292Z" fill="#ffe066" filter="url(#glowf)"/>
+        <circle cx="800" cy="318" r="10" fill="#7fe8ff" filter="url(#glowf)"/>
+      </g>
+      <text class="label" x="800" y="505">Fairy Throne</text>
+    </g></g>
+
+    <!-- GROUND -->
+    <use href="#ground" fill="url(#ground-dark)"/>
+    <use href="#ground" class="lit-bg" fill="url(#ground-lit)"/>
+    <!-- meadow flower drifts (healed) -->
+    <g class="lit-bg" filter="url(#blur-far)">
+      <ellipse cx="1080" cy="640" rx="260" ry="26" fill="#ff6fb5" opacity=".85"/>
+      <ellipse cx="560" cy="650" rx="200" ry="22" fill="#ff8fd0" opacity=".75"/>
+      <ellipse cx="1480" cy="690" rx="180" ry="24" fill="#d58cff" opacity=".7"/>
+    </g>
+    <!-- bioluminescent plants (cursed) -->
+    <g class="dark-bg">
+      <g stroke="#d03ab8" stroke-width="6" stroke-linecap="round" fill="none">
+        <path d="M70 860 Q60 790 85 740"/><path d="M95 860 Q110 800 100 760"/>
+        <path d="M1500 850 Q1490 780 1515 730"/><path d="M1530 850 Q1545 790 1535 750"/>
+        <path d="M640 880 Q630 830 650 800"/><path d="M1010 880 Q1025 830 1010 800"/>
+      </g>
+      <g fill="#6ffff0" filter="url(#glowf)">
+        <circle class="bio" cx="85" cy="738" r="8"/><circle class="bio" cx="100" cy="758" r="7"/>
+        <circle class="bio" cx="1515" cy="728" r="8"/><circle class="bio" cx="1535" cy="748" r="7"/>
+        <circle class="bio" cx="650" cy="798" r="7"/><circle class="bio" cx="1010" cy="798" r="7"/>
+      </g>
+      <g fill="#3fe3e0" opacity=".8" filter="url(#glowf)">
+        <ellipse class="bio" cx="1040" cy="650" rx="34" ry="14" transform="rotate(-20 1040 650)"/>
+        <ellipse class="bio" cx="1080" cy="660" rx="30" ry="12" transform="rotate(25 1080 660)"/>
+        <ellipse class="bio" cx="590" cy="660" rx="30" ry="12" transform="rotate(-25 590 660)"/>
+        <ellipse class="bio" cx="1460" cy="680" rx="32" ry="13" transform="rotate(15 1460 680)"/>
+      </g>
     </g>
 
     <!-- STATION 3: Dark Cave (center-left back) -->
     <g class="zone" data-station="3">
-      <circle class="glow" cx="470" cy="560" r="150" fill="url(#g-glow)"/>
-      <path class="fill" d="M340 620 Q470 420 600 620Z"/>
-      <path d="M400 620 Q470 500 540 620Z" fill="#05100a"/>
-      <text class="label" x="470" y="665">Dark Cave</text>
-    </g>
-
-    <!-- STATION 1: Old Oak (left front) -->
-    <g class="zone" data-station="1">
-      <circle class="glow" cx="230" cy="640" r="170" fill="url(#g-glow)"/>
-      <rect class="fill" x="205" y="660" width="50" height="130" rx="8"/>
-      <circle class="fill" cx="230" cy="620" r="110"/>
-      <circle class="fill" cx="160" cy="660" r="60"/>
-      <circle class="fill" cx="300" cy="660" r="60"/>
-      <text class="label" x="230" y="835">Old Oak</text>
+      <circle class="glow" cx="470" cy="560" r="170" fill="url(#g-glow)"/>
+      <g class="dark">
+        <path d="M325 640 Q340 480 470 455 Q605 480 615 640Z" fill="url(#rock-dark)"/>
+        <path d="M410 640 Q414 555 470 540 Q526 555 530 640Z" fill="#07030f"/>
+        <g fill="#c66bff" filter="url(#glowf)"><ellipse class="bio" cx="455" cy="590" rx="5" ry="7"/><ellipse class="bio" cx="485" cy="590" rx="5" ry="7"/></g>
+        <path d="M360 640 L372 598 L384 640Z M560 640 L574 604 L588 640Z" fill="#5fe8e8" opacity=".55"/>
+      </g>
+      <g class="lit">
+        <path d="M325 640 Q340 480 470 455 Q605 480 615 640Z" fill="url(#rock-lit)"/>
+        <path d="M410 640 Q414 555 470 540 Q526 555 530 640Z" fill="url(#cave-lit)"/>
+        <path d="M345 545 Q400 455 470 455 Q545 455 600 545 Q560 500 470 495 Q380 500 345 545Z" fill="#5cc540"/>
+        <path d="M360 640 L374 590 L388 640Z" fill="#7ff6ff" filter="url(#glowf)"/>
+        <path d="M556 640 L572 584 L590 640Z" fill="#ff9be0" filter="url(#glowf)"/>
+      </g>
+      <text class="label" x="470" y="690">Dark Cave</text>
     </g>
 
     <!-- STATION 4: Waterfall (right) -->
     <g class="zone" data-station="4">
-      <circle class="glow" cx="1250" cy="600" r="170" fill="url(#g-glow)"/>
-      <path class="fill" d="M1130 760 L1180 480 L1320 480 L1370 760Z"/>
-      <rect class="fill" x="1215" y="480" width="70" height="280" rx="20"/>
-      <ellipse class="fill" cx="1250" cy="775" rx="150" ry="30"/>
-      <text class="label" x="1250" y="840">Waterfall</text>
+      <circle class="glow" cx="1250" cy="610" r="190" fill="url(#g-glow)"/>
+      <g class="dark">
+        <path d="M1115 790 L1145 565 Q1165 470 1250 465 Q1338 470 1358 565 L1388 790Z" fill="url(#rock-dark)"/>
+        <rect x="1215" y="468" width="70" height="312" rx="18" fill="url(#water-dark)"/>
+        <ellipse cx="1250" cy="790" rx="165" ry="32" fill="#2e2660"/>
+      </g>
+      <g class="lit">
+        <path d="M1115 790 L1145 565 Q1165 470 1250 465 Q1338 470 1358 565 L1388 790Z" fill="url(#rock-lit)"/>
+        <path d="M1150 540 Q1170 470 1250 466 Q1330 470 1352 540 Q1300 505 1250 505 Q1195 505 1150 540Z" fill="#5cc540"/>
+        <rect x="1215" y="468" width="70" height="312" rx="18" fill="url(#water-lit)"/>
+        <g stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".85">
+          <line class="stream" x1="1232" y1="480" x2="1232" y2="775"/>
+          <line class="stream" x1="1250" y1="470" x2="1250" y2="780" style="animation-delay:-.3s"/>
+          <line class="stream" x1="1268" y1="480" x2="1268" y2="775" style="animation-delay:-.55s"/>
+        </g>
+        <ellipse cx="1250" cy="790" rx="165" ry="32" fill="#4fd6f5"/>
+        <ellipse cx="1250" cy="782" rx="95" ry="16" fill="#fff" opacity=".6" filter="url(#blur-far)"/>
+        <g fill="#ff6fb5"><circle cx="1160" cy="535" r="10"/><circle cx="1340" cy="530" r="10"/><circle cx="1320" cy="512" r="7"/></g>
+      </g>
+      <text class="label" x="1250" y="860">Waterfall</text>
     </g>
 
-    <!-- STATION 2: Mushroom Ring (bottom center) -->
-    <g class="zone" data-station="2">
-      <circle class="glow" cx="800" cy="720" r="150" fill="url(#g-glow)"/>
-      <g class="fill">
-        <ellipse cx="700" cy="700" rx="34" ry="20"/><rect x="690" y="700" width="20" height="40" rx="6"/>
-        <ellipse cx="770" cy="740" rx="30" ry="18"/><rect x="761" y="740" width="18" height="34" rx="6"/>
-        <ellipse cx="840" cy="745" rx="30" ry="18"/><rect x="831" y="745" width="18" height="34" rx="6"/>
-        <ellipse cx="905" cy="705" rx="34" ry="20"/><rect x="895" y="705" width="20" height="40" rx="6"/>
-        <ellipse cx="800" cy="680" rx="28" ry="16"/><rect x="792" y="680" width="16" height="30" rx="6"/>
+    <!-- STATION 1: Old Oak (left front) -->
+    <g class="zone" data-station="1">
+      <circle class="glow" cx="230" cy="640" r="200" fill="url(#g-glow)"/>
+      <g class="dark">
+        <path d="M195 810 Q212 730 208 650 L252 650 Q248 730 268 810Z" fill="url(#bark-dark)"/>
+        <g fill="url(#canopy-dark)">
+          <circle cx="150" cy="655" r="68"/><circle cx="312" cy="655" r="68"/>
+          <circle cx="190" cy="565" r="66"/><circle cx="282" cy="572" r="64"/><circle cx="232" cy="610" r="104"/>
+        </g>
+        <g fill="#6ffff0" filter="url(#glowf)">
+          <circle class="bio" cx="180" cy="590" r="5"/><circle class="bio" cx="270" cy="620" r="6"/>
+          <circle class="bio" cx="140" cy="670" r="4"/><circle class="bio" cx="300" cy="560" r="5"/>
+        </g>
       </g>
-      <text class="label" x="800" y="820">Mushroom Ring</text>
+      <g class="lit">
+        <path d="M195 810 Q212 730 208 650 L252 650 Q248 730 268 810Z" fill="url(#bark-lit)"/>
+        <g fill="url(#canopy-lit)">
+          <circle cx="150" cy="655" r="68"/><circle cx="312" cy="655" r="68"/>
+          <circle cx="190" cy="565" r="66"/><circle cx="282" cy="572" r="64"/><circle cx="232" cy="610" r="104"/>
+        </g>
+        <g fill="#ff8fd0">
+          <circle cx="180" cy="590" r="9"/><circle cx="270" cy="620" r="9"/><circle cx="140" cy="670" r="8"/>
+          <circle cx="300" cy="560" r="8"/><circle cx="235" cy="545" r="8"/><circle cx="330" cy="660" r="8"/>
+        </g>
+        <g fill="#fff6c2"><circle cx="180" cy="590" r="3"/><circle cx="270" cy="620" r="3"/><circle cx="235" cy="545" r="3"/></g>
+      </g>
+      <text class="label" x="230" y="855">Old Oak</text>
+    </g>
+
+    <!-- STATION 2: Mushroom Ring (front center) -->
+    <g class="zone" data-station="2">
+      <circle class="glow" cx="805" cy="730" r="170" fill="url(#g-glow)"/>
+      <g class="dark">
+        <g fill="url(#stem-dark)">
+          <rect x="691" y="700" width="20" height="44" rx="8"/><rect x="762" y="740" width="18" height="38" rx="8"/>
+          <rect x="832" y="745" width="18" height="38" rx="8"/><rect x="896" y="705" width="20" height="44" rx="8"/>
+          <rect x="797" y="678" width="16" height="34" rx="7"/>
+        </g>
+        <g fill="url(#cap-dark)">
+          <path d="M664 706 Q701 650 738 706Z"/><path d="M740 746 Q771 698 802 746Z"/>
+          <path d="M810 751 Q841 703 872 751Z"/><path d="M869 711 Q906 655 943 711Z"/><path d="M780 684 Q805 642 830 684Z"/>
+        </g>
+        <g fill="#6ffff0" filter="url(#glowf)">
+          <circle class="bio" cx="694" cy="688" r="4"/><circle class="bio" cx="770" cy="728" r="4"/>
+          <circle class="bio" cx="846" cy="733" r="4"/><circle class="bio" cx="912" cy="692" r="4"/><circle class="bio" cx="805" cy="668" r="3"/>
+        </g>
+      </g>
+      <g class="lit">
+        <g fill="url(#stem-lit)">
+          <rect x="691" y="700" width="20" height="44" rx="8"/><rect x="762" y="740" width="18" height="38" rx="8"/>
+          <rect x="832" y="745" width="18" height="38" rx="8"/><rect x="896" y="705" width="20" height="44" rx="8"/>
+          <rect x="797" y="678" width="16" height="34" rx="7"/>
+        </g>
+        <g fill="url(#cap-lit)">
+          <path d="M664 706 Q701 650 738 706Z"/><path d="M740 746 Q771 698 802 746Z"/>
+          <path d="M810 751 Q841 703 872 751Z"/><path d="M869 711 Q906 655 943 711Z"/><path d="M780 684 Q805 642 830 684Z"/>
+        </g>
+        <g fill="#fff">
+          <circle cx="690" cy="690" r="5"/><circle cx="712" cy="684" r="4"/><circle cx="766" cy="730" r="4"/>
+          <circle cx="846" cy="732" r="5"/><circle cx="900" cy="694" r="5"/><circle cx="922" cy="698" r="3"/><circle cx="806" cy="666" r="4"/>
+        </g>
+      </g>
+      <text class="label" x="805" y="830">Mushroom Ring</text>
+    </g>
+
+    <!-- floating motes: violet when cursed, gold when healed -->
+    <g class="dark-bg" fill="#c89bff" filter="url(#glowf)">
+      <circle class="mote" cx="380" cy="420" r="3"/><circle class="mote" cx="660" cy="520" r="2.5"/><circle class="mote" cx="980" cy="420" r="3"/>
+      <circle class="mote" cx="1120" cy="560" r="2.5"/><circle class="mote" cx="1450" cy="460" r="3"/><circle class="mote" cx="120" cy="520" r="2.5"/>
+    </g>
+    <g class="lit-bg" fill="#fff3a8" filter="url(#glowf)">
+      <circle class="mote" cx="420" cy="380" r="3.5"/><circle class="mote" cx="700" cy="560" r="3"/><circle class="mote" cx="1010" cy="380" r="3.5"/>
+      <circle class="mote" cx="1150" cy="600" r="3"/><circle class="mote" cx="1420" cy="420" r="3.5"/><circle class="mote" cx="90" cy="560" r="3"/>
     </g>
   </svg>
 
+  <!-- guide fairy: pastel 3D-cartoon style, feathered blue wings -->
   <div id="fairy">
-    <svg viewBox="0 0 100 100" aria-hidden="true">
-      <ellipse cx="35" cy="45" rx="22" ry="30" fill="#bfe9ff" opacity=".8" transform="rotate(-20 35 45)"/>
-      <ellipse cx="65" cy="45" rx="22" ry="30" fill="#bfe9ff" opacity=".8" transform="rotate(20 65 45)"/>
-      <ellipse cx="50" cy="62" rx="14" ry="22" fill="#ffd166"/>
-      <circle cx="50" cy="34" r="14" fill="#ffe4c4"/>
-      <path d="M36 30 Q50 10 64 30" fill="#c0392b"/>
-      <circle cx="45" cy="34" r="2" fill="#333"/><circle cx="55" cy="34" r="2" fill="#333"/>
-      <path d="M45 40 Q50 44 55 40" stroke="#333" stroke-width="1.5" fill="none"/>
+    <svg viewBox="0 0 120 120" aria-hidden="true">
+      <defs>
+        <linearGradient id="f-wing" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#64d4ff"/><stop offset=".6" stop-color="#2f5cf0"/><stop offset="1" stop-color="#1a2fa8"/></linearGradient>
+        <radialGradient id="f-skin" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#fff2ea"/><stop offset="1" stop-color="#f3bfae"/></radialGradient>
+        <linearGradient id="f-dress" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9fd2"/><stop offset="1" stop-color="#b24fd6"/></linearGradient>
+        <linearGradient id="f-hair" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff4fb0"/><stop offset="1" stop-color="#c0208a"/></linearGradient>
+      </defs>
+      <g class="wing l" fill="url(#f-wing)">
+        <ellipse cx="38" cy="54" rx="7" ry="26" transform="rotate(-62 38 54)"/>
+        <ellipse cx="40" cy="62" rx="7" ry="24" transform="rotate(-80 40 62)"/>
+        <ellipse cx="42" cy="70" rx="6" ry="20" transform="rotate(-100 42 70)"/>
+      </g>
+      <g class="wing r" fill="url(#f-wing)">
+        <ellipse cx="82" cy="54" rx="7" ry="26" transform="rotate(62 82 54)"/>
+        <ellipse cx="80" cy="62" rx="7" ry="24" transform="rotate(80 80 62)"/>
+        <ellipse cx="78" cy="70" rx="6" ry="20" transform="rotate(100 78 70)"/>
+      </g>
+      <path d="M50 70 Q60 62 70 70 L80 100 Q60 107 40 100Z" fill="url(#f-dress)"/>
+      <circle cx="60" cy="48" r="17" fill="url(#f-skin)"/>
+      <path d="M43 47 Q42 25 60 25 Q80 25 77 47 Q73 34 60 34 Q48 34 43 47Z" fill="url(#f-hair)"/>
+      <path d="M58 26 Q66 14 76 18 Q68 20 64 30Z" fill="#4fe0ff"/>
+      <path d="M46 36 Q60 28 74 36" stroke="#ffc844" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="60" cy="31" r="3" fill="#7fe8ff"/>
+      <ellipse cx="54" cy="50" rx="3.6" ry="4.6" fill="#2a1a4a"/><ellipse cx="66" cy="50" rx="3.6" ry="4.6" fill="#2a1a4a"/>
+      <circle cx="55.2" cy="48.4" r="1.4" fill="#fff"/><circle cx="67.2" cy="48.4" r="1.4" fill="#fff"/>
+      <ellipse cx="49" cy="56" rx="3" ry="1.8" fill="#ff7fae" opacity=".5"/><ellipse cx="71" cy="56" rx="3" ry="1.8" fill="#ff7fae" opacity=".5"/>
+      <path d="M56 57 Q60 60 64 57" stroke="#8a3050" stroke-width="1.5" fill="none" stroke-linecap="round"/>
     </svg>
   </div>
   <div id="bubble">Connecting to the forest…</div>
@@ -170,14 +413,16 @@
   overlay.addEventListener('click', wake);
 
   // --- effects ---
-  function sparkle(el, n = 24) {
+  const SPARK = ['#ffd166', '#ff8fd0', '#7fe8ff', '#b18cff'];
+  function sparkle(el, n = 28) {
     const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
     for (let i = 0; i < n; i++) {
       const s = document.createElement('div'); s.className = 'sparkle';
-      const a = Math.random() * Math.PI * 2, d = 80 + Math.random() * 180;
+      const a = Math.random() * Math.PI * 2, d = 80 + Math.random() * 200;
       s.style.left = cx + 'px'; s.style.top = cy + 'px';
+      s.style.setProperty('--c', SPARK[i % SPARK.length]);
       s.style.setProperty('--dx', Math.cos(a) * d + 'px'); s.style.setProperty('--dy', Math.sin(a) * d + 'px');
-      stage.appendChild(s); setTimeout(() => s.remove(), 1300);
+      stage.appendChild(s); setTimeout(() => s.remove(), 1400);
     }
   }
   function say(text, cls = '') { bubble.textContent = text; bubble.className = cls; }
@@ -188,6 +433,7 @@
       const n = +z.dataset.station;
       z.classList.toggle('healed', st.healed.includes(n));
     });
+    stage.style.setProperty('--p', st.healed.length / st.stations.length);
     stage.classList.toggle('done', st.done);
 
     if (st.seq !== seenSeq) {
@@ -207,7 +453,7 @@
         return;
       }
       if (!first && st.event === 'done') {
-        document.querySelectorAll('.zone').forEach(sparkle); fanfare();
+        document.querySelectorAll('.zone').forEach(z => sparkle(z)); fanfare();
         say(st.message, 'done');
         return;
       }
