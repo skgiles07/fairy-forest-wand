@@ -79,6 +79,22 @@ Same purple / green / rainbow behavior, plus `POST /hit {"station": N,
 are ordered. Gotchas: ~30% of boards need the CP2102 USB driver, and some
 need `BOOT` held during upload.
 
+## Option C: pre-built M5StickS3 station (recommended for WiFi stations)
+
+One part per station, nothing to wire. ~$29 each (RobotShop $28.90 US),
+~$145 for 5 + chargers. Replaces the discontinued M5StickC Plus2.
+
+- ESP32-S3, WiFi + BLE, 1.14" color screen, speaker, mic, USB-C.
+- **IR transmitter + receiver built in** (pins G46/G42, TX vs RX to confirm).
+  Receiver part/frequency unpublished, so same 36 vs 38 kHz risk.
+- 250 mAh battery = minutes, not hours. Run each on a USB-C phone charger or
+  power bank.
+- Screen is the light: purple idle, green healed, rainbow finale, can show
+  text.
+- Arduino with M5Unified + M5PM1 libraries; IR receive via ESP32 RMT
+  (IRremoteESP8266 decodes MagiQuest). Same sketch logic as Option B.
+- Buy 1 first, test the wand, then 4 more.
+
 ## Status (2026-10-26)
 
 - Done: CPX firmware, wand test, decoder + self-check, clue cards, TV hub
