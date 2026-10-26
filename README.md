@@ -1,5 +1,7 @@
 # Fairy Forest Wand
 
+Decisions, status, and next steps: see `PLAN.md`.
+
 Home MagiQuest-style scavenger hunt. Liza's Great Wolf Lodge wand, five
 light-and-sound stations, one story: the fairies healing the forest.
 
