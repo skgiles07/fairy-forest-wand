@@ -24,6 +24,19 @@
   .steam:nth-child(2) { animation-delay: -1s; } .steam:nth-child(3) { animation-delay: -2s; }
   @keyframes fall { from { transform: translate(0, -260px); } to { transform: translate(-80px, 420px); } }
   @keyframes steam { from { transform: translateY(0) scale(.6); opacity: .8; } to { transform: translateY(-70px) scale(1.6); opacity: 0; } }
+  #stage.scene-cave { background: linear-gradient(#080c22, #151f45 60%, #0a0f28); }
+  #stage.scene-cave::before { background: linear-gradient(#3f2468, #2e1a48); }
+  #goblin { transition: transform 1.3s cubic-bezier(.5, -0.3, .4, 1.3); }
+  #goblin .gbody { animation: gbob .5s ease-in-out infinite alternate; }
+  #goblin.tease .gbody { animation: gtease .25s ease-in-out 3 alternate; }
+  #goblin .gsorry { display: none; }
+  #stage.done #goblin .gcrystal, #stage.done #goblin .ggrin { display: none; }
+  #stage.done #goblin .gsorry { display: inline; }
+  #stage.done #goblin .gbody { animation: none; }
+  #pedestal-crystal { opacity: 0; transition: opacity 1.5s 1.2s; }
+  #stage.done #pedestal-crystal { opacity: 1; }
+  @keyframes gbob { from { transform: translateY(0); } to { transform: translateY(-8px); } }
+  @keyframes gtease { from { transform: rotate(-10deg); } to { transform: rotate(10deg); } }
   #stage::before { content: ""; position: absolute; inset: 0; opacity: var(--p); transition: opacity 2.5s;
     background: linear-gradient(#c9efff, #5cc540 55%, #2a7426); }
   #scene { position: absolute; left: 0; top: 0; width: 100%; height: 76%; }
@@ -632,6 +645,203 @@
     </g>
   </svg>
 </template>
+<template id="scene-cave">
+  <svg id="scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <radialGradient id="c-wall-dark" cx=".5" cy=".55" r=".75"><stop offset="0" stop-color="#2c3f78"/><stop offset=".6" stop-color="#151f45"/><stop offset="1" stop-color="#080c22"/></radialGradient>
+      <radialGradient id="c-wall-lit" cx=".5" cy=".55" r=".75"><stop offset="0" stop-color="#8a4fb8"/><stop offset=".6" stop-color="#3f2468"/><stop offset="1" stop-color="#1c0f33"/></radialGradient>
+      <linearGradient id="c-floor-dark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a5f96"/><stop offset="1" stop-color="#1a2246"/></linearGradient>
+      <linearGradient id="c-floor-lit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a3f8a"/><stop offset="1" stop-color="#2e1a48"/></linearGradient>
+      <linearGradient id="c-rock-dark" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a6fa8"/><stop offset="1" stop-color="#1f2a55"/></linearGradient>
+      <linearGradient id="c-rock-lit" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b48ae0"/><stop offset="1" stop-color="#5a3a8c"/></linearGradient>
+      <linearGradient id="c-ice" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#bfe8ff"/><stop offset="1" stop-color="#5fb8f0"/></linearGradient>
+      <radialGradient id="c-water" cx=".4" cy=".4" r=".8"><stop offset="0" stop-color="#7ff6ff"/><stop offset=".6" stop-color="#1fa8c8"/><stop offset="1" stop-color="#0d5a7a"/></radialGradient>
+      <radialGradient id="c-gob-skin" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#c8f28a"/><stop offset="1" stop-color="#4f9a3a"/></radialGradient>
+      <radialGradient id="c-glow"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".7"/>
+        <stop offset=".5" stop-color="#7fe8ff" stop-opacity=".28"/><stop offset="1" stop-color="#7fe8ff" stop-opacity="0"/></radialGradient>
+      <linearGradient id="c-beam" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#bfe8ff" stop-opacity="0"/></linearGradient>
+      <filter id="c-blur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="4"/></filter>
+      <filter id="c-blur-big" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="12"/></filter>
+      <filter id="c-glowf" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <path id="c-ceiling" d="M0 0 L1600 0 L1600 420 L1540 380 L1500 470 L1450 330 L1390 400 L1330 300 L1270 360 L1200 290 L1150 340 L1080 280 L1020 330 L950 280 L880 320 L800 270 L720 320 L650 280 L580 330 L520 285 L450 340 L400 290 L330 360 L270 300 L210 400 L150 330 L90 470 L50 380 L0 430Z"/>
+      <path id="c-floor" d="M0 640 C300 600 560 620 800 610 C1060 600 1330 620 1600 605 L1600 900 L0 900Z"/>
+    </defs>
+
+    <!-- CAVE BACK WALL + CEILING -->
+    <rect width="1600" height="900" fill="url(#c-wall-dark)"/>
+    <rect class="lit-bg" width="1600" height="900" fill="url(#c-wall-lit)"/>
+    <use href="#c-ceiling" fill="#0b1230"/>
+    <use href="#c-ceiling" class="lit-bg" fill="#24133f"/>
+    <!-- frost icicles along ceiling (frozen) -->
+    <g class="dark-bg" fill="url(#c-ice)" opacity=".85">
+      <path d="M270 300 L282 360 L294 302Z"/><path d="M400 290 L410 340 L420 292Z"/><path d="M520 285 L532 350 L544 288Z"/>
+      <path d="M650 280 L660 330 L670 282Z"/><path d="M950 280 L962 345 L974 282Z"/><path d="M1080 280 L1090 335 L1100 282Z"/>
+      <path d="M1200 290 L1212 352 L1224 292Z"/><path d="M1330 300 L1340 350 L1350 302Z"/>
+    </g>
+    <!-- wall crystals: dim ice when frozen, glowing pink/teal/orange when warm (bioluminescent look) -->
+    <g class="dark-bg" fill="#6f86b8" opacity=".7">
+      <path d="M90 560 L110 470 L130 560Z"/><path d="M125 560 L140 500 L155 560Z"/><path d="M1460 560 L1480 460 L1500 560Z"/>
+      <path d="M1500 560 L1514 500 L1528 560Z"/><path d="M620 520 L632 460 L644 520Z"/><path d="M990 520 L1004 450 L1018 520Z"/>
+    </g>
+    <g class="lit-bg" filter="url(#c-glowf)">
+      <path class="bio" d="M90 560 L110 470 L130 560Z" fill="#ff7fd0"/><path class="bio" d="M125 560 L140 500 L155 560Z" fill="#7ff6ff"/>
+      <path class="bio" d="M1460 560 L1480 460 L1500 560Z" fill="#7ff6ff"/><path class="bio" d="M1500 560 L1514 500 L1528 560Z" fill="#ffb05c"/>
+      <path class="bio" d="M620 520 L632 460 L644 520Z" fill="#c8a0ff"/><path class="bio" d="M990 520 L1004 450 L1018 520Z" fill="#ff7fd0"/>
+    </g>
+
+    <!-- CRYSTAL LIGHT BEAMS (finale; shares the #rainbow fade-in) -->
+    <g id="rainbow" filter="url(#c-blur-big)" opacity="0">
+      <polygon points="800,360 640,0 720,0" fill="url(#c-beam)"/><polygon points="800,360 880,0 960,0" fill="url(#c-beam)"/>
+      <polygon points="800,360 380,120 440,60" fill="url(#c-beam)"/><polygon points="800,360 1160,60 1220,120" fill="url(#c-beam)"/>
+      <circle cx="800" cy="360" r="120" fill="#fff" opacity=".5"/>
+    </g>
+
+    <!-- STATION 5: Crystal Pedestal (back center) -->
+    <g class="zone" data-station="5" data-gx="800" data-gy="420">
+      <circle class="glow" cx="800" cy="440" r="160" fill="url(#c-glow)"/>
+      <g class="dark">
+        <ellipse cx="800" cy="505" rx="62" ry="14" fill="#1f2a55"/>
+        <path d="M762 505 L772 425 L828 425 L838 505Z" fill="url(#c-rock-dark)"/>
+        <ellipse cx="800" cy="423" rx="44" ry="10" fill="#dce8ff"/>
+      </g>
+      <g class="lit">
+        <ellipse cx="800" cy="505" rx="62" ry="14" fill="#3a2260"/>
+        <path d="M762 505 L772 425 L828 425 L838 505Z" fill="url(#c-rock-lit)"/>
+        <ellipse cx="800" cy="423" rx="44" ry="10" fill="#d8c0ff"/>
+        <g fill="#7ff6ff" filter="url(#c-glowf)"><circle cx="785" cy="460" r="3"/><circle cx="800" cy="475" r="3"/><circle cx="815" cy="460" r="3"/></g>
+      </g>
+      <path id="pedestal-crystal" d="M800 330 L824 375 L800 418 L776 375Z" fill="url(#c-ice)" filter="url(#c-glowf)"/>
+      <text class="label" x="800" y="550">Crystal Pedestal</text>
+    </g>
+
+    <!-- FLOOR -->
+    <use href="#c-floor" fill="url(#c-floor-dark)"/>
+    <use href="#c-floor" class="lit-bg" fill="url(#c-floor-lit)"/>
+    <g class="dark-bg" fill="#dce8ff" opacity=".35" filter="url(#c-blur)">
+      <ellipse cx="560" cy="700" rx="180" ry="18"/><ellipse cx="1120" cy="720" rx="200" ry="20"/><ellipse cx="1450" cy="680" rx="120" ry="14"/>
+    </g>
+    <!-- warm cave plants (teal leaves, orange coral, magenta stalks) -->
+    <g class="lit-bg">
+      <g fill="#ffa040" filter="url(#c-glowf)">
+        <path d="M1400 700 Q1390 650 1410 630 Q1420 660 1430 640 Q1440 670 1425 700Z"/>
+        <path d="M560 690 Q552 650 570 635 Q578 660 588 648 Q594 672 582 690Z"/>
+      </g>
+      <g fill="#5ff0e8" opacity=".9" filter="url(#c-glowf)">
+        <ellipse class="bio" cx="1040" cy="660" rx="34" ry="14" transform="rotate(-20 1040 660)"/>
+        <ellipse class="bio" cx="1475" cy="640" rx="30" ry="12" transform="rotate(25 1475 640)"/>
+        <ellipse class="bio" cx="610" cy="650" rx="28" ry="11" transform="rotate(-25 610 650)"/>
+      </g>
+      <g stroke="#e03ab8" stroke-width="6" stroke-linecap="round" fill="none">
+        <path d="M1530 780 Q1520 720 1545 690"/><path d="M1000 860 Q1010 810 995 780"/>
+      </g>
+      <g fill="#7ff6ff" filter="url(#c-glowf)"><circle class="bio" cx="1545" cy="688" r="7"/><circle class="bio" cx="995" cy="778" r="7"/></g>
+    </g>
+
+    <!-- STATION 3: Rock Stairs (left back) -->
+    <g class="zone" data-station="3" data-gx="505" data-gy="472">
+      <circle class="glow" cx="430" cy="540" r="160" fill="url(#c-glow)"/>
+      <g class="dark">
+        <path d="M320 620 L320 580 L370 580 L370 550 L420 550 L420 520 L470 520 L470 490 L540 490 L540 620Z" fill="url(#c-rock-dark)"/>
+        <path d="M320 580 L370 580 L370 586 L320 586Z M370 550 L420 550 L420 556 L370 556Z M420 520 L470 520 L470 526 L420 526Z M470 490 L540 490 L540 497 L470 497Z" fill="#e8f2ff"/>
+      </g>
+      <g class="lit">
+        <path d="M320 620 L320 580 L370 580 L370 550 L420 550 L420 520 L470 520 L470 490 L540 490 L540 620Z" fill="url(#c-rock-lit)"/>
+        <path d="M320 580 L370 580 L370 586 L320 586Z M370 550 L420 550 L420 556 L370 556Z M420 520 L470 520 L470 526 L420 526Z M470 490 L540 490 L540 497 L470 497Z" fill="#5ff0e8" filter="url(#c-glowf)"/>
+      </g>
+      <text class="label" x="430" y="660">Rock Stairs</text>
+    </g>
+
+    <!-- STATION 4: Goblin's Nest (right) -->
+    <g class="zone" data-station="4" data-gx="1200" data-gy="612">
+      <circle class="glow" cx="1200" cy="620" r="170" fill="url(#c-glow)"/>
+      <g class="dark">
+        <ellipse cx="1200" cy="630" rx="120" ry="36" fill="#3a4a78"/>
+        <g stroke="#8fa2cc" stroke-width="6" stroke-linecap="round">
+          <path d="M1090 620 L1180 600 M1120 645 L1260 610 M1150 600 L1300 640 M1100 635 L1230 655 M1220 598 L1310 625"/>
+        </g>
+        <g fill="#c8d6ef"><circle cx="1150" cy="612" r="7"/><circle cx="1250" cy="618" r="6"/></g>
+      </g>
+      <g class="lit">
+        <ellipse cx="1200" cy="630" rx="120" ry="36" fill="#6a4228"/>
+        <g stroke="#b07a4f" stroke-width="6" stroke-linecap="round">
+          <path d="M1090 620 L1180 600 M1120 645 L1260 610 M1150 600 L1300 640 M1100 635 L1230 655 M1220 598 L1310 625"/>
+        </g>
+        <g fill="#ffd166" filter="url(#c-glowf)"><circle cx="1150" cy="612" r="7"/><circle cx="1250" cy="618" r="6"/><circle cx="1280" cy="632" r="5"/></g>
+        <path d="M1110 600 L1100 575 Q1112 568 1118 580Z" fill="#ff6fb5"/>
+        <path d="M1290 600 L1310 570" stroke="#e8e8f0" stroke-width="5" stroke-linecap="round"/><ellipse cx="1312" cy="566" rx="7" ry="9" fill="#e8e8f0"/>
+      </g>
+      <text class="label" x="1200" y="710">Goblin's Nest</text>
+    </g>
+
+    <!-- STATION 1: Icicle Tunnel (left front) -->
+    <g class="zone" data-station="1" data-gx="340" data-gy="800">
+      <circle class="glow" cx="200" cy="680" r="190" fill="url(#c-glow)"/>
+      <g class="dark">
+        <path d="M50 820 Q60 570 200 545 Q340 570 350 820Z" fill="url(#c-rock-dark)"/>
+        <path d="M100 820 Q105 625 200 610 Q295 625 300 820Z" fill="#05081a"/>
+        <g fill="url(#c-ice)">
+          <path d="M130 640 L142 720 L154 636Z"/><path d="M165 618 L178 700 L190 615Z"/><path d="M205 612 L218 730 L230 614Z"/>
+          <path d="M245 622 L256 690 L268 628Z"/>
+        </g>
+      </g>
+      <g class="lit">
+        <path d="M50 820 Q60 570 200 545 Q340 570 350 820Z" fill="url(#c-rock-lit)"/>
+        <path d="M100 820 Q105 625 200 610 Q295 625 300 820Z" fill="#1a3a5a"/>
+        <ellipse cx="200" cy="780" rx="80" ry="60" fill="#5ff0e8" opacity=".35" filter="url(#c-blur-big)"/>
+        <g fill="#7ff6ff" filter="url(#c-glowf)"><circle class="bio" cx="150" cy="650" r="5"/><circle class="bio" cx="218" cy="640" r="5"/><circle class="bio" cx="256" cy="660" r="4"/></g>
+      </g>
+      <text class="label" x="200" y="860">Icicle Tunnel</text>
+    </g>
+
+    <!-- STATION 2: Glowworm Pool (front center) -->
+    <g class="zone" data-station="2" data-gx="985" data-gy="780">
+      <circle class="glow" cx="820" cy="770" r="170" fill="url(#c-glow)"/>
+      <g class="dark">
+        <ellipse cx="820" cy="775" rx="152" ry="42" fill="#3a4a78"/>
+        <ellipse cx="820" cy="770" rx="126" ry="30" fill="#a8c8ec"/>
+        <path d="M760 765 L790 776 L812 766 M840 778 L862 766 L888 776" stroke="#6f8ab8" stroke-width="3" fill="none"/>
+      </g>
+      <g class="lit">
+        <ellipse cx="820" cy="775" rx="152" ry="42" fill="#5a3a8c"/>
+        <ellipse cx="820" cy="770" rx="126" ry="30" fill="url(#c-water)"/>
+        <g fill="#c8ff9a" filter="url(#c-glowf)">
+          <circle class="bio" cx="770" cy="765" r="4"/><circle class="bio" cx="805" cy="775" r="3.5"/><circle class="bio" cx="845" cy="762" r="4"/>
+          <circle class="bio" cx="878" cy="774" r="3.5"/><circle class="bio" cx="820" cy="758" r="3"/>
+        </g>
+      </g>
+      <text class="label" x="820" y="860">Glowworm Pool</text>
+    </g>
+
+    <!-- THE GOBLIN: stands at the spot Liza must zap next -->
+    <g id="goblin">
+      <g class="gbody">
+        <ellipse cx="0" cy="0" rx="30" ry="7" fill="#000" opacity=".3"/>
+        <g fill="#3f7a2e"><rect x="-14" y="-24" width="9" height="24" rx="4"/><rect x="5" y="-24" width="9" height="24" rx="4"/></g>
+        <path d="M-24 -20 Q-27 -60 0 -62 Q27 -60 24 -20Z" fill="#8a5a3a"/>
+        <rect x="-24" y="-34" width="48" height="6" fill="#5a3a1f"/>
+        <g stroke="#6fb84a" stroke-width="8" stroke-linecap="round" fill="none" class="garms">
+          <path d="M-20 -52 Q-30 -80 -14 -108"/><path d="M20 -52 Q30 -80 14 -108"/>
+        </g>
+        <path d="M-22 -84 L-60 -100 L-24 -70Z" fill="url(#c-gob-skin)"/><path d="M22 -84 L60 -100 L24 -70Z" fill="url(#c-gob-skin)"/>
+        <ellipse cx="0" cy="-78" rx="27" ry="23" fill="url(#c-gob-skin)"/>
+        <g fill="#ffe14a"><ellipse cx="-10" cy="-82" rx="8" ry="9"/><ellipse cx="10" cy="-82" rx="8" ry="9"/></g>
+        <g fill="#2a1a2a"><circle cx="-8" cy="-81" r="4"/><circle cx="12" cy="-81" r="4"/></g>
+        <path class="gbrow" d="M-19 -94 L-4 -90 M19 -94 L4 -90" stroke="#2f5a1f" stroke-width="3" stroke-linecap="round"/>
+        <path class="ggrin" d="M-11 -66 Q0 -58 11 -66 Q0 -62 -11 -66Z" fill="#fff" stroke="#2f5a1f" stroke-width="2"/>
+        <ellipse class="gsorry" cx="0" cy="-64" rx="4" ry="5" fill="#2a1a2a"/>
+        <path class="gcrystal" d="M0 -150 L16 -122 L0 -96 L-16 -122Z" fill="url(#c-ice)" filter="url(#c-glowf)"/>
+      </g>
+    </g>
+
+    <!-- frozen drips / warm motes -->
+    <g class="dark-bg" fill="#e8f6ff" opacity=".8"><circle class="flake" cx="926" cy="616" r="3"/><circle class="flake" cx="925" cy="590" r="2"/><circle class="flake" cx="378" cy="592" r="3"/><circle class="flake" cx="1289" cy="425" r="1.5"/><circle class="flake" cx="914" cy="485" r="2"/><circle class="flake" cx="185" cy="605" r="1.5"/><circle class="flake" cx="1219" cy="532" r="3"/><circle class="flake" cx="1339" cy="410" r="1.5"/><circle class="flake" cx="1082" cy="362" r="1.5"/><circle class="flake" cx="73" cy="427" r="2"/><circle class="flake" cx="1228" cy="345" r="3"/><circle class="flake" cx="668" cy="555" r="2"/><circle class="flake" cx="1063" cy="449" r="2.5"/><circle class="flake" cx="1023" cy="332" r="1.5"/><circle class="flake" cx="936" cy="472" r="3"/><circle class="flake" cx="1128" cy="372" r="2.5"/><circle class="flake" cx="645" cy="447" r="2.5"/><circle class="flake" cx="60" cy="365" r="1.5"/><circle class="flake" cx="820" cy="385" r="2.5"/><circle class="flake" cx="791" cy="364" r="1.5"/><circle class="flake" cx="1402" cy="330" r="2"/><circle class="flake" cx="429" cy="356" r="3"/><circle class="flake" cx="768" cy="533" r="3"/><circle class="flake" cx="149" cy="619" r="2"/><circle class="flake" cx="1594" cy="468" r="2.5"/><circle class="flake" cx="178" cy="489" r="2.5"/><circle class="flake" cx="31" cy="539" r="1.5"/><circle class="flake" cx="275" cy="456" r="1.5"/></g>
+    <g class="lit-bg" fill="#fff3a8" filter="url(#c-glowf)">
+      <circle class="mote" cx="420" cy="420" r="3.5"/><circle class="mote" cx="700" cy="560" r="3"/><circle class="mote" cx="1010" cy="420" r="3.5"/>
+      <circle class="mote" cx="1150" cy="480" r="3"/><circle class="mote" cx="1420" cy="440" r="3.5"/><circle class="mote" cx="90" cy="560" r="3"/>
+    </g>
+  </svg>
+</template>
 
 <script>
   const $ = s => document.querySelector(s);
@@ -692,6 +902,12 @@
     stage.classList.toggle('done', st.done);
     stage.classList.toggle('scene-dragon', st.scene === 'dragon');
     stage.classList.toggle('scene-mountain', st.scene === 'mountain');
+    stage.classList.toggle('scene-cave', st.scene === 'cave');
+    const gob = document.getElementById('goblin');
+    if (gob) {  // goblin waits at the next spot; caught at the last one
+      const z = document.querySelector(`.zone[data-station="${st.done ? st.stations.at(-1) : st.stations[st.healed.length]}"]`);
+      gob.style.transform = `translate(${z.dataset.gx}px, ${z.dataset.gy}px)`;
+    }
     $('#title').textContent = st.title;
     document.querySelectorAll('.zone').forEach(z => {
       const name = st.spots[z.dataset.station]; if (name) z.querySelector('.label').textContent = name.replace(/^The /, '');
@@ -710,6 +926,8 @@
       if (!first && st.event === 'wrong') {
         stage.classList.add('shake'); setTimeout(() => stage.classList.remove('shake'), 600);
         buzz(); say(st.not_yet, 'wrong');
+        const gob = document.getElementById('goblin');
+        if (gob) { gob.classList.add('tease'); setTimeout(() => gob.classList.remove('tease'), 800); }
         setTimeout(() => say(st.clue), 3000);
         return;
       }

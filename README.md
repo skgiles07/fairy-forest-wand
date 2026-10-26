@@ -80,7 +80,8 @@ resets.
 
 Levels: `fairy-forest.json` (default), `dragon.json` (chase the dragon off the
 throne), `mountain.json` (thaw the Frozen Mountain, own scene):
-`python3 hub/server.py hub/adventures/mountain.json`. Scene art lives in
+`python3 hub/server.py hub/adventures/mountain.json`, `goblin.json` (chase the
+goblin through the Crystal Cave, sequel to the mountain). Scene art lives in
 `<template id="scene-...">` blocks in `hub/static/index.html`; an adventure picks
 one with `"scene"`.
 
