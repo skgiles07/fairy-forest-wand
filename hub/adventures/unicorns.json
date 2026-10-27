@@ -1,0 +1,15 @@
+{
+  "title": "The Unicorn Pools",
+  "scene": "pools",
+  "cheer": "Pop! A unicorn is free at {spot}!",
+  "opening": "Evil magic is zapping the Unicorn Pools! The unicorns are hiding inside magic bubbles to stay safe. Break the evil spells with your fairy light and set every unicorn free!",
+  "not_yet": "Zzzap! The evil magic is too strong there right now. Follow the clue!",
+  "steps": [
+    { "station": 2, "spot": "The Lily Pool",      "clue": "Where lily pads float and little frogs say hi, a unicorn hides from the stormy sky. Find the Lily Pool and break the spell!" },
+    { "station": 4, "spot": "The Starlight Pool", "clue": "Twinkle, twinkle, shining bright, a unicorn hides in the Starlight Pool tonight. Wave your wand to set it free!" },
+    { "station": 1, "spot": "The Moonlight Pool", "clue": "Silver and quiet, round as the moon, the Moonlight Pool needs rescuing soon! A little unicorn waits for you." },
+    { "station": 3, "spot": "The Sparkle Pool",   "clue": "Fizz and sparkle, bubble and pop! The Sparkle Pool's unicorn is scared of the storm on top. Zap the evil magic away!" },
+    { "station": 5, "spot": "The Crystal Spring", "clue": "Up to the top where the Crystal Spring flows, the biggest storm of evil magic glows. One giant zap to save them all!" }
+  ],
+  "ending": "BOOM! The evil magic is gone! The bubbles float away, a rainbow fills the sky, and all the unicorns prance and splash. The unicorns name you the Hero of the Unicorn Pools!"
+}

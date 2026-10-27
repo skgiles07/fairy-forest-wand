@@ -26,6 +26,18 @@
   @keyframes steam { from { transform: translateY(0) scale(.6); opacity: .8; } to { transform: translateY(-70px) scale(1.6); opacity: 0; } }
   #stage.scene-cave { background: linear-gradient(#080c22, #151f45 60%, #0a0f28); }
   #stage.scene-cave::before { background: linear-gradient(#3f2468, #2e1a48); }
+  #stage.scene-pools { background: linear-gradient(#14082a, #3a1658 60%, #1e1033); }
+  .ububble { transform-box: fill-box; transform-origin: center; animation: shimmer 1.8s ease-in-out infinite alternate;
+    transition: transform 1.2s ease-out; }
+  .zone.healed .ububble { transform: scale(1.6); }
+  .bolt { animation: flicker .7s steps(2, jump-none) infinite; }
+  .uni { transform-box: fill-box; transform-origin: bottom center; }
+  .zone.healed .uni { animation: prance .9s ease-in-out infinite alternate; }
+  #evil { transform-origin: 1300px 320px; transform: scale(calc(1 - var(--p) * .7)); transition: transform 2s, opacity 2s; }
+  #stage.done #evil { opacity: 0; transform: scale(0); }
+  @keyframes shimmer { from { opacity: .75; } to { opacity: 1; } }
+  @keyframes flicker { 0% { opacity: 1; } 100% { opacity: .15; } }
+  @keyframes prance { from { transform: translateY(0) rotate(0); } to { transform: translateY(-14px) rotate(-6deg); } }
   #goblin { transition: transform 1.3s cubic-bezier(.5, -0.3, .4, 1.3); }
   #goblin .gbody { animation: gbob .5s ease-in-out infinite alternate; }
   #goblin.tease .gbody { animation: gtease .25s ease-in-out 3 alternate; }
@@ -842,6 +854,190 @@
     </g>
   </svg>
 </template>
+<template id="scene-pools">
+  <svg id="scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="p-sky-dark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14082a"/><stop offset=".6" stop-color="#3a1658"/><stop offset="1" stop-color="#5a2470"/></linearGradient>
+      <linearGradient id="p-sky-lit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fd8ff"/><stop offset=".6" stop-color="#ffd6ec"/><stop offset="1" stop-color="#fff1c4"/></linearGradient>
+      <linearGradient id="p-terrace-dark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a4a8a"/><stop offset="1" stop-color="#2e2150"/></linearGradient>
+      <linearGradient id="p-terrace-lit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff8ff"/><stop offset="1" stop-color="#f0c8ea"/></linearGradient>
+      <linearGradient id="p-ground-dark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3f2a62"/><stop offset="1" stop-color="#1e1033"/></linearGradient>
+      <linearGradient id="p-ground-lit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a6e85c"/><stop offset=".5" stop-color="#5cc540"/><stop offset="1" stop-color="#2e8a30"/></linearGradient>
+      <radialGradient id="p-rim" cx=".5" cy=".3" r=".8"><stop offset="0" stop-color="#fff4fc"/><stop offset="1" stop-color="#c8a8e0"/></radialGradient>
+      <radialGradient id="p-water" cx=".45" cy=".4" r=".8"><stop offset="0" stop-color="#d8fcff"/><stop offset=".5" stop-color="#5fd8f5"/><stop offset="1" stop-color="#b48aff"/></radialGradient>
+      <radialGradient id="p-bubble" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#ffffff" stop-opacity=".05"/>
+        <stop offset=".75" stop-color="#bfe8ff" stop-opacity=".25"/><stop offset="1" stop-color="#ff9fe0" stop-opacity=".6"/></radialGradient>
+      <radialGradient id="p-glow"><stop offset="0" stop-color="#fff2a8" stop-opacity=".7"/>
+        <stop offset=".5" stop-color="#ffb8e0" stop-opacity=".3"/><stop offset="1" stop-color="#ffb8e0" stop-opacity="0"/></radialGradient>
+      <radialGradient id="p-sun"><stop offset="0" stop-color="#fffbe6"/><stop offset=".3" stop-color="#fff3b8" stop-opacity=".8"/><stop offset="1" stop-color="#fff3b8" stop-opacity="0"/></radialGradient>
+      <radialGradient id="p-orb" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#6a1a9a"/><stop offset=".7" stop-color="#2a0640"/><stop offset="1" stop-color="#ff4fd8"/></radialGradient>
+      <linearGradient id="u-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e6dcff"/></linearGradient>
+      <linearGradient id="u-horn" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#ffb84a"/><stop offset="1" stop-color="#fff2a8"/></linearGradient>
+      <filter id="p-blur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="4"/></filter>
+      <filter id="p-glowf" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <!-- unicorn, feet at origin, facing right -->
+      <g id="unicorn">
+        <path d="M-36 -40 Q-62 -42 -66 -18 Q-58 -30 -48 -26 Q-62 -12 -52 4 Q-46 -18 -34 -28Z" fill="#ff8fd0"/>
+        <path d="M-38 -36 Q-58 -28 -58 -6" stroke="#8fd8ff" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <g fill="url(#u-body)"><rect x="-28" y="-32" width="9" height="32" rx="4"/><rect x="-14" y="-30" width="9" height="30" rx="4"/>
+          <rect x="12" y="-30" width="9" height="30" rx="4"/><rect x="24" y="-32" width="9" height="32" rx="4"/></g>
+        <g fill="#ffc844"><rect x="-28" y="-6" width="9" height="6" rx="2"/><rect x="-14" y="-6" width="9" height="6" rx="2"/>
+          <rect x="12" y="-6" width="9" height="6" rx="2"/><rect x="24" y="-6" width="9" height="6" rx="2"/></g>
+        <ellipse cx="0" cy="-40" rx="38" ry="21" fill="url(#u-body)"/>
+        <path d="M18 -52 Q26 -78 40 -86 L56 -76 Q42 -64 36 -42Z" fill="url(#u-body)"/>
+        <ellipse cx="54" cy="-82" rx="19" ry="13" transform="rotate(20 54 -82)" fill="url(#u-body)"/>
+        <ellipse cx="67" cy="-75" rx="9" ry="7" fill="#ffe8f2"/>
+        <path d="M42 -94 L46 -108 L52 -94Z" fill="#fff"/>
+        <path d="M50 -94 L66 -126 L59 -91Z" fill="url(#u-horn)"/>
+        <path d="M40 -92 Q20 -88 18 -66 Q28 -76 34 -74 Q16 -64 18 -46 Q30 -64 40 -66Z" fill="#c88cff"/>
+        <path d="M44 -94 Q30 -94 26 -80" stroke="#ff8fd0" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M34 -80 Q22 -72 24 -56" stroke="#7fe8ff" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="55" cy="-84" rx="3.6" ry="4.6" fill="#3a1a4a"/><circle cx="56" cy="-86" r="1.4" fill="#fff"/>
+        <ellipse cx="62" cy="-77" rx="3.2" ry="2" fill="#ff9fc8" opacity=".6"/>
+      </g>
+    </defs>
+
+    <!-- SKY: evil-magic storm to pastel rainbow day -->
+    <rect width="1600" height="900" fill="url(#p-sky-dark)"/>
+    <g class="lit-bg">
+      <rect width="1600" height="900" fill="url(#p-sky-lit)"/>
+      <circle cx="300" cy="300" r="260" fill="url(#p-sun)"/>
+      <g fill="#fff" opacity=".9" filter="url(#p-blur)">
+        <ellipse cx="1200" cy="300" rx="110" ry="32"/><ellipse cx="1260" cy="282" rx="60" ry="30"/><ellipse cx="560" cy="330" rx="90" ry="26"/>
+      </g>
+    </g>
+    <g id="rainbow" fill="none" stroke-width="22" stroke-linecap="round" opacity="0">
+      <path d="M180 620 A620 330 0 0 1 1420 620" stroke="#ff6b8b"/><path d="M202 620 A598 310 0 0 1 1398 620" stroke="#ffb35c"/>
+      <path d="M224 620 A576 290 0 0 1 1376 620" stroke="#ffe66b"/><path d="M246 620 A554 270 0 0 1 1354 620" stroke="#7ee08a"/>
+      <path d="M268 620 A532 250 0 0 1 1332 620" stroke="#6bc8ff"/><path d="M290 620 A510 230 0 0 1 1310 620" stroke="#b18cff"/>
+    </g>
+    <!-- evil storm clouds -->
+    <g class="dark-bg" fill="#2b1a45">
+      <circle cx="120" cy="280" r="70"/><circle cx="240" cy="300" r="60"/><circle cx="380" cy="270" r="80"/><circle cx="520" cy="300" r="60"/>
+      <circle cx="660" cy="280" r="70"/><circle cx="960" cy="285" r="70"/><circle cx="1100" cy="300" r="60"/><circle cx="1240" cy="275" r="80"/>
+      <circle cx="1380" cy="300" r="60"/><circle cx="1500" cy="280" r="75"/><rect x="0" y="230" width="1600" height="80"/>
+    </g>
+    <!-- the evil magic orb: shrinks as unicorns are freed -->
+    <g id="evil">
+      <circle cx="1300" cy="320" r="70" fill="#ff4fd8" opacity=".25" filter="url(#p-blur)"/>
+      <circle cx="1300" cy="320" r="44" fill="url(#p-orb)"/>
+      <path d="M1278 300 Q1300 288 1318 304 Q1300 296 1286 312" stroke="#ff8fe8" stroke-width="3" fill="none"/>
+      <g fill="#ffe14a"><path d="M1282 322 L1296 316 L1294 326Z"/><path d="M1318 322 L1304 316 L1306 326Z"/></g>
+    </g>
+
+    <!-- terraces + ground -->
+    <path d="M0 560 C200 500 400 520 560 540 L1040 540 C1200 520 1400 500 1600 550 L1600 900 L0 900Z" fill="#2a1a48"/>
+    <path class="lit-bg" d="M0 560 C200 500 400 520 560 540 L1040 540 C1200 520 1400 500 1600 550 L1600 900 L0 900Z" fill="#b8e6a0"/>
+    <path d="M560 500 Q800 395 1040 500 L1040 560 L560 560Z" fill="url(#p-terrace-dark)"/>
+    <path class="lit-bg" d="M560 500 Q800 395 1040 500 L1040 560 L560 560Z" fill="url(#p-terrace-lit)"/>
+    <path d="M250 660 Q800 520 1350 660 L1350 700 L250 700Z" fill="url(#p-terrace-dark)"/>
+    <path class="lit-bg" d="M250 660 Q800 520 1350 660 L1350 700 L250 700Z" fill="url(#p-terrace-lit)"/>
+    <path d="M0 690 C300 670 560 680 800 676 C1060 672 1330 682 1600 670 L1600 900 L0 900Z" fill="url(#p-ground-dark)"/>
+    <path class="lit-bg" d="M0 690 C300 670 560 680 800 676 C1060 672 1330 682 1600 670 L1600 900 L0 900Z" fill="url(#p-ground-lit)"/>
+    <g class="lit-bg" stroke="#bff3ff" stroke-width="7" stroke-linecap="round" opacity=".9">
+      <line class="stream" x1="760" y1="470" x2="745" y2="600"/><line class="stream" x1="845" y1="470" x2="860" y2="600" style="animation-delay:-.4s"/>
+      <line class="stream" x1="600" y1="640" x2="590" y2="720" style="animation-delay:-.2s"/><line class="stream" x1="1010" y1="640" x2="1020" y2="720" style="animation-delay:-.6s"/>
+    </g>
+    <g class="lit-bg" filter="url(#p-blur)">
+      <ellipse cx="1420" cy="760" rx="160" ry="20" fill="#ff8fd0" opacity=".75"/><ellipse cx="520" cy="820" rx="140" ry="18" fill="#d58cff" opacity=".7"/>
+    </g>
+
+    <g class="zone" data-station="5">
+      <circle class="glow" cx="800" cy="420" r="133" fill="url(#p-glow)"/>
+      <ellipse cx="800" cy="459" rx="98" ry="27" fill="url(#p-rim)"/>
+      <g class="dark"><ellipse cx="800" cy="455" rx="83" ry="20" fill="#4a2a6a"/></g>
+      <g class="lit"><ellipse cx="800" cy="455" rx="83" ry="20" fill="url(#p-water)"/><g fill="#e8f6ff" filter="url(#p-glowf)"><path d="M770 452 L778 436 L786 452Z"/><path d="M820 450 L830 430 L840 450Z"/></g></g>
+      <g transform="translate(800 455) scale(0.7 0.7)"><use class="uni" href="#unicorn"/></g>
+      <g class="dark">
+        <circle class="ububble" cx="803" cy="413" r="57" fill="url(#p-bubble)" stroke="#ffd6f4" stroke-opacity=".7" stroke-width="2"/>
+        <ellipse cx="781" cy="387" rx="13" ry="7" fill="#fff" opacity=".7" transform="rotate(-30 781 387)"/>
+        <path class="bolt" d="M828 315 L785 331 L817 339 L797 356" stroke="#d27aff" stroke-width="6" fill="none" stroke-linejoin="round" filter="url(#p-glowf)"/>
+      </g>
+      <g class="lit" fill="#ff6fb5">
+        <path d="M842 371 c-6 -8 -18 -2 -12 8 l12 12 l12 -12 c6 -10 -6 -16 -12 -8z"/>
+        <path d="M751 385 c-4 -6 -13 -1 -9 6 l9 9 l9 -9 c4 -7 -5 -12 -9 -6z" fill="#c88cff"/>
+      </g>
+      <text class="label" x="800" y="524">Crystal Spring</text>
+    </g>
+    <g class="zone" data-station="3">
+      <circle class="glow" cx="470" cy="545" r="152" fill="url(#p-glow)"/>
+      <ellipse cx="470" cy="589" rx="112" ry="30" fill="url(#p-rim)"/>
+      <g class="dark"><ellipse cx="470" cy="585" rx="94" ry="22" fill="#4a2a6a"/></g>
+      <g class="lit"><ellipse cx="470" cy="585" rx="94" ry="22" fill="url(#p-water)"/><g fill="#fff" filter="url(#p-glowf)"><circle cx="440" cy="585" r="3"/><circle cx="490" cy="580" r="3"/><circle cx="515" cy="590" r="2.5"/></g></g>
+      <g transform="translate(470 585) scale(0.8 0.8)"><use class="uni" href="#unicorn"/></g>
+      <g class="dark">
+        <circle class="ububble" cx="473" cy="537" r="66" fill="url(#p-bubble)" stroke="#ffd6f4" stroke-opacity=".7" stroke-width="2"/>
+        <ellipse cx="448" cy="507" rx="14" ry="8" fill="#fff" opacity=".7" transform="rotate(-30 448 507)"/>
+        <path class="bolt" d="M498 315 L455 378 L487 409 L467 471" stroke="#d27aff" stroke-width="6" fill="none" stroke-linejoin="round" filter="url(#p-glowf)"/>
+      </g>
+      <g class="lit" fill="#ff6fb5">
+        <path d="M518 489 c-6 -8 -18 -2 -12 8 l12 12 l12 -12 c6 -10 -6 -16 -12 -8z"/>
+        <path d="M414 505 c-4 -6 -13 -1 -9 6 l9 9 l9 -9 c4 -7 -5 -12 -9 -6z" fill="#c88cff"/>
+      </g>
+      <text class="label" x="470" y="657">Sparkle Pool</text>
+    </g>
+    <g class="zone" data-station="4">
+      <circle class="glow" cx="1130" cy="545" r="152" fill="url(#p-glow)"/>
+      <ellipse cx="1130" cy="589" rx="112" ry="30" fill="url(#p-rim)"/>
+      <g class="dark"><ellipse cx="1130" cy="585" rx="94" ry="22" fill="#4a2a6a"/></g>
+      <g class="lit"><ellipse cx="1130" cy="585" rx="94" ry="22" fill="url(#p-water)"/><g fill="#fff6a8" filter="url(#p-glowf)"><circle cx="1090" cy="585" r="3"/><circle cx="1150" cy="590" r="3"/><circle cx="1175" cy="580" r="2.5"/></g></g>
+      <g transform="translate(1130 585) scale(-0.8 0.8)"><use class="uni" href="#unicorn"/></g>
+      <g class="dark">
+        <circle class="ububble" cx="1127" cy="537" r="66" fill="url(#p-bubble)" stroke="#ffd6f4" stroke-opacity=".7" stroke-width="2"/>
+        <ellipse cx="1102" cy="507" rx="14" ry="8" fill="#fff" opacity=".7" transform="rotate(-30 1102 507)"/>
+        <path class="bolt" d="M1152 315 L1109 378 L1141 409 L1121 471" stroke="#d27aff" stroke-width="6" fill="none" stroke-linejoin="round" filter="url(#p-glowf)"/>
+      </g>
+      <g class="lit" fill="#ff6fb5">
+        <path d="M1178 489 c-6 -8 -18 -2 -12 8 l12 12 l12 -12 c6 -10 -6 -16 -12 -8z"/>
+        <path d="M1074 505 c-4 -6 -13 -1 -9 6 l9 9 l9 -9 c4 -7 -5 -12 -9 -6z" fill="#c88cff"/>
+      </g>
+      <text class="label" x="1130" y="657">Starlight Pool</text>
+    </g>
+    <g class="zone" data-station="1">
+      <circle class="glow" cx="230" cy="720" r="190" fill="url(#p-glow)"/>
+      <ellipse cx="230" cy="774" rx="140" ry="38" fill="url(#p-rim)"/>
+      <g class="dark"><ellipse cx="230" cy="770" rx="118" ry="28" fill="#4a2a6a"/></g>
+      <g class="lit"><ellipse cx="230" cy="770" rx="118" ry="28" fill="url(#p-water)"/><path d="M230 762 a14 9 0 1 0 22 6 a11 7 0 1 1 -22 -6z" fill="#fff" opacity=".85"/></g>
+      <g transform="translate(230 770) scale(1 1)"><use class="uni" href="#unicorn"/></g>
+      <g class="dark">
+        <circle class="ububble" cx="234" cy="710" r="82" fill="url(#p-bubble)" stroke="#ffd6f4" stroke-opacity=".7" stroke-width="2"/>
+        <ellipse cx="203" cy="673" rx="18" ry="10" fill="#fff" opacity=".7" transform="rotate(-30 203 673)"/>
+        <path class="bolt" d="M259 315 L216 440 L248 503 L228 628" stroke="#d27aff" stroke-width="6" fill="none" stroke-linejoin="round" filter="url(#p-glowf)"/>
+      </g>
+      <g class="lit" fill="#ff6fb5">
+        <path d="M290 650 c-6 -8 -18 -2 -12 8 l12 12 l12 -12 c6 -10 -6 -16 -12 -8z"/>
+        <path d="M160 670 c-4 -6 -13 -1 -9 6 l9 9 l9 -9 c4 -7 -5 -12 -9 -6z" fill="#c88cff"/>
+      </g>
+      <text class="label" x="230" y="850">Moonlight Pool</text>
+    </g>
+    <g class="zone" data-station="2">
+      <circle class="glow" cx="830" cy="730" r="190" fill="url(#p-glow)"/>
+      <ellipse cx="830" cy="784" rx="140" ry="38" fill="url(#p-rim)"/>
+      <g class="dark"><ellipse cx="830" cy="780" rx="118" ry="28" fill="#4a2a6a"/></g>
+      <g class="lit"><ellipse cx="830" cy="780" rx="118" ry="28" fill="url(#p-water)"/><g fill="#5cc540"><ellipse cx="770" cy="785" rx="20" ry="7"/><ellipse cx="900" cy="778" rx="18" ry="6"/></g><circle cx="900" cy="774" r="5" fill="#ff8fd0"/></g>
+      <g transform="translate(830 780) scale(-1 1)"><use class="uni" href="#unicorn"/></g>
+      <g class="dark">
+        <circle class="ububble" cx="826" cy="720" r="82" fill="url(#p-bubble)" stroke="#ffd6f4" stroke-opacity=".7" stroke-width="2"/>
+        <ellipse cx="795" cy="683" rx="18" ry="10" fill="#fff" opacity=".7" transform="rotate(-30 795 683)"/>
+        <path class="bolt" d="M851 315 L808 444 L840 509 L820 638" stroke="#d27aff" stroke-width="6" fill="none" stroke-linejoin="round" filter="url(#p-glowf)"/>
+      </g>
+      <g class="lit" fill="#ff6fb5">
+        <path d="M890 660 c-6 -8 -18 -2 -12 8 l12 12 l12 -12 c6 -10 -6 -16 -12 -8z"/>
+        <path d="M760 680 c-4 -6 -13 -1 -9 6 l9 9 l9 -9 c4 -7 -5 -12 -9 -6z" fill="#c88cff"/>
+      </g>
+      <text class="label" x="830" y="860">Lily Pool</text>
+    </g>
+
+    <g class="lit-bg" fill="#fff3a8" filter="url(#p-glowf)">
+      <circle class="mote" cx="420" cy="420" r="3.5"/><circle class="mote" cx="700" cy="560" r="3"/><circle class="mote" cx="1010" cy="420" r="3.5"/>
+      <circle class="mote" cx="1150" cy="480" r="3"/><circle class="mote" cx="1420" cy="440" r="3.5"/><circle class="mote" cx="90" cy="560" r="3"/>
+    </g>
+    <g class="dark-bg" fill="#d27aff" filter="url(#p-glowf)">
+      <circle class="mote" cx="380" cy="420" r="3"/><circle class="mote" cx="980" cy="420" r="3"/><circle class="mote" cx="1450" cy="460" r="3"/>
+    </g>
+  </svg>
+</template>
 
 <script>
   const $ = s => document.querySelector(s);
@@ -903,6 +1099,7 @@
     stage.classList.toggle('scene-dragon', st.scene === 'dragon');
     stage.classList.toggle('scene-mountain', st.scene === 'mountain');
     stage.classList.toggle('scene-cave', st.scene === 'cave');
+    stage.classList.toggle('scene-pools', st.scene === 'pools');
     const gob = document.getElementById('goblin');
     if (gob) {  // goblin waits at the next spot; caught at the last one
       const z = document.querySelector(`.zone[data-station="${st.done ? st.stations.at(-1) : st.stations[st.healed.length]}"]`);
