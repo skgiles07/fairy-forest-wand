@@ -95,7 +95,7 @@ One part per station, nothing to wire. ~$29 each (RobotShop $28.90 US),
   (IRremoteESP8266 decodes MagiQuest). Same sketch logic as Option B.
 - Buy 1 first, test the wand, then 4 more.
 
-## Status (2026-10-26)
+## Status (2026-10-26, evening)
 
 - Done: CPX firmware, wand test, decoder + self-check, clue cards, TV hub
   (verified end to end in browser with keyboard simulator). Repo on GitHub
@@ -105,6 +105,24 @@ One part per station, nothing to wire. ~$29 each (RobotShop $28.90 US),
 - Not verified: decoder timing against the real wand; 38 kHz receiver hearing
   the 36 kHz wand.
 
+### Levels (TV hub, 2026-10-26)
+
+All play on the same 5 physical stations; each adventure JSON picks a scene
+template in `hub/static/index.html` (`"scene"`), order, clues, cheer text.
+
+| File | Scene | Order |
+|---|---|---|
+| `fairy-forest.json` | forest (cursed violet to sunlit meadow) | 1 2 3 4 5 |
+| `dragon.json` | forest + retreating pink dragon | 4 1 3 2 5 |
+| `mountain.json` | blizzard night to sunrise, aurora finale | 1 2 3 4 5 |
+| `goblin.json` | Crystal Cave interior, goblin waits at next spot | 1 3 2 5 4 |
+| `unicorns.json` | unicorn pools, bubbles + evil-magic lightning | 2 4 1 3 5 |
+
+Run one with `python3 hub/server.py hub/adventures/<file>`. TV labels are
+story names; clue cards point to real hiding spots and need writing per level.
+Open-page gotcha: a tab opened before a scene change keeps the old page,
+refresh it.
+
 ## Next steps
 
 1. Get a micro-USB data cable. Plug the board in and check for a
@@ -113,6 +131,8 @@ One part per station, nothing to wire. ~$29 each (RobotShop $28.90 US),
    paste serial output for a decoder timing fix. Nothing = M5Stack fallback.
 3. Decide: CPX standalone stations + printed cards, or ESP32 stations + TV hub.
 4. Fill in hiding spots in `cards/clues.md` with Liza.
+5. Write clue cards for the dragon, mountain, goblin and unicorn levels.
+6. Optional: chain levels (mountain finale goes straight into goblin) without restarting the hub.
 
 ## Parked (not built)
 
