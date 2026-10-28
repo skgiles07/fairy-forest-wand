@@ -1,6 +1,6 @@
 # /goal — Liza's Magi Quest campaign build (overnight)
 
-Use this prompt in a new Codex context, high effort, from the repo root:
+Use this prompt in a new Claude (Fable 5.1) or Codex context, high effort, from the repo root:
 
 ```text
 Goal: Build the five-chapter campaign described in PLAN-CAMPAIGN.md for the fairy-forest-wand hub: step modes (ordered, collect, puzzle, charge, boss), a Campaign wrapper with realm map and saved progress, the TV page additions, five chapter JSONs telling Liza's story, printable station sleeves and clue cards, and docs. Verify with hub/test_server.py and the self-driving browser harness hub/verify.py. Commit on main. Do not push.
