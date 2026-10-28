@@ -10,10 +10,12 @@ Rebuild the Great Wolf Lodge MagiQuest wand game at home with Liza's own
 wand. Long term: an engine where she invents adventures and they become data
 files. Short term: one story first.
 
-**Story 1: Fairy Forest Healing.** Dark energy has drained the forest. Liza's
-wand carries fairy light. She visits 5 forest spots in order and waves the
-wand. Each station glows green and chimes (that patch is healed). Last station:
-rainbow + fanfare, forest healed.
+**Story 1 (standalone stations): Fairy Forest Healing.** Five spots in order,
+each station glows green and chimes; last station rainbow + fanfare.
+
+**Campaign (TV hub): Liza's Magi Quest.** Five chapters from Liza's own
+outline (`docs/story/liza-outline.md`), plan in `docs/GAME-PLAN.md` and
+`PLAN-CAMPAIGN.md`, built 2026-10-27.
 
 ## Key facts
 
@@ -102,33 +104,37 @@ One part per station, nothing to wire. ~$29 each (RobotShop $28.90 US),
 - Buy 1 first, test the wand, then 4 more. Order from Amazon (M5Stack
   Official Store, $31.90, cart checked 2026-10-27).
 
-## Status (2026-10-26, evening)
+## Status (2026-10-28)
 
-- Done: CPX firmware, wand test, decoder + self-check, clue cards, TV hub
-  (verified end to end in browser with keyboard simulator). Repo on GitHub
-  `skgiles07/fairy-forest-wand`.
-- In hand: 1 Adafruit board. Needs a **micro-USB data cable** (USB-C end for
-  the Mac) to plug in.
-- Not verified: decoder timing against the real wand; 38 kHz receiver hearing
-  the 36 kHz wand.
+- Done: CPX firmware, wand decoder + self-check, M5StickS3 station sketch
+  (not yet compiled on hardware), TV hub, and **Liza's Magi Quest campaign**
+  (built overnight 2026-10-27 per `PLAN-CAMPAIGN.md` + `wargames/01`):
+  five step modes, campaign + realm map + saved progress, five chapters in
+  Liza's story, Frost Queen + Good Witch + castle intro, printable sleeves,
+  generated clue cards, spellbook, item cards. `hub/test_server.py` ok;
+  `hub/verify.py` (headless-Chrome self-drive) `verify ok, skipped: []`.
+- In hand: 1 Adafruit board (needs a micro-USB data cable). M5StickS3
+  arrives Thu 10/29.
+- Not verified: decoder timing against the real wand; 38 kHz receiver
+  hearing the 36 kHz wand; StickS3 IR window position (sleeves carry a
+  placeholder); 48 x 24 x 14 mm sleeve size.
 
-### Levels (TV hub, 2026-10-26)
+### Chapters (TV hub, 2026-10-28)
 
-All play on the same 5 physical stations; each adventure JSON picks a scene
-template in `hub/static/index.html` (`"scene"`), order, clues, cheer text.
+All play on the same 5 physical stations (crystal cluster, magic mushroom,
+treasure chest, lantern, fountain), relabelled per chapter on the TV.
 
-| File | Scene | Order |
+| File | Scene | Mode / order |
 |---|---|---|
-| `fairy-forest.json` | forest (cursed violet to sunlit meadow) | 1 2 3 4 5 |
-| `dragon.json` | forest + retreating pink dragon | 4 1 3 2 5 |
-| `mountain.json` | blizzard night to sunrise, aurora finale | 1 2 3 4 5 |
-| `goblin.json` | Crystal Cave interior, goblin waits at next spot | 1 3 2 5 4 |
-| `unicorns.json` | unicorn pools, bubbles + evil-magic lightning | 2 4 1 3 5 |
+| `01-fairy-pools.json` | forest | ordered 1 2 3 4 5 |
+| `02-crystal-caves.json` | cave | collect {1 2 3 4} then 5 |
+| `03-frozen-mountain.json` | mountain | 1 2, puzzle 3 1 4, 5 |
+| `04-unicorn-forest.json` | pools | 2 4 1 3, charge 5 x5 |
+| `05-fire-mountain.json` | forest + dragon | 4 1 3 2, boss 5 hp 8 / 90 s |
 
-Run one with `python3 hub/server.py hub/adventures/<file>`. TV labels are
-story names; clue cards point to real hiding spots and need writing per level.
-Open-page gotcha: a tab opened before a scene change keeps the old page,
-refresh it.
+`hub/adventures/campaign.json` lists them; `python3 hub/server.py` loads
+it. Progress in `hub/state/progress.json` (gitignored). Between chapters:
+realm map, 20 s or any wave.
 
 ## Next steps
 
@@ -136,16 +142,22 @@ refresh it.
    `CIRCUITPY` or `CPLAYBOOT` drive.
 2. Run the wand test (README Step 1). Green flash = order 4 more. Blue flash =
    paste serial output for a decoder timing fix. Nothing = M5Stack fallback.
-3. Decide: CPX standalone stations + printed cards, or ESP32 stations + TV hub.
-4. Fill in hiding spots in `cards/clues.md` with Liza.
-5. Write clue cards for the dragon, mountain, goblin and unicorn levels.
-6. Optional: chain levels (mountain finale goes straight into goblin) without restarting the hub.
+3. StickS3 arrives 10/29: flash `station.ino`, find the IR receiver edge
+   (phone camera + TV remote), fix the IR window in `cards/cutouts/*.svg`
+   and confirm the 48 x 24 x 14 mm sleeve.
+4. Read the five chapters aloud with Liza; confirm the RESOLVED-pending-
+   confirmation choices in `wargames/LEDGER.md` (spot names, chapter 5's
+   "dragon smoke made everything sick" tie-in, intro line).
+5. Print `cards/chapters/*.md`, fill in hiding spots, print sleeves and
+   item cards, family playtest chapter 1, then the campaign.
 
 ## Parked (not built)
 
 - Breadboard ESP32 (Option B) station sketch; M5StickS3 sketch covers WiFi stations
 - Multiple wands / scoring (wand IDs already logged)
 - Stations that speak clues (MP3 module + SD card)
-- Prettier hub art (current art is flat SVG)
 - Adventure generator / Liza-authored stories (format already exists:
-  new JSON in `hub/adventures/`)
+  new JSON in `hub/adventures/` + a line in `campaign.json`)
+- Multiple wands / scoring, stations that speak clues, phone companion
+  app, NFC runes (GAME-PLAN section 8)
+- Chapter 0 castle scene as a full scene (today: a static intro card)

@@ -146,6 +146,29 @@ Everything in sections 3-5 runs with zero hardware (keyboard simulator +
 | E | cutout SVGs + cards generator + spellbook | SVGs open in Chrome; `cards.py` output matches JSON spot names |
 | F | README + PLAN updated | next-session pickup reads clean |
 
+### New since 2026-10-27 (shipped overnight, one commit per wargame move)
+
+- A: `Game` step modes `ordered | collect | puzzle | charge | boss`, schema
+  validation, `/state` schema per `PLAN-CAMPAIGN.md` section 3 (`rev`, `gen`,
+  `targets`, `event_station`, `last_step`, per-mode counters). `/hit` still
+  answers only `heal | wrong | done`.
+- B: `Campaign` (transition table section 4), server-owned map deadline,
+  `progress.json` (versioned, fingerprinted, atomic), `/next`, `/campaign`,
+  `/log`, `--debug` + `/debug/expire`, `--state-dir`. Page: `rev` diffing
+  with gen-guarded timers, realm map scene, per-mode HUD, castle intro card,
+  reward frame before the map, save badge, `?voice=1`, error reporting,
+  `?autoplay=1` self-drive. `hub/verify.py` runs it in headless Chrome.
+- C: `01-fairy-pools` .. `05-fire-mountain.json`; old five files removed.
+- D: Frost Queen (mountain), Good Witch (pools bubble), intro card;
+  `docs/screenshots/{map,frost-queen,good-witch}.png` canaries.
+- E: `cards/cutouts/station-1..5.svg`, `hub/cards.py --check`,
+  `cards/chapters/*.md`, `cards/spellbook.md`, `cards/items/*.svg`.
+- F: README, PLAN.md, this block.
+
+Still open for Scott (hardware): IR window position, sleeve size, wand
+frequency test; and a read-aloud pass on the story choices logged in
+`wargames/LEDGER.md`.
+
 ## 8. Out of scope (parked)
 
 Multiple wands / scoring, stations that speak, a story editor for Liza (the

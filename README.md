@@ -3,7 +3,9 @@
 Decisions, status, and next steps: see `PLAN.md`.
 
 Home MagiQuest-style scavenger hunt. Liza's Great Wolf Lodge wand, five
-light-and-sound stations, one story: the fairies healing the forest.
+wand stations hidden in paper objects, a TV hub, and one five-chapter
+story: Liza's Magi Quest (fairy pools, crystal caves, frozen mountain,
+unicorn forest, fire mountain).
 
 No soldering, no wiring. Each station is one board in a jar.
 
@@ -55,9 +57,25 @@ rainbow finale.
 Behavior: purple breathing while idle; wand hit = green sparkle + chime,
 stays green 30 s, resets itself. Game replays with no button presses.
 
-## Step 3: clue cards
+## Step 3: clue cards and sleeves
 
-`cards/clues.md`. Fill in hiding spots with Liza, print, cut.
+Generated from the same JSON the TV reads, so cards and screen never
+disagree:
+
+```
+python3 hub/cards.py hub/adventures/campaign.json --check   # writes cards/chapters/*.md, exit 0 = cards match the JSON
+```
+
+- `cards/chapters/NN-<land>.md`: one file per chapter: opening, one card
+  per step (collect / puzzle steps list all their stations), ending. Each
+  card names the physical object (crystal cluster, magic mushroom, treasure
+  chest, lantern, fountain) and the chapter's spot name. Fill in the hiding
+  spot line with Liza, print, cut.
+- `cards/cutouts/station-1..5.svg`: letter-size face panel + 1:1 fold-around
+  sleeve for the M5StickS3 (48 x 24 x 14 mm placeholder, screen and IR
+  windows marked; move the IR window once the unit arrives).
+- `cards/items/*.svg`: the four Crystal Caves clue items (3 x 4 in).
+- `cards/spellbook.md`: five sticker pages, one per healed land.
 
 ## Dev check
 
@@ -84,36 +102,67 @@ game still works. Serial Monitor at 115200 shows wand IDs; if it prints
 `undecoded frame` with pulse pairs, paste that for a decoder timing fix.
 Keep the wand > 30 cm from the board; too close and the receiver saturates.
 
-## TV hub (web app)
+## TV hub (web app): Liza's Magi Quest
 
 ```
-python3 hub/server.py
+python3 hub/server.py                      # loads hub/adventures/campaign.json on port 8000
+python3 hub/server.py --port 8080          # other port
+python3 hub/server.py hub/adventures/03-frozen-mountain.json   # one chapter on its own
 ```
 
 Then on the TV: Fire Stick / Chromecast browser (or cast a tab) to
 `http://<mac-ip>:8000/` (Mac IP: System Settings > Wi-Fi > Details).
-Tap once to turn sound on. Forest map lights up zone by zone, fairy reads
-the clue, rainbow finale. Hub enforces station order; wrong station shakes
-the map and says "not yet."
+Tap once to turn sound on. Add `?voice=1` for spoken clues (Web Speech).
 
-Test tonight with no hardware: keys `1`-`5` fire fake station hits, `R`
-resets.
+One campaign, five chapters, one realm map between them, progress saved in
+`hub/state/progress.json` (gitignored; a chapter per evening works). Castle
+intro card: any wave starts chapter 1. After a chapter the map shows for
+20 s (or until a wave / `N`), then the next chapter loads. Finish all five
+and the realm is healed.
 
-Levels: `fairy-forest.json` (default), `dragon.json` (chase the dragon off the
-throne), `mountain.json` (thaw the Frozen Mountain, own scene):
-`python3 hub/server.py hub/adventures/mountain.json`, `goblin.json` (chase the
-goblin through the Crystal Cave, sequel to the mountain), `unicorns.json`
-(break the evil magic and free the unicorns from their bubbles). Scene art lives in
-`<template id="scene-...">` blocks in `hub/static/index.html`; an adventure picks
-one with `"scene"`.
+| # | Chapter | Scene | Steps |
+|---|---|---|---|
+| 1 | The Fairy Pools | forest | ordered 1 2 3 4 5 |
+| 2 | The Crystal Caves | cave | **collect** clues at 1 2 3 4 (any order), then goblin at 5 |
+| 3 | The Frozen Mountain | mountain | ordered 1 2, **puzzle** 3 1 4 (Frost Queen's riddle), ordered 5 |
+| 4 | The Unicorn Forest | pools | ordered 2 4 1 3, **charge** 5 waves at the Big Bubble (Good Witch) |
+| 5 | Fire Mountain | forest + dragon | ordered 4 1 3 2, **boss** dragon at 5, 8 leaves, 90 s window |
 
-New story = new JSON in `hub/adventures/` (title, opening, 5 steps with
-station/spot/clue, ending). Run `python3 hub/server.py hub/adventures/x.json`.
+Step modes (`"mode"` on a step in the chapter JSON):
 
-Stations report hits with `POST /hit {"station": N, "wand_id": "..."}`.
-Hub needs WiFi stations, so this path = ESP32 build, not CPX.
+| mode | fields | plays |
+|---|---|---|
+| `ordered` (default) | `station` | wave at that station next |
+| `collect` | `stations: [..]`, `spots: {station: name}` | all of them, any order; rune wheel fills |
+| `puzzle` | `pattern: [..]`, `spots` | the pattern in order; a wrong wave starts it over |
+| `charge` | `station`, `hits` | N waves at one station; charge ring |
+| `boss` | `station`, `hp`, `window_s` | one leaf per wave; no wave for `window_s` = fire, +2 leaves (never full, can't be lost) |
 
-Dev check: `python3 hub/test_server.py`.
+Keys: `1`-`5` fake station hits, `r` restarts the chapter, `N` / Enter
+leaves the map early, `R` (shift) wipes progress and returns to the castle.
+
+Stations only ever see three answers to `POST /hit {"station": N,
+"wand_id": ".."}`: `heal`, `wrong`, `done`. Everything richer (mode,
+targets, items, pattern, charge, leaves, map countdown, saved-progress
+errors) is in `GET /state`. Other endpoints: `POST /reset`,
+`POST /reset?campaign=1`, `POST /next {"gen": n}`, `GET /campaign`,
+`POST /log`. `--state-dir <dir>` (or `HUB_STATE_DIR`) moves the progress
+file; `--debug` adds `POST /debug/expire` for tests.
+
+Scene art lives in `<template id="scene-...">` blocks in
+`hub/static/index.html`; a chapter picks one with `"scene"`. New story =
+new JSON in `hub/adventures/` listed in `campaign.json`.
+
+Dev checks (no hardware, no server of your own):
+
+```
+python3 hub/test_server.py     # engine: every mode, campaign transitions, progress, each chapter winnable -> ok
+python3 hub/verify.py          # self-driving browser walkthrough in headless Chrome -> verify ok, skipped: []
+python3 hub/verify.py --shot docs/screenshots/map.png --stop-at map     # visual canary (map | puzzle | charge_done)
+```
+
+`verify.py` starts its own server on a free port with a temp state dir, so
+family progress is never touched.
 
 ## Later (not built)
 

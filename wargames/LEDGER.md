@@ -50,6 +50,33 @@ Moves and gates:
   added `stations` (current step) to the schema. Gate: `verify ok`,
   `skipped: [witch]`. Old five adventures `git rm`'d after the gate.
 
+- M6 `efe3922` Frost Queen, Good Witch, reward frame. Two self-drive
+  findings: (a) the chapter ends on the charge step and the server is on
+  the map instantly, so the witch was never on screen; applied the
+  wargame's fanfare-before-map fork (page holds the chapter scene 6 s as a
+  reward frame, then mounts the map); (b) CSS opacity transitions do not
+  advance under headless virtual time, so the witch assertion checks the
+  class toggle + popped bubble, not computed opacity. Gate: `verify ok`,
+  `skipped: []`. Three PNG canaries written.
+- M7 `5ab6ca4` printables. `cards.py --check` exit 0 (26 station cards);
+  mutation test: a wrong spot and an omitted station both fail the check.
+  xmllint clean on 9 SVGs. `clues.md` removed after `01-fairy-pools.md`
+  existed.
+- M8 docs (this commit). Final: status clean, `test_server.py` ok,
+  `verify.py` ok, nothing pushed.
+
+Deviations from the wargame (PLAN-CAMPAIGN.md wins; none conflicted):
+- `Campaign` class landed in the M2 commit instead of M4 (same code, one
+  move earlier) so M3 could cover the transition table in one pass.
+- Castle intro card shipped in M4 (the self-drive needed the intro phase
+  on screen); M6 only verified it.
+- The self-drive posts `/hit` / `/next` / `/reset` directly and asserts the
+  JSON result (PLAN-CAMPAIGN section 7 action protocol); a dispatched
+  keyboard event cannot await the POST.
+- `/state` gained `stations` (current step), `chapter_scene`,
+  `chapter_title`, `campaign_title`, `chapters_total`, `lands`, `next_land`,
+  `intro` beyond the section 3 list; all additive.
+
 RESOLVED-pending-confirmation (story choices the outline left silent):
 - Spot names per chapter are new (e.g. Old Oak Pool, Mushroom Spring,
   Cave Pool, Waterfall Pool, Fairy Spring; Pine Grove, Warm Springs,
