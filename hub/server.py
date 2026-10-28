@@ -448,7 +448,7 @@ class Campaign:
                 "campaign_title": self.title, "intro": self.intro,
                 "title": self.title if on_map else st["title"],
                 "chapter_title": st["title"],
-                "scene": "map" if on_map else st["scene"],
+                "chapter_scene": st["scene"], "scene": "map" if on_map else st["scene"],
                 "lands": lands, "next_land": next_land,
                 "map_deadline_s": (max(0.0, round(self.map_deadline - self.now(), 2))
                                    if self.phase == "map" else None),

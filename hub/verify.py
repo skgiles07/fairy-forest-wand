@@ -39,6 +39,15 @@ def main(argv):
     keep = "--keep" in args
     if keep:
         args.remove("--keep")
+    shot = stop_at = None
+    for flag in ("--shot", "--stop-at"):
+        if flag in args:
+            i = args.index(flag)
+            if flag == "--shot":
+                shot = args[i + 1]
+            else:
+                stop_at = args[i + 1]
+            del args[i:i + 2]
     budget = 180000
     if "--budget" in args:
         i = args.index("--budget")
@@ -80,7 +89,12 @@ def main(argv):
         cmd = [chrome, "--headless=new", "--disable-gpu", "--no-first-run", "--no-default-browser-check",
                "--autoplay-policy=no-user-gesture-required", "--mute-audio",
                f"--user-data-dir={tmp / 'chrome'}", f"--virtual-time-budget={budget}",
-               "--window-size=1920,1080", "--dump-dom", f"{url}/?autoplay=1"]
+               "--window-size=1920,1080", "--hide-scrollbars"]
+        if shot:
+            Path(shot).parent.mkdir(parents=True, exist_ok=True)
+            cmd += [f"--screenshot={Path(shot).resolve()}", f"{url}/?autoplay=1&stop_at={stop_at or 'map'}"]
+        else:
+            cmd += ["--dump-dom", f"{url}/?autoplay=1"]
         with open(dom, "w") as out, open(tmp / "chrome.log", "w") as cerr:
             try:
                 subprocess.run(cmd, stdout=out, stderr=cerr, timeout=max(120, budget // 500))
@@ -117,6 +131,8 @@ def main(argv):
             rc = 1
         else:
             print(passes[0])
+            if shot:
+                print(f"screenshot: {shot} ({Path(shot).stat().st_size if Path(shot).exists() else 0} bytes)")
             p = state_dir / "progress.json"
             if p.exists():
                 d = json.loads(p.read_text())
