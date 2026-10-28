@@ -91,9 +91,16 @@ One part per station, nothing to wire. ~$29 each (RobotShop $28.90 US),
   power bank.
 - Screen is the light: purple idle, green healed, rainbow finale, can show
   text.
-- Arduino with M5Unified + M5PM1 libraries; IR receive via ESP32 RMT
-  (IRremoteESP8266 decodes MagiQuest). Same sketch logic as Option B.
-- Buy 1 first, test the wand, then 4 more.
+- **Sketch written** (2026-10-27): `firmware/m5sticks3/station.ino` +
+  `magiquest.h` (C++ port of the Python decoder, host test
+  `test_magiquest.cpp`). IR RX on G42 via ESP-IDF RMT (M5 docs: GPIO
+  polling does not work on this board; IRremoteESP8266 not used). Speaker
+  amp must be off while receiving, so sound is bracketed with
+  `Speaker.begin()/end()`. EXT 5V output enabled for the receiver. POSTs
+  `/hit` to the hub, falls back to local heal if the hub is unreachable.
+  Button A = fake hit. Not yet compiled against real hardware.
+- Buy 1 first, test the wand, then 4 more. Order from Amazon (M5Stack
+  Official Store, $31.90, cart checked 2026-10-27).
 
 ## Status (2026-10-26, evening)
 
@@ -136,7 +143,7 @@ refresh it.
 
 ## Parked (not built)
 
-- ESP32 WiFi station sketch
+- Breadboard ESP32 (Option B) station sketch; M5StickS3 sketch covers WiFi stations
 - Multiple wands / scoring (wand IDs already logged)
 - Stations that speak clues (MP3 module + SD card)
 - Prettier hub art (current art is flat SVG)

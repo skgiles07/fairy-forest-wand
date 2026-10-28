@@ -62,6 +62,27 @@ stays green 30 s, resets itself. Game replays with no button presses.
 ## Dev check
 
 `python3 firmware/test_magiquest.py` prints `ok` if the decoder is sane.
+C++ port (used by the M5StickS3 sketch):
+`g++ -std=c++11 -o /tmp/mq firmware/m5sticks3/test_magiquest.cpp && /tmp/mq`.
+
+## WiFi stations (M5StickS3, for the TV hub)
+
+`firmware/m5sticks3/station.ino`. One board per station, nothing to wire.
+
+1. Arduino IDE: add `https://static-cdn.m5stack.com/resource/arduino/package_m5stack_index.json`
+   to Board Manager URLs, install **M5Stack** boards (>= 3.2.5) and the
+   **M5Unified** library (>= 0.2.12). Board: `M5Stack > M5StickS3`.
+2. Edit the config block at the top of `station.ino`: `STATION` (1-5),
+   `WIFI_SSID`, `WIFI_PASS`, `HUB_URL` (the Mac's IP, port 8000).
+3. Plug in over USB-C, Upload. Repeat per board, changing only `STATION`.
+4. Run the hub (`python3 hub/server.py ...`). Screen breathes purple and
+   says `waiting` once WiFi is up (`no wifi` otherwise).
+5. Button A fakes a wand hit for testing without the wand.
+
+Hub offline: a hit heals locally (rainbow on station 5), so the printed-card
+game still works. Serial Monitor at 115200 shows wand IDs; if it prints
+`undecoded frame` with pulse pairs, paste that for a decoder timing fix.
+Keep the wand > 30 cm from the board; too close and the receiver saturates.
 
 ## TV hub (web app)
 
@@ -96,5 +117,5 @@ Dev check: `python3 hub/test_server.py`.
 
 ## Later (not built)
 
-ESP32 WiFi station sketch (written when parts are ordered), multiple wands
-(IDs already logged), stations that speak clues.
+Breadboard ESP32 station sketch (M5StickS3 sketch exists instead), multiple
+wands (IDs already logged), stations that speak clues.
