@@ -1,0 +1,17 @@
+{
+  "title": "The Frozen Mountain",
+  "scene": "mountain",
+  "mentor": "Frost Queen",
+  "cheer": "{spot}! Up you go!",
+  "opening": "We have to climb the Frozen Mountain. The Frost Queen lives at the top. She will help us, but first we must solve her puzzle.",
+  "not_yet": "Brrr! Not there. The snow is too deep. Follow the clue!",
+  "steps": [
+    { "station": 1, "spot": "The Pine Grove",    "clue": "Start at the Pine Grove. The trees are buried in snow. Wave your wand to shake it off, then climb!" },
+    { "station": 2, "spot": "The Warm Springs",  "clue": "Next, the Warm Springs. Wave your wand and the steam will warm you up. Keep climbing!" },
+    { "mode": "puzzle", "pattern": [3, 1, 4], "spot": "The Frost Queen's Riddle",
+      "spots": { "3": "The Frost Bridge", "1": "The Pine Grove", "4": "The Summit" },
+      "clue": "The Frost Queen appears! Her riddle: Bridge, then Grove, then Summit. Wave your wand in that order. Bridge first!" },
+    { "station": 5, "spot": "The Frost Throne", "clue": "You solved it! The Frost Queen waves her staff. Climb to the Frost Throne at the very top and wave your wand!" }
+  ],
+  "ending": "The Frost Queen smiles. The ice melts and the sun comes out. She says: Go to the Unicorn Forest. It got zapped, and the unicorns need you!"
+}

@@ -1,0 +1,16 @@
+{
+  "title": "The Fairy Pools",
+  "scene": "forest",
+  "mentor": "Fairy Guide",
+  "cheer": "Splash! {spot} runs clear!",
+  "opening": "The fairies are all sick. Something is poisoning the water! Your wand holds fairy light. Clean the five pools, one by one.",
+  "not_yet": "Not that pool. The fairies are still sick. Follow the clue!",
+  "steps": [
+    { "station": 1, "spot": "The Old Oak Pool",   "clue": "Start at the pool under the Old Oak. The water is dark and still. Wave your wand and make it sparkle!" },
+    { "station": 2, "spot": "The Mushroom Spring", "clue": "Next, the spring by the Mushroom Ring. The frogs stopped singing. Wave your wand and wake them up!" },
+    { "station": 3, "spot": "The Cave Pool",       "clue": "Now the pool inside the Dark Cave. It smells funny in there. Hold your wand high and clean it!" },
+    { "station": 4, "spot": "The Waterfall Pool",  "clue": "The Waterfall is dripping black goo. Stand where the water falls. Wave your wand and wash it away!" },
+    { "station": 5, "spot": "The Fairy Spring",    "clue": "One pool left. The Fairy Spring by the Throne. Clean it and the fairies will wake up!" }
+  ],
+  "ending": "The water runs clear! The fairies open their eyes and stretch their wings. But who poisoned the water? The Fairy Guide says a crystal is missing from the Crystal Caves. Let's go find out who stole it!"
+}

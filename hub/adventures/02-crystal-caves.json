@@ -1,0 +1,15 @@
+{
+  "title": "The Crystal Caves",
+  "scene": "cave",
+  "villain": "Goblin",
+  "cheer": "You found {spot}!",
+  "opening": "Who stole the crystal that made the fairies sick? The clues are down in the Crystal Caves. Find all four clues, then catch the thief!",
+  "not_yet": "Hee hee! No clue there. Keep looking!",
+  "steps": [
+    { "mode": "collect", "stations": [1, 2, 3, 4], "spot": "The Clue Hunt",
+      "spots": { "1": "The Muddy Footprint", "2": "The Torn Sock", "3": "The Dropped Spoon", "4": "The Giggle Jar" },
+      "clue": "Look for four clues. A muddy footprint, a torn sock, a dropped spoon, and a giggle in a jar. Wave your wand at each one!" },
+    { "station": 5, "spot": "The Crystal Pedestal", "clue": "A footprint, a sock, a spoon, and a giggle. It was the goblin! He is hiding by the Crystal Pedestal. Zap him with fairy light!" }
+  ],
+  "ending": "Gotcha! The goblin says sorry. He gives the crystal back and it glows on the pedestal again. But the cave is still cold. We need help from the Frost Queen on the Frozen Mountain!"
+}

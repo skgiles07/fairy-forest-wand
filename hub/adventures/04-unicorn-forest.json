@@ -1,0 +1,17 @@
+{
+  "title": "The Unicorn Forest",
+  "scene": "pools",
+  "mentor": "Good Witch",
+  "cheer": "Pop! A unicorn is free at {spot}!",
+  "opening": "The Unicorn Forest got zapped! The magic is gone and the unicorns are hiding in bubbles. Help restore the magic. Then find the Good Witch!",
+  "not_yet": "Zzzap! The magic is too weak there. Follow the clue!",
+  "steps": [
+    { "station": 2, "spot": "The Lily Pool",      "clue": "Start at the Lily Pool where the frogs live. A unicorn hides in a bubble. Wave your wand and bring the magic back!" },
+    { "station": 4, "spot": "The Starlight Pool", "clue": "Now the Starlight Pool. It used to twinkle. Wave your wand and make it shine again!" },
+    { "station": 1, "spot": "The Moonlight Pool", "clue": "The Moonlight Pool is dark and quiet. A little unicorn waits there. Wave your wand and free it!" },
+    { "station": 3, "spot": "The Sparkle Pool",   "clue": "The Sparkle Pool lost its fizz. Wave your wand and watch it bubble!" },
+    { "mode": "charge", "station": 5, "hits": 5, "spot": "The Big Bubble",
+      "clue": "Look! A big bubble at the top. The Good Witch is inside! Wave your wand five times to pop it!" }
+  ],
+  "ending": "POP! The Good Witch comes out of the bubble. She was protecting the unicorns. The magic is back! She points her wand at Fire Mountain. Rocks block the path, so she clears the rockslide with one big wave!"
+}
