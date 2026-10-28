@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fairy Forest</title>
+<title>Liza's Magi Quest</title>
 <style>
   /* Art direction: glossy 3D-animated look. Cursed = dark violet with
      bioluminescent cyan/magenta; healed = sunlit meadow, pink flowers. */
@@ -124,12 +124,70 @@
   .sparkle { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: #fff; z-index: 3;
     box-shadow: 0 0 12px 5px var(--c, var(--gold)); pointer-events: none; animation: fly 1.3s ease-out forwards; }
   @keyframes fly { to { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; } }
+
+  /* ---- campaign: realm map, per-mode HUD, intro card, badges ---- */
+  #stage.scene-map { background: linear-gradient(#0b0a2e, #2a1a5e 55%, #14103a); }
+  .land .glow { opacity: 0; transition: opacity 1.2s; }
+  .land.done .glow { opacity: 1; animation: pulse 3s ease-in-out infinite; }
+  .land .hill { transition: filter 1s, opacity 1s; }
+  .land:not(.done):not(.next) .hill { filter: saturate(.35) brightness(.6); }
+  .land.next .hill { animation: landpulse 1.4s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: bottom center; }
+  .land .land-name { fill: #e6dcff; font-size: 34px; font-weight: 700; text-anchor: middle; paint-order: stroke; stroke: #14103a; stroke-width: 8px; stroke-linejoin: round; }
+  .land.done .land-name { fill: #fff6c2; }
+  .land .star { opacity: 0; transition: opacity 1s; }
+  .land.done .star { opacity: 1; }
+  .trail { stroke-dasharray: 14 18; animation: flow 1.6s linear infinite; }
+  @keyframes landpulse { from { transform: scale(1); filter: brightness(1); } to { transform: scale(1.05); filter: brightness(1.35); } }
+  #hud { position: absolute; right: 1.5vw; top: 7vh; z-index: 2; display: none; background: var(--glass); border: 2px solid var(--glassline);
+    border-radius: 2.4vh; padding: 1.6vh 1.8vw; color: #fff; text-align: center; box-shadow: 0 0 30px #b07aff44; backdrop-filter: blur(6px); }
+  #hud.on { display: block; }
+  #hud .hud-title { font-size: 2.3vh; letter-spacing: .06em; color: var(--gold); margin-bottom: 1vh; max-width: 26vw; }
+  #hud .wheel { position: relative; width: 20vh; height: 20vh; margin: 0 auto; }
+  #hud .wheel::before { content: ""; position: absolute; inset: 15%; border-radius: 50%; border: 3px dashed #b18cff77; }
+  #hud .rune { position: absolute; left: 50%; top: 50%; width: 6.4vh; height: 6.4vh; margin: -3.2vh 0 0 -3.2vh; border-radius: 50%;
+    background: #2a1a4a; border: 3px solid #6e5aa8; display: grid; place-items: center; font-size: 1.3vh; line-height: 1.1; padding: .4vh;
+    transform: rotate(calc(var(--i) * 360deg / var(--n))) translateY(-7.2vh) rotate(calc(-1 * var(--i) * 360deg / var(--n)));
+    transition: background .6s, border-color .6s, box-shadow .6s; color: #cbb8ff; }
+  #hud .rune.filled { background: radial-gradient(#fff6c2, #ffc844 60%, #b8740f); border-color: #fff; color: #3a2200; box-shadow: 0 0 18px #ffd166; }
+  #hud .strip { display: flex; gap: 1.2vw; justify-content: center; }
+  #hud .pip { width: 7vh; height: 7vh; border-radius: 50%; background: #2a1a4a; border: 3px solid #6e5aa8; display: grid; place-items: center;
+    font-size: 1.4vh; color: #cbb8ff; padding: .4vh; transition: background .5s, box-shadow .5s; }
+  #hud .pip.now { border-color: #7fe8ff; box-shadow: 0 0 16px #7fe8ff; animation: pulse 1.2s ease-in-out infinite; }
+  #hud .pip.filled { background: radial-gradient(#e8fbff, #7fe8ff 60%, #2f8fc8); color: #0a2a3a; border-color: #fff; box-shadow: 0 0 18px #7fe8ff; }
+  #hud .ring { width: 18vh; height: 18vh; display: block; margin: 0 auto; }
+  #hud .ring .track { fill: none; stroke: #3a2a60; stroke-width: 12; }
+  #hud .ring .arc { fill: none; stroke: #ff8fd0; stroke-width: 12; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%;
+    transition: stroke-dashoffset .5s; filter: drop-shadow(0 0 6px #ff8fd0); }
+  #hud .ring text { fill: #fff; font-size: 26px; font-weight: 700; text-anchor: middle; }
+  #hud .leaves { display: flex; gap: .6vw; justify-content: center; flex-wrap: wrap; max-width: 28vw; }
+  #hud .leaf { width: 5vh; height: 5vh; }
+  #hud .leaf path { fill: #4a4a5a; stroke: #2a2a3a; stroke-width: 1; transition: fill .5s; }
+  #hud .leaf .vein { fill: none; stroke: #2a2a3a; }
+  #hud .leaf.green path { fill: #5cc540; stroke: #2e8a30; filter: drop-shadow(0 0 4px #9dffb0); }
+  #hud .leaf.green .vein { stroke: #2e8a30; }
+  #stage.fire::after { content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none;
+    background: radial-gradient(circle at 50% 40%, #ff9a3acc, #ff2a0066 60%, transparent); animation: flash .9s ease-out forwards; }
+  @keyframes flash { from { opacity: 1; } to { opacity: 0; } }
+  #intro { position: absolute; inset: 0; z-index: 5; display: none; place-items: center; background: radial-gradient(circle at 50% 60%, #3a1a6e, #120830 70%); }
+  #intro.on { display: grid; }
+  #intro .card { text-align: center; }
+  #intro svg { width: 44vh; height: 30vh; display: block; margin: 0 auto 2vh; filter: drop-shadow(0 0 24px #ffd16688); }
+  #intro h1 { margin: 0; font-size: 8vh; letter-spacing: .12em; color: var(--gold); text-shadow: 0 0 24px #ff9de0aa, 0 4px 0 #7a3a10; }
+  #intro p { font-size: 3.6vh; margin: 2vh 0 0; opacity: .9; animation: pulse 2s ease-in-out infinite; }
+  #save-badge { position: absolute; left: 1.5vw; top: 1.5vh; z-index: 3; display: none; background: #8a5a00dd; color: #fff3b8; border: 2px solid #ffc844;
+    border-radius: 1.2vh; padding: .6vh 1.2vw; font-size: 1.8vh; }
+  #save-badge.on { display: block; }
+  #bubble.map { background: rgba(34, 16, 70, .74); color: var(--gold); text-align: center; padding-left: 4vw; }
+  #frost-queen, #good-witch { opacity: 0; transition: opacity 1.2s; }
+  #frost-queen.on, #good-witch.on { opacity: 1; }
+  #frost-queen.on .staff-tip { animation: pulse 1.2s ease-in-out infinite; }
+  #autoplay-result { position: absolute; left: 0; bottom: 0; font-size: 10px; opacity: .001; }
 </style>
 </head>
 <body>
 <div id="stage">
   <div id="title">FAIRY FOREST</div>
-  <div id="hint">keys 1-5 = stations · R = reset</div>
+  <div id="hint">keys 1-5 = stations · r = reset chapter · N = next · R = new game</div>
 
   <svg id="scene"></svg>
 
@@ -166,6 +224,32 @@
     </svg>
   </div>
   <div id="bubble">Waking up the magic…</div>
+  <div id="hud" data-mode=""></div>
+  <div id="save-badge">progress not saved</div>
+  <div id="intro"><div class="card">
+    <svg viewBox="0 0 440 300" aria-hidden="true">
+      <defs><linearGradient id="i-castle" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a4aa8"/><stop offset="1" stop-color="#2a1550"/></linearGradient>
+        <radialGradient id="i-moon"><stop offset="0" stop-color="#fff6c2"/><stop offset=".5" stop-color="#ffd166" stop-opacity=".6"/><stop offset="1" stop-color="#ffd166" stop-opacity="0"/></radialGradient></defs>
+      <circle cx="340" cy="70" r="70" fill="url(#i-moon)"/><circle cx="340" cy="70" r="26" fill="#fff6c2"/>
+      <g fill="#fff"><circle cx="60" cy="40" r="2"/><circle cx="130" cy="90" r="1.5"/><circle cx="230" cy="30" r="2"/><circle cx="410" cy="150" r="1.5"/></g>
+      <path d="M0 300 L0 240 Q110 200 220 236 Q330 272 440 230 L440 300Z" fill="#1d1040"/>
+      <g fill="url(#i-castle)">
+        <rect x="70" y="150" width="50" height="130"/><rect x="320" y="150" width="50" height="130"/><rect x="120" y="180" width="200" height="100"/>
+        <rect x="190" y="110" width="60" height="170"/>
+        <path d="M70 150 L70 130 L82 130 L82 142 L96 142 L96 130 L108 130 L108 142 L120 142 L120 150Z"/><path d="M320 150 L320 130 L332 130 L332 142 L346 142 L346 130 L358 130 L358 142 L370 142 L370 150Z"/>
+        <path d="M120 180 L120 166 L134 166 L134 176 L150 176 L150 166 L164 166 L164 176 L180 176 L180 166 L194 166 L194 180Z"/>
+        <path d="M250 180 L250 166 L264 166 L264 176 L280 176 L280 166 L294 166 L294 176 L310 176 L310 166 L320 166 L320 180Z"/>
+        <path d="M190 110 L220 60 L250 110Z"/><path d="M60 130 L95 90 L130 130Z"/><path d="M310 130 L345 90 L380 130Z"/>
+      </g>
+      <path d="M220 60 L220 30 L250 40 L220 50Z" fill="#ff6fb5"/>
+      <path d="M205 280 L205 225 Q220 210 235 225 L235 280Z" fill="#ffd166"/>
+      <g fill="#ffe9a8"><rect x="86" y="190" width="10" height="16" rx="3"/><rect x="336" y="190" width="10" height="16" rx="3"/><rect x="150" y="215" width="10" height="16" rx="3"/><rect x="280" y="215" width="10" height="16" rx="3"/></g>
+      <path d="M200 285 Q200 200 300 150 Q380 110 420 60" stroke="#ff8fd0" stroke-width="3" fill="none" stroke-dasharray="4 10" stroke-linecap="round" class="trail"/>
+      <circle cx="420" cy="60" r="7" fill="#fff" filter="url(#glowf)"/>
+    </svg>
+    <h1 id="intro-title">Liza's Magi Quest</h1>
+    <p id="intro-text">Wave your wand to begin</p>
+  </div></div>
 
   <div id="overlay">Tap or press any key to wake the forest<small>(turns the sound on)</small></div>
 </div>
@@ -1039,10 +1123,81 @@
   </svg>
 </template>
 
+<template id="scene-map">
+  <svg id="scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="map-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b0a2e"/><stop offset=".7" stop-color="#2a1a5e"/><stop offset="1" stop-color="#3a2a7e"/></linearGradient>
+      <radialGradient id="land-glow"><stop offset="0" stop-color="#fff6c2" stop-opacity=".7"/><stop offset=".6" stop-color="#ffd166" stop-opacity=".2"/><stop offset="1" stop-color="#ffd166" stop-opacity="0"/></radialGradient>
+      <radialGradient id="l-green" cx=".4" cy=".2" r=".9"><stop offset="0" stop-color="#c8ff8a"/><stop offset=".5" stop-color="#5cc540"/><stop offset="1" stop-color="#1f6a2a"/></radialGradient>
+      <radialGradient id="l-violet" cx=".4" cy=".2" r=".9"><stop offset="0" stop-color="#e0c8ff"/><stop offset=".5" stop-color="#8a4fb8"/><stop offset="1" stop-color="#3a1a60"/></radialGradient>
+      <radialGradient id="l-ice" cx=".4" cy=".2" r=".9"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#9fd8ff"/><stop offset="1" stop-color="#2f6fa8"/></radialGradient>
+      <radialGradient id="l-pink" cx=".4" cy=".2" r=".9"><stop offset="0" stop-color="#ffe0f4"/><stop offset=".5" stop-color="#ff7fd0"/><stop offset="1" stop-color="#a8307a"/></radialGradient>
+      <radialGradient id="l-fire" cx=".4" cy=".2" r=".9"><stop offset="0" stop-color="#fff0a0"/><stop offset=".45" stop-color="#ff8a3a"/><stop offset="1" stop-color="#a82a10"/></radialGradient>
+      <filter id="map-glowf" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="map-blur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="8"/></filter>
+    </defs>
+    <rect width="1600" height="900" fill="url(#map-sky)"/>
+    <g fill="#fff">
+      <circle cx="120" cy="90" r="2"/><circle cx="300" cy="160" r="1.5"/><circle cx="520" cy="70" r="2"/><circle cx="760" cy="140" r="1.5"/><circle cx="980" cy="60" r="2.5"/>
+      <circle cx="1120" cy="200" r="1.5"/><circle cx="220" cy="250" r="1.5"/><circle cx="640" cy="230" r="1"/><circle cx="1500" cy="120" r="2"/><circle cx="1380" cy="260" r="1.5"/>
+    </g>
+    <circle cx="1400" cy="150" r="120" fill="#ffc8f4" opacity=".25" filter="url(#map-blur)"/><circle cx="1400" cy="150" r="38" fill="#ffe6fb"/>
+    <path d="M0 720 C300 660 600 700 800 680 C1000 660 1300 700 1600 660 L1600 900 L0 900Z" fill="#1d1448"/>
+    <path class="trail" d="M200 600 C330 520 420 520 520 560 C640 610 720 620 840 560 C960 500 1040 520 1140 560 C1240 600 1320 560 1400 480" stroke="#ffd166" stroke-width="6" fill="none" stroke-linecap="round" opacity=".8"/>
+    <g class="land" data-chapter="0">
+      <circle class="glow" cx="200" cy="600" r="170" fill="url(#land-glow)"/>
+      <path class="hill" d="M60 700 Q200 440 340 700Z" fill="url(#l-green)"/>
+      <ellipse cx="200" cy="640" rx="40" ry="14" fill="#7fe8ff" opacity=".8"/>
+      <path class="star" d="M200 480 L210 505 L237 507 L216 524 L223 550 L200 536 L177 550 L184 524 L163 507 L190 505Z" fill="#fff6c2" filter="url(#map-glowf)"/>
+      <text class="land-name" x="200" y="760">Fairy Pools</text>
+    </g>
+    <g class="land" data-chapter="1">
+      <circle class="glow" cx="520" cy="590" r="170" fill="url(#land-glow)"/>
+      <path class="hill" d="M380 700 Q520 410 660 700Z" fill="url(#l-violet)"/>
+      <path d="M470 700 Q475 610 520 600 Q565 610 570 700Z" fill="#12082a"/>
+      <path d="M505 600 L520 560 L535 600Z" fill="#bfe8ff"/>
+      <path class="star" d="M520 450 L530 475 L557 477 L536 494 L543 520 L520 506 L497 520 L504 494 L483 477 L510 475Z" fill="#fff6c2" filter="url(#map-glowf)"/>
+      <text class="land-name" x="520" y="760">Crystal Caves</text>
+    </g>
+    <g class="land" data-chapter="2">
+      <circle class="glow" cx="840" cy="560" r="180" fill="url(#land-glow)"/>
+      <path class="hill" d="M690 700 L840 360 L990 700Z" fill="url(#l-ice)"/>
+      <path d="M840 360 L880 450 L860 440 L840 460 L820 440 L800 450Z" fill="#fff"/>
+      <path class="star" d="M840 300 L850 325 L877 327 L856 344 L863 370 L840 356 L817 370 L824 344 L803 327 L830 325Z" fill="#fff6c2" filter="url(#map-glowf)"/>
+      <text class="land-name" x="840" y="760">Frozen Mountain</text>
+    </g>
+    <g class="land" data-chapter="3">
+      <circle class="glow" cx="1140" cy="590" r="170" fill="url(#land-glow)"/>
+      <path class="hill" d="M1000 700 Q1140 420 1280 700Z" fill="url(#l-pink)"/>
+      <g fill="#fff"><circle cx="1100" cy="620" r="14"/><circle cx="1175" cy="640" r="12"/><circle cx="1140" cy="580" r="10"/></g>
+      <path class="star" d="M1140 450 L1150 475 L1177 477 L1156 494 L1163 520 L1140 506 L1117 520 L1124 494 L1103 477 L1130 475Z" fill="#fff6c2" filter="url(#map-glowf)"/>
+      <text class="land-name" x="1140" y="760">Unicorn Forest</text>
+    </g>
+    <g class="land" data-chapter="4">
+      <circle class="glow" cx="1420" cy="560" r="180" fill="url(#land-glow)"/>
+      <path class="hill" d="M1270 700 L1420 380 L1570 700Z" fill="url(#l-fire)"/>
+      <path d="M1395 400 Q1420 360 1445 400 Q1420 390 1395 400Z" fill="#ffe14a" filter="url(#map-glowf)"/>
+      <path class="star" d="M1420 310 L1430 335 L1457 337 L1436 354 L1443 380 L1420 366 L1397 380 L1404 354 L1383 337 L1410 335Z" fill="#fff6c2" filter="url(#map-glowf)"/>
+      <text class="land-name" x="1420" y="760">Fire Mountain</text>
+    </g>
+    <text id="map-count" x="800" y="840" fill="#e6dcff" font-size="30" text-anchor="middle" opacity=".8"></text>
+  </svg>
+</template>
+
 <script>
   const $ = s => document.querySelector(s);
-  const stage = $('#stage'), bubble = $('#bubble'), overlay = $('#overlay');
-  let seenSeq = -1, audio = null, sceneName = null;
+  const stage = $('#stage'), bubble = $('#bubble'), overlay = $('#overlay'), hud = $('#hud'), intro = $('#intro');
+  const params = new URLSearchParams(location.search);
+  const VOICE = params.get('voice') === '1';
+  let seenRev = -1, seenFire = null, seenGen = null, audio = null, sceneName = null, latest = null;
+  let timers = [], mapShowNext = false;
+  window.__renderedRev = -1;
+
+  // --- error reporting: fetch failures and render failures are never confused ---
+  const post = (p, body) => fetch(p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
+  const logTo = (level, msg) => post('/log', { level, msg: String(msg).slice(0, 800) }).catch(() => {});
+  window.onerror = (msg, src, line, col, err) => { logTo('error', `${msg} @${line}:${col} ${err && err.stack || ''}`); };
+  window.addEventListener('unhandledrejection', e => logTo('error', 'unhandled: ' + (e.reason && e.reason.stack || e.reason)));
 
   // each adventure picks a scene template; dragon level reuses the forest
   function mountScene(name) {
@@ -1063,11 +1218,13 @@
   function chime() { if (!audio) return; const t = audio.currentTime;
     [523, 659, 784, 1047].forEach((f, i) => tone(f, t + i * .12, .5)); }
   function buzz() { if (!audio) return; tone(160, audio.currentTime, .4, 'sawtooth', .15); }
+  function fire() { if (!audio) return; const t = audio.currentTime;
+    [90, 70, 110, 60].forEach((f, i) => tone(f, t + i * .15, .5, 'sawtooth', .2)); }
   function fanfare() { if (!audio) return; const t = audio.currentTime;
     [523, 523, 523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, t + i * .17, .6, 'triangle', .3)); }
 
   function wake() {
-    if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
+    try { if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
     overlay.remove();
   }
   overlay.addEventListener('click', wake);
@@ -1075,6 +1232,7 @@
   // --- effects ---
   const SPARK = ['#ffd166', '#ff8fd0', '#7fe8ff', '#b18cff'];
   function sparkle(el, n = 28) {
+    if (!el) return;
     const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
     for (let i = 0; i < n; i++) {
       const s = document.createElement('div'); s.className = 'sparkle';
@@ -1085,73 +1243,345 @@
       stage.appendChild(s); setTimeout(() => s.remove(), 1400);
     }
   }
-  function say(text, cls = '') { bubble.textContent = text; bubble.className = cls; }
+  let spoken = '';
+  function say(text, cls = '') {
+    text = text || '';
+    bubble.textContent = text; bubble.className = cls;
+    if (VOICE && text && text !== spoken && window.speechSynthesis) {
+      spoken = text; speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text); u.rate = .95; u.pitch = 1.15; speechSynthesis.speak(u);
+    }
+  }
+  // delayed UI callbacks: captured rev, no-op if the world moved, read CURRENT state when they fire
+  function later(ms, fn) {
+    const r = seenRev;
+    timers.push(setTimeout(() => { if (seenRev === r && latest) fn(latest); }, ms));
+  }
+  const zone = n => document.querySelector(`.zone[data-station="${n}"]`);
+  const nice = s => (s || '').replace(/^The /, '');
+  const lower = s => (s || '').replace(/^The /, 'the ');
+
+  // --- per-mode HUD: drawn from last_step right after a completion (live counters already reset) ---
+  function renderHud(st) {
+    const src = st.last_step ? st.last_step : st;
+    const mode = st.last_step ? st.last_step.mode : st.mode;
+    const complete = !!st.last_step;
+    const show = st.phase === 'play' || st.phase === 'map';
+    hud.classList.toggle('on', show && !!mode && mode !== 'ordered');
+    if (!show || !mode || mode === 'ordered') { hud.innerHTML = ''; hud.dataset.mode = ''; return; }
+    hud.dataset.mode = mode;
+    if (mode === 'collect') {
+      const all = src.stations || [], found = src.items || [];
+      hud.innerHTML = `<div class="hud-title">Clues found ${found.length} / ${all.length}</div><div class="wheel">` +
+        all.map((n, i) => `<div class="rune ${found.includes(n) ? 'filled' : ''}" style="--i:${i};--n:${all.length}" data-station="${n}">
+          <span>${nice(st.spots[n] || n)}</span></div>`).join('') + '</div>';
+    } else if (mode === 'puzzle') {
+      const pat = src.pattern || [], pos = complete ? pat.length : (st.pattern_pos || 0);
+      hud.innerHTML = `<div class="hud-title">${pat.map(n => nice(st.spots[n] || n)).join(' · ')}</div><div class="strip">` +
+        pat.map((n, i) => `<div class="pip ${i < pos ? 'filled' : ''} ${i === pos && !complete ? 'now' : ''}"><span>${nice(st.spots[n] || n)}</span></div>`).join('') + '</div>';
+    } else if (mode === 'charge') {
+      const c = src.charge || 0, m = src.charge_max || 1, pct = Math.round(100 * c / m), r = 54, C = 2 * Math.PI * r;
+      hud.innerHTML = `<div class="hud-title">Charge the spell</div>
+        <svg class="ring" viewBox="0 0 130 130" data-pct="${pct}"><circle cx="65" cy="65" r="${r}" class="track"/>
+        <circle cx="65" cy="65" r="${r}" class="arc" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - c / m)}"/>
+        <text x="65" y="72">${c} / ${m}</text></svg>`;
+    } else if (mode === 'boss') {
+      const hp = src.hp == null ? 0 : src.hp, m = src.hp_max || 1;
+      hud.innerHTML = `<div class="hud-title">Dragon leaves</div><div class="leaves">` +
+        Array.from({ length: m }, (_, i) => `<svg class="leaf ${i < hp ? 'green' : ''}" viewBox="0 0 24 24"><path d="M12 2 C4 6 2 14 6 20 C12 22 20 16 12 2Z"/><path d="M8 18 L13 8" class="vein"/></svg>`).join('') + '</div>';
+    }
+  }
+
+  // --- map scene ---
+  function renderMap(st) {
+    const lands = st.lands || [];
+    lands.forEach(l => {
+      const el = document.querySelector(`.land[data-chapter="${l.chapter}"]`);
+      if (!el) return;
+      el.classList.toggle('done', !!l.done); el.classList.toggle('next', !!l.next);
+      const t = el.querySelector('.land-name'); if (t) t.textContent = l.name;
+    });
+    const n = document.querySelector('#map-count'); if (n) n.textContent = `${(st.chapters_done || []).length} / ${st.chapters_total || lands.length} lands healed`;
+  }
 
   // --- state ---
   function render(st) {
+    latest = st;
+    const onMap = st.scene === 'map';
     mountScene(st.scene === 'dragon' ? 'forest' : st.scene);
+    ['dragon', 'mountain', 'cave', 'pools', 'map', 'forest'].forEach(s => stage.classList.toggle('scene-' + s, st.scene === s));
+    ['intro', 'play', 'map', 'finished'].forEach(p => stage.classList.toggle('phase-' + p, st.phase === p));
+    stage.classList.toggle('done', !!st.done && !onMap);
+    const p = st.progress && st.progress.total ? st.progress.done / st.progress.total : 0;
+    stage.style.setProperty('--p', onMap ? 1 : p);
     document.querySelectorAll('.zone').forEach(z => {
       const n = +z.dataset.station;
       z.classList.toggle('healed', st.healed.includes(n));
+      z.classList.toggle('target', (st.targets || []).includes(n));
+      const name = st.spots[n]; const lab = z.querySelector('.label');
+      if (name && lab) lab.textContent = nice(name);
     });
-    stage.style.setProperty('--p', st.healed.length / st.stations.length);
-    stage.classList.toggle('done', st.done);
-    stage.classList.toggle('scene-dragon', st.scene === 'dragon');
-    stage.classList.toggle('scene-mountain', st.scene === 'mountain');
-    stage.classList.toggle('scene-cave', st.scene === 'cave');
-    stage.classList.toggle('scene-pools', st.scene === 'pools');
     const gob = document.getElementById('goblin');
-    if (gob) {  // goblin waits at the next spot; caught at the last one
-      const z = document.querySelector(`.zone[data-station="${st.done ? st.stations.at(-1) : st.stations[st.healed.length]}"]`);
-      gob.style.transform = `translate(${z.dataset.gx}px, ${z.dataset.gy}px)`;
+    if (gob) {  // goblin stands at the next target; otherwise at the last hit spot if that zone exists
+      const at = (st.targets && st.targets.length) ? st.targets[0] : st.event_station;
+      const z = at == null ? null : zone(at);
+      if (z && z.dataset.gx) gob.style.transform = `translate(${z.dataset.gx}px, ${z.dataset.gy}px)`;
+      else if (at != null && !z) logTo('warn', 'goblin: no zone for station ' + at);
     }
-    $('#title').textContent = st.title;
-    document.querySelectorAll('.zone').forEach(z => {
-      const name = st.spots[z.dataset.station]; if (name) z.querySelector('.label').textContent = name.replace(/^The /, '');
-    });
+    const fq = document.getElementById('frost-queen'); if (fq) fq.classList.toggle('on', st.mode === 'puzzle' || (st.last_step && st.last_step.mode === 'puzzle'));
+    const gw = document.getElementById('good-witch');
+    if (gw) gw.classList.toggle('on', st.scene === 'pools' && st.healed.includes(5) && st.mode !== 'charge');
+    $('#title').textContent = st.title || '';
+    intro.classList.toggle('on', st.phase === 'intro');
+    if (st.phase === 'intro') { $('#intro-title').textContent = st.campaign_title || st.title; $('#intro-text').textContent = st.intro || 'Wave your wand to begin'; }
+    $('#save-badge').classList.toggle('on', !!st.save_error);
+    if (onMap) renderMap(st);
+    renderHud(st);
 
-    if (st.seq !== seenSeq) {
-      const first = seenSeq === -1; seenSeq = st.seq;
-      if (!first && st.event === 'heal') {
-        const z = document.querySelector(`.zone[data-station="${st.healed.at(-1)}"]`);
-        z.classList.add('just'); setTimeout(() => z.classList.remove('just'), 900);
-        sparkle(z); chime();
-        say(st.cheer.replace('{spot}', st.spots[st.healed.at(-1)].replace(/^The /, 'the ')).replace(/^the/, 'The'));
-        setTimeout(() => say(st.clue), 2200);
-        return;
+    if (st.gen !== seenGen) { mapShowNext = false; seenGen = st.gen; }
+    if (st.rev !== seenRev) {
+      const first = seenRev === -1; seenRev = st.rev;
+      timers.forEach(clearTimeout); timers = [];
+      if (seenFire !== null && st.fire_seq !== seenFire && st.fire_seq > 0) {
+        stage.classList.add('shake', 'fire'); fire();
+        setTimeout(() => stage.classList.remove('shake', 'fire'), 900);
+        say('ROAR! The dragon breathes fire and grows two leaves back! Keep zapping!', 'wrong');
+        later(3000, s => say(s.clue));
+        seenFire = st.fire_seq;
+        window.__renderedRev = st.rev; return;
       }
-      if (!first && st.event === 'wrong') {
+      seenFire = st.fire_seq;
+      if (!first && st.phase === 'play' && st.event === 'heal') {
+        const z = zone(st.event_station);
+        if (z) { z.classList.add('just'); setTimeout(() => z.classList.remove('just'), 900); sparkle(z); }
+        chime();
+        const spot = st.spots[st.event_station];
+        let text = (st.cheer || '{spot} is healed!').replace('{spot}', lower(spot)).replace(/^the/, 'The');
+        if (st.mode === 'collect' && !st.last_step) text = `You found ${lower(spot)}! ${st.items.length} of ${st.targets.length + st.items.length}.`;
+        if (st.mode === 'puzzle' && !st.last_step) text = `${nice(spot)}! ${st.pattern_pos} of ${st.pattern.length}. Keep going!`;
+        if (st.mode === 'charge' && !st.last_step) text = `${st.charge} of ${st.charge_max}! Wave again!`;
+        if (st.mode === 'boss' && !st.last_step) text = `Zap! ${st.hp} leaves left!`;
+        say(text);
+        later(2200, s => say(s.clue));
+        window.__renderedRev = st.rev; return;
+      }
+      if (!first && st.phase === 'play' && st.event === 'wrong') {
         stage.classList.add('shake'); setTimeout(() => stage.classList.remove('shake'), 600);
         buzz(); say(st.not_yet, 'wrong');
-        const gob = document.getElementById('goblin');
         if (gob) { gob.classList.add('tease'); setTimeout(() => gob.classList.remove('tease'), 800); }
-        setTimeout(() => say(st.clue), 3000);
-        return;
+        later(3000, s => say(s.clue));
+        window.__renderedRev = st.rev; return;
       }
-      if (!first && st.event === 'done') {
-        document.querySelectorAll('.zone').forEach(z => sparkle(z)); fanfare();
-        say(st.message, 'done');
-        return;
+      if (!first && st.event === 'done' && (st.phase === 'map' || st.done) && !mapShowNext) {
+        document.querySelectorAll('.zone, .land.done').forEach(z => sparkle(z, 10)); fanfare();
+        say(st.ending, 'done');
+        if (st.phase === 'map') later(6000, () => { mapShowNext = true; render(latest); });
+        window.__renderedRev = st.rev; return;
       }
     }
-    if (st.done) say(st.message, 'done');
-    else if (st.message && st.healed.length === 0) say(st.message + ' ' + st.clue);
-    else if (bubble.textContent.startsWith('Waking')) say(st.clue);
+    if (st.phase === 'intro') say(st.intro || 'Wave your wand to begin!');
+    else if (st.phase === 'finished') say(st.ending, 'done');
+    else if (st.phase === 'map') {
+      if (mapShowNext || !st.ending) say(`Next: ${st.next_land || 'the end'}  ·  ${Math.ceil(st.map_deadline_s || 0)}`, 'map');
+      else if (!bubble.textContent) say(st.ending, 'done');
+    }
+    else if (st.done) say(st.ending, 'done');
+    else if (st.progress.done === 0 && !st.event) say((st.opening ? st.opening + ' ' : '') + st.clue);
+    else if (!bubble.textContent || bubble.textContent.startsWith('Waking') || bubble.className === 'map') say(st.clue);
+    window.__renderedRev = st.rev;
   }
 
   async function poll() {
-    try { render(await (await fetch('/state')).json()); } catch (e) { say('Lost the magic… is the hub running?'); }
+    let st = null;
+    try { st = await (await fetch('/state', { cache: 'no-store' })).json(); }
+    catch (e) { say('Lost the magic… is the hub running?'); }
+    if (st) {
+      try { render(st); }
+      catch (e) { say('Spell misfire: ' + e.message, 'wrong'); logTo('error', 'render: ' + (e.stack || e)); }
+    }
     setTimeout(poll, 400);
   }
   poll();
 
   // --- keyboard simulator (no hardware needed) ---
-  const post = (p, body) => fetch(p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
   document.addEventListener('keydown', e => {
     if (overlay.isConnected) wake();
     if (e.key >= '1' && e.key <= '5') post('/hit', { station: +e.key, wand_id: 'keyboard' });
-    if (e.key === 'r' || e.key === 'R') { seenSeq = -1; post('/reset'); }
+    else if (e.key === 'R') post('/reset?campaign=1');
+    else if (e.key === 'r') post('/reset');
+    else if (e.key === 'n' || e.key === 'N' || e.key === 'Enter' || e.key === ' ') { if (latest) post('/next', { gen: latest.gen }); }
   });
+
+  // ================= ?autoplay=1 self-drive: the page proves itself and reports through /log =================
+  async function autoplay() {
+    const stopAt = params.get('stop_at');
+    const failures = [], visited = [], ran = new Set();
+    const check = (c, m) => { if (!c) throw new Error(m); };
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const getState = async () => (await fetch('/state', { cache: 'no-store' })).json();
+    const settle = async rev => { for (let i = 0; i < 400 && window.__renderedRev < rev; i++) await sleep(25); check(window.__renderedRev >= rev, `renderer never reached rev ${rev}`); };
+    async function act(name, fn, expect) {
+      const rev0 = (await getState()).rev;
+      const res = await fn();
+      check(expect(res), `${name}: unexpected result ${JSON.stringify(res)}`);
+      let st;
+      for (let i = 0; i < 400; i++) { st = await getState(); if (st.rev > rev0) break; await sleep(25); }
+      check(st.rev > rev0, `${name}: rev did not move (${rev0})`);
+      await settle(st.rev);
+      return st;
+    }
+    async function noop(name, fn, expect) {
+      const rev0 = (await getState()).rev;
+      const res = await fn();
+      check(expect(res), `${name}: unexpected result ${JSON.stringify(res)}`);
+      await sleep(50); const st = await getState(); await sleep(50);
+      check(st.rev === rev0 && (await getState()).rev === rev0, `${name}: rev moved on a no-op`);
+      await settle(st.rev);
+      return st;
+    }
+    const hit = (n, exp) => act(`hit ${n}`, async () => (await (await post('/hit', { station: n, wand_id: 'autoplay' })).json()).result, r => r === exp);
+    const halted = async where => { if (stopAt === where) { report('pass', `autoplay stopped at ${where}`); return true; } return false; };
+    const stopped = () => { const e = new Error('stop'); e.stop = true; return e; };
+    function report(level, msg) {
+      const el = document.getElementById('autoplay-result') || Object.assign(document.body.appendChild(document.createElement('div')), { id: 'autoplay-result' });
+      el.textContent = `${level}: ${msg}`; el.dataset.level = level;
+      logTo(level, msg);
+    }
+    try {
+      wake();
+      const camp = await (await fetch('/campaign')).json();
+      const chapters = camp.chapters;
+      const modes = new Set(chapters.flatMap(c => c.steps.map(s => s.mode)));
+      const witchPossible = modes.has('charge') && chapters.some(c => c.scene === 'pools' && c.steps.some(s => s.mode === 'charge'))
+        && !!document.getElementById('scene-pools').content.querySelector('#good-witch');
+      const expected = chapters.flatMap((c, i) => c.steps.map(s => `${i}:${s.mode}`));
+
+      // intro -> chapter 0
+      let st = await getState();
+      if (st.phase !== 'intro') { await act('reset campaign', async () => (await (await post('/reset?campaign=1')).json()), r => r.ok); st = await getState(); }
+      await settle(st.rev);
+      check(st.phase === 'intro' && intro.classList.contains('on'), 'intro card not shown');
+      check(bubble.textContent.length > 0, 'intro bubble empty');
+      if (await halted('intro')) throw stopped();
+      st = await hit(1, 'heal');
+      check(st.phase === 'play' && st.chapter === 0 && st.healed.length === 0, 'intro hit did not start chapter 0');
+
+      for (let ci = 0; ci < chapters.length; ci++) {
+        const ch = chapters[ci];
+        let wrongDone = false, resetDone = false;
+        for (let si = 0; si < ch.steps.length; si++) {
+          const step = ch.steps[si];
+          st = await getState();
+          check(st.phase === 'play' && st.chapter === ci && st.progress.done === si, `chapter ${ci} step ${si}: state ${st.phase}/${st.chapter}/${st.progress.done}`);
+          visited.push(`${ci}:${st.mode}`);
+          const healedBefore = document.querySelectorAll('.zone.healed').length;
+          if (!wrongDone) {  // one wrong key per chapter
+            const wrong = [1, 2, 3, 4, 5].find(n => !st.targets.includes(n) && !(step.mode === 'collect' && step.stations.includes(n)));
+            st = await hit(wrong, 'wrong');
+            check(st.event === 'wrong' && st.event_station === wrong, 'wrong hit not recorded');
+            check(document.querySelectorAll('.zone.healed').length === healedBefore, 'wrong hit lit a zone');
+            check(bubble.textContent.length > 0 && bubble.classList.contains('wrong'), 'not_yet text missing');
+            wrongDone = true;
+          }
+          const last = si === ch.steps.length - 1;
+          const finalResult = last ? 'done' : 'heal';
+          if (step.mode === 'ordered') {
+            if (ci === 2 && si === 0 && !resetDone) {  // reset mid-chapter 3
+              st = await hit(step.stations[0], 'heal');
+              check(st.healed.length === 1 && document.querySelectorAll('.zone.healed').length === 1, 'ordered heal did not light the zone');
+              const gen0 = st.gen;
+              st = await act('reset', async () => (await (await post('/reset')).json()), r => r.ok);
+              check(st.gen !== gen0 && st.healed.length === 0 && document.querySelectorAll('.zone.healed').length === 0, 'reset left zones lit');
+              check(st.last_step === null && st.progress.done === 0, 'reset did not clear step state');
+              resetDone = true; ran.add('reset');
+            }
+            st = await hit(step.stations[0], finalResult);
+            check(st.healed.includes(step.stations[0]), 'ordered heal missing from healed');
+            check(bubble.textContent.length > 0, 'bubble empty after heal');
+          } else if (step.mode === 'collect') {
+            ran.add('collect');
+            const list = step.stations;
+            st = await hit(list[0], 'heal');
+            check(st.items.length === 1 && hud.querySelectorAll('.rune.filled').length === 1, `rune wheel after 1: ${hud.querySelectorAll('.rune.filled').length}`);
+            st = await hit(list[0], 'heal');  // duplicate: items unchanged, event heal
+            check(st.items.length === 1 && st.event === 'heal' && hud.querySelectorAll('.rune.filled').length === 1, 'duplicate collect changed items');
+            for (let k = 1; k < list.length; k++) {
+              st = await hit(list[k], k === list.length - 1 ? finalResult : 'heal');
+              check(hud.querySelectorAll('.rune.filled').length === k + 1, `rune wheel after ${k + 1}`);
+            }
+            check(st.last_step && st.last_step.mode === 'collect' && st.last_step.items.length === list.length, 'collect last_step missing');
+            check(list.every(n => st.healed.includes(n)), 'collect items not in healed');
+            check(list.every(n => document.querySelector(`.zone[data-station="${n}"]`) === null || document.querySelector(`.zone[data-station="${n}"]`).classList.contains('healed')), 'collect zones not lit');
+          } else if (step.mode === 'puzzle') {
+            ran.add('puzzle');
+            const pat = step.stations;
+            st = await hit(pat[0], 'heal');
+            check(st.pattern_pos === 1 && hud.querySelectorAll('.pip.filled').length === 1, 'pattern strip after 1');
+            const bad = [1, 2, 3, 4, 5].find(n => n !== pat[1]);
+            st = await hit(bad, 'wrong');
+            check(st.pattern_pos === 0 && hud.querySelectorAll('.pip.filled').length === 0, 'wrong mid-pattern did not reset the strip');
+            if (await halted('puzzle')) throw stopped();
+            for (let k = 0; k < pat.length; k++) {
+              st = await hit(pat[k], k === pat.length - 1 ? finalResult : 'heal');
+              check(hud.querySelectorAll('.pip.filled').length === k + 1, `pattern strip after ${k + 1}`);
+            }
+            check(st.last_step && st.last_step.mode === 'puzzle', 'puzzle last_step missing');
+          } else if (step.mode === 'charge') {
+            ran.add('charge');
+            const n = step.stations[0], m = (await (await fetch('/state')).json()).charge_max;
+            for (let k = 1; k <= m; k++) {
+              st = await hit(n, k === m ? finalResult : 'heal');
+              const pct = +hud.querySelector('.ring').dataset.pct;
+              check(pct === Math.round(100 * k / m), `charge ring ${pct} after ${k}`);
+            }
+            check(st.last_step && st.last_step.charge === m, 'charge last_step missing');
+            if (witchPossible && ch.scene === 'pools') {
+              ran.add('witch');
+              const gw = document.getElementById('good-witch');
+              check(gw && gw.classList.contains('on') && getComputedStyle(gw).opacity !== '0', 'good witch not revealed after charge');
+            }
+            if (await halted('charge_done')) throw stopped();
+          } else if (step.mode === 'boss') {
+            ran.add('boss');
+            const n = step.stations[0];
+            st = await hit(n, 'heal'); st = await hit(n, 'heal');
+            const hp0 = st.hp, fire0 = st.fire_seq;
+            check(hud.querySelectorAll('.leaf.green').length === hp0, 'leaf bar mismatch');
+            st = await act('expire', async () => (await (await post('/debug/expire')).json()), r => r.ok && r.expired === 'boss');
+            check(st.fire_seq === fire0 + 1, 'fire_seq did not move');
+            check(st.hp === Math.min(hp0 + 2, st.hp_max), `hp after fire ${st.hp}`);
+            check(hud.querySelectorAll('.leaf.green').length === st.hp, 'leaf bar did not regrow');
+            check(bubble.textContent.length > 0, 'fire bubble empty');
+            let hp = st.hp;
+            while (hp > 0) { st = await hit(n, hp === 1 ? finalResult : 'heal'); hp--; check(hud.querySelectorAll('.leaf.green').length === hp, `leaves ${hp}`); }
+          }
+        }
+        // chapter complete -> map (or finished after the last)
+        st = await getState(); await settle(st.rev);
+        check(st.phase === 'map' && st.scene === 'map', `chapter ${ci} did not reach the map (${st.phase})`);
+        check(st.chapters_done.length === ci + 1 && document.querySelectorAll('.land.done').length === ci + 1, `map .land.done count after chapter ${ci}`);
+        check(document.querySelectorAll('.land.next').length === (ci + 1 < chapters.length ? 1 : 0), 'map .land.next count');
+        check(bubble.textContent.length > 0, 'map bubble empty');
+        if (ci === 0) {  // stale /next is ignored
+          st = await noop('stale next', async () => (await (await post('/next', { gen: st.gen - 1 })).json()), r => r.ignored === true);
+          check(st.phase === 'map', 'stale next advanced the map');
+        }
+        if (await halted('map')) throw stopped();
+        st = await hit(3, 'heal');  // leave the map by wand; consumed by the transition
+        if (ci + 1 < chapters.length) check(st.phase === 'play' && st.chapter === ci + 1 && st.healed.length === 0 && st.last_step === null, 'map hit touched the new chapter');
+        else check(st.phase === 'finished', 'did not finish');
+      }
+      st = await getState();
+      check(st.phase === 'finished' && document.querySelectorAll('.land.done').length === chapters.length, 'finished map not all done');
+      check(bubble.textContent.length > 0, 'finished bubble empty');
+      check(JSON.stringify(visited) === JSON.stringify(expected), `visited ${visited.join(',')} != expected ${expected.join(',')}`);
+      const skipped = ['collect', 'puzzle', 'charge', 'boss', 'witch'].filter(m => !ran.has(m));
+      report('pass', `autoplay pass skipped: [${skipped.join(', ')}] steps: ${visited.length}`);
+    } catch (e) {
+      if (!e.stop) report('fail', `autoplay fail: ${e.message} ${(e.stack || '').split('\n')[1] || ''}`);
+    }
+  }
+  if (params.get('autoplay') === '1') window.addEventListener('load', () => setTimeout(autoplay, 300));
 </script>
 </body>
 </html>

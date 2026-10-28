@@ -284,6 +284,7 @@ class Campaign:
 
     def __init__(self, cfg, path, state_dir, now=time.monotonic):
         self.title = cfg.get("title", "Magi Quest")
+        self.intro = cfg.get("intro", "Wave your wand to begin!")
         self.name = Path(path).name
         base = Path(path).parent
         self.files = list(cfg["chapters"])
@@ -443,7 +444,8 @@ class Campaign:
                 "rev": self.c["rev"], "gen": self.c["gen"], "phase": self.phase,
                 "chapter": self.chapter, "chapters_done": list(self.chapters_done),
                 "chapters_total": len(self.chapters),
-                "campaign_title": self.title, "title": self.title if on_map else st["title"],
+                "campaign_title": self.title, "intro": self.intro,
+                "title": self.title if on_map else st["title"],
                 "chapter_title": st["title"],
                 "scene": "map" if on_map else st["scene"],
                 "lands": lands, "next_land": next_land,

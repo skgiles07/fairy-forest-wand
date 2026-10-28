@@ -1,0 +1,14 @@
+{
+  "title": "Liza's Magi Quest",
+  "intro": "You got your wand at the castle. The whole realm needs your help! Wave your wand to begin.",
+  "chapters": ["fairy-forest.json", "goblin.json", "mountain.json", "unicorns.json", "dragon.json"],
+  "map": {
+    "lands": [
+      { "name": "Fairy Pools",     "chapter": 0 },
+      { "name": "Crystal Caves",   "chapter": 1 },
+      { "name": "Frozen Mountain", "chapter": 2 },
+      { "name": "Unicorn Forest",  "chapter": 3 },
+      { "name": "Fire Mountain",   "chapter": 4 }
+    ]
+  }
+}
