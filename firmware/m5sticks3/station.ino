@@ -8,9 +8,12 @@
   Behavior mirrors the CPX firmware (firmware/code.py):
     Idle        : slow purple breathing (dark energy), station number on screen
     Wand hit    : POST /hit to the hub; hub answers heal | wrong | done
-      heal      : green sparkle + rising chime, stays green HEALED_SECONDS
+      heal      : green sparkle + rising chime, glows green HEALED_SECONDS
       wrong     : red flash + low buzz, "not yet", back to idle
-      done      : rainbow + fanfare, stays rainbow
+      done      : rainbow + fanfare, glows DONE_SECONDS, then rearms
+    Input is only blocked HIT_COOLDOWN_MS after a hit (not for the whole
+    glow) because campaign steps like "wave 5 times" and boss fights need
+    repeat hits at one station.
     Hub offline : behaves as "heal" (or "done" on FINAL_STATION) so the game
                   still plays with printed cards.
     Button A    : simulate a wand hit (test without the wand)
@@ -35,7 +38,10 @@ static const int FINAL_STATION = 5;
 static const char* WIFI_SSID = "YOUR_WIFI";
 static const char* WIFI_PASS = "YOUR_PASSWORD";
 static const char* HUB_URL = "http://192.168.1.10:8000";  // Mac running hub/server.py
-static const uint32_t HEALED_SECONDS = 30;
+static const uint32_t HEALED_SECONDS = 30;     // how long the green glow stays (visual only)
+static const uint32_t DONE_SECONDS = 60;       // rainbow glow after a chapter ends, then rearm
+static const uint32_t HIT_COOLDOWN_MS = 1500;  // input ignored this long after any hit
+                                               // (short: charge/boss steps need repeat waves)
 static const uint32_t WRONG_COOLDOWN_MS = 2000;
 // -----------------------------------------------------------------------------
 
@@ -198,7 +204,9 @@ static String post_hit(uint32_t wand_id) {
 
 // ---- main ------------------------------------------------------------------------
 static uint32_t quiet_until = 0;  // ignore IR until this millis()
-static bool finished = false;
+static uint32_t glow_until = 0;   // keep the last color on screen until this millis()
+// No "finished" latch: the hub runs a multi-chapter campaign and station 5
+// must rearm after a chapter's "done", so done is just a longer glow.
 
 void setup() {
     auto cfg = M5.config();
@@ -226,7 +234,7 @@ void loop() {
     bool got = read_wand(&hit);
     if (M5.BtnA.wasPressed()) { got = true; hit.wand_id = 0; }
 
-    if (finished || now < quiet_until) {
+    if (now < quiet_until) {
         delay(30);
         return;
     }
@@ -236,12 +244,15 @@ void loop() {
         if (r == "") r = (STATION == FINAL_STATION) ? "done" : "heal";  // hub offline
         if (r == "done") {
             final_rainbow();
-            finished = true;
+            glow_until = millis() + DONE_SECONDS * 1000;
+            quiet_until = millis() + HIT_COOLDOWN_MS;
         } else if (r == "heal") {
             heal_sparkle();
-            quiet_until = millis() + HEALED_SECONDS * 1000;
+            glow_until = millis() + HEALED_SECONDS * 1000;
+            quiet_until = millis() + HIT_COOLDOWN_MS;
         } else {
             wrong_flash();
+            glow_until = millis() + WRONG_COOLDOWN_MS;
             quiet_until = millis() + WRONG_COOLDOWN_MS;
         }
         // drop any frames that arrived while we were busy
@@ -249,6 +260,10 @@ void loop() {
         return;
     }
 
+    if (now < glow_until) {  // hold the last color, keep listening
+        delay(30);
+        return;
+    }
     breathe(now);
     delay(30);
 }
