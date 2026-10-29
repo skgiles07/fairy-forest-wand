@@ -19,7 +19,7 @@ import sys
 import threading
 import time
 from datetime import datetime, timezone
-from http.server import HTTPServer, SimpleHTTPRequestHandler
+from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 from urllib.parse import urlsplit, parse_qs
 
@@ -720,7 +720,7 @@ def main(argv):
     Handler.debug = debug
     title = Handler.game.title if isinstance(Handler.game, Campaign) else Handler.game.adventure["title"]
     print(f"{title}  ->  http://0.0.0.0:{port}/", flush=True)
-    HTTPServer(("0.0.0.0", port), Handler).serve_forever()
+    ThreadingHTTPServer(("0.0.0.0", port), Handler).serve_forever()
 
 
 if __name__ == "__main__":
