@@ -295,6 +295,118 @@ with tempfile.TemporaryDirectory() as tmp:
     info = make_campaign(tmp).campaign_info()
     assert info["title"] == "Camp" and info["chapters"][0]["steps"][0] == {"mode": "ordered", "stations": [1]}
 
+# ---------------------------------------------------------------- three-sensor story loop, checkpoint and shared room setup
+with tempfile.TemporaryDirectory() as tmp:
+    root = Path(tmp)
+    labels = {"1": "Moon Crystal", "2": "Elder Tree", "3": "Treasure Chest"}
+    first = dict(title="Pools", opening="Help the fairies", ending="Water restored", steps=[
+        {"mode": "dialogue", "kind": "briefing", "speaker": "Mira", "clue": "Find three ingredients."},
+        {"mode": "collect", "stations": [1, 2, 3], "spots": labels,
+         "items_by_station": {"1": "Moon drop", "2": "Leaf", "3": "Shell"}, "clue": "Search the house."},
+        {"mode": "dialogue", "kind": "forge", "clue": "Bring them to the TV.",
+         "reward": {"spell": "Healing", "icon": "leaf"}},
+        {"mode": "boss", "pattern": [3, 1, 2], "hp": 3, "spots": labels, "clue": "Heal the three springs."},
+        {"mode": "dialogue", "clue": "The water clears. A crystal is missing!"},
+    ])
+    second = dict(title="Caves", opening="Find the crystal", ending="Found", steps=[
+        {"mode": "dialogue", "clue": "Your healing light reveals the trail."},
+        {"station": 2, "spot": "Elder Tree", "clue": "Follow it."},
+    ])
+    for name, chapter in (("first.json", first), ("second.json", second)):
+        (root / name).write_text(json.dumps(chapter))
+    cfg = {"title": "Three landmarks", "chapters": ["first.json", "second.json"],
+           "wait_for_next": True, "progress_file": "progress-v2.json",
+           "stations": [{"id": n, "name": labels[str(n)], "room": f"Room {n}", "icon": "star"}
+                        for n in (1, 2, 3)]}
+    path = root / "campaign.json"
+    path.write_text(json.dumps(cfg))
+    state_dir = root / "state"
+    state_dir.mkdir()
+    legacy = state_dir / "progress.json"
+    legacy.write_text("prototype progress stays here")
+    create = lambda: Campaign(cfg, path, state_dir, now=now)
+    c = create()
+    assert legacy.read_text() == "prototype progress stays here"
+    assert not c.progress_path.exists(), "merely opening v2 must not overwrite old/new progress"
+    assert c.hit(1) == "wrong" and c.state()["phase"] == "intro"
+    raises(lambda: c.hit(4), "1-3")
+    c.next(c.state()["gen"])
+    st = c.state()
+    assert st["mode"] == "dialogue" and st["targets"] == [] and st["mentor"] == "Mira"
+    assert c.hit(1) == "wrong" and c.state()["progress"]["done"] == 0
+    old_gen = st["gen"]
+    c.next(old_gen)
+    assert c.state()["mode"] == "collect"
+    assert c.next(old_gen) == {"ignored": True}, "duplicate Continue cannot skip the next beat"
+    assert c.hit(2) == "heal" and c.hit(2) == "heal"
+    assert c.state()["items"] == [2]
+    assert c.state()["inventory"] == [{"station": 1, "name": "Moon drop", "collected": False},
+                                       {"station": 2, "name": "Leaf", "collected": True},
+                                       {"station": 3, "name": "Shell", "collected": False}]
+    c = create()
+    assert c.state()["items"] == [2] and c.state()["phase"] == "play", "mid-hunt reload keeps found ingredients"
+    c.reset_request()
+    c = create()
+    assert c.state()["progress"]["done"] == 0 and c.state()["mode"] == "dialogue", "chapter restart persists"
+    c.next(c.state()["gen"])
+    c.hit(2)
+    c.hit(3)
+    c.hit(1)
+    assert c.state()["beat"]["kind"] == "forge" and c.state()["spellbook"] == []
+    c.next(c.state()["gen"])
+    assert c.state()["spellbook"] == [{"spell": "Healing", "icon": "leaf"}]
+    assert c.state()["hp"] == 3 and c.state()["targets"] == [3]
+    assert c.hit(3) == "heal" and c.state()["targets"] == [1]
+    assert c.hit(3) == "wrong" and c.state()["hp"] == 2, "repeated casts at one prop do not beat the boss"
+    clock["t"] += 3600
+    assert c.state()["hp"] == 2, "walking and breaks must not lose encounter progress"
+    c = create()
+    assert c.state()["hp"] == 2 and c.state()["targets"] == [1]
+    c.hit(1)
+    c.hit(2)
+    assert c.state()["mode"] == "dialogue"
+    c.next(c.state()["gen"])
+    assert c.state()["phase"] == "map" and c.state()["map_deadline_s"] is None
+    clock["t"] += 3600
+    assert c.hit(2) == "wrong" and c.state()["phase"] == "map", "remote waves cannot skip chapter endings"
+    c.next(c.state()["gen"])
+    assert c.state()["chapter"] == 1 and c.state()["spellbook"][0]["spell"] == "Healing"
+    c.next(c.state()["gen"])
+    c.hit(2)
+    c.next(c.state()["gen"])
+    assert create().state()["phase"] == "finished" and create().state()["spellbook"][0]["spell"] == "Healing"
+    rooms = [{"id": n, "room": name} for n, name in enumerate(("Living room", "Hallway", "Bedroom"), 1)]
+    assert c.set_rooms(rooms)["ok"]
+    assert [x["room"] for x in create().state()["stations_config"]] == [x["room"] for x in rooms]
+    raises(lambda: c.set_rooms([{"id": 1, "room": ""}]), "3 rooms")
+    raises(lambda: c.set_rooms([dict(x, room="") for x in rooms]), "1-80")
+    assert legacy.read_text() == "prototype progress stays here"
+    c.reset_request(campaign=True)
+    assert create().state()["phase"] == "intro", "new campaign reset cannot restore stale checkpoint"
+    # Exercise wire validation without opening a socket or touching family progress.
+    from types import SimpleNamespace
+    from server import Handler
+    def api(body, route="/hit"):
+        raw = json.dumps(body).encode()
+        fake = SimpleNamespace(headers={"Content-Length": str(len(raw))}, rfile=io.BytesIO(raw),
+                               path=route, game=c, _json=lambda obj, code=200: (code, obj))
+        return Handler.do_POST(fake)
+    assert api({"station": 4}) == (400, {"error": "station must be in 1-3"})
+    for bad in (True, 1.5, "1", None):
+        assert api({"station": bad})[0] == 400
+    assert api([]) == (400, {"error": "body must be an object"})
+    assert api({"stations": rooms}, "/stations")[0] == 200
+    # Wrong riddle casts reset their sequence; a restart must not revive the old partial answer.
+    first["steps"] = [{"mode": "puzzle", "pattern": [3, 1, 2], "spots": labels, "clue": "Follow the signs."}]
+    (root / "first.json").write_text(json.dumps(first))
+    puzzle_state = root / "puzzle-state"
+    p = Campaign(cfg, path, puzzle_state)
+    p.next(p.state()["gen"])
+    p.hit(3)
+    assert p.state()["pattern_pos"] == 1
+    p.hit(2)
+    assert Campaign(cfg, path, puzzle_state).state()["pattern_pos"] == 0
+
 # ---------------------------------------------------------------- every adventure on disk is valid and winnable
 for f in sorted(ADV.glob("*.json")):
     if f.name == "campaign.json":
@@ -305,9 +417,14 @@ for f in sorted(ADV.glob("*.json")):
     touched = set()
     for s in a["steps"]:
         mode = s.get("mode", "ordered")
+        if mode == "dialogue":
+            g.next(g.state()["gen"])
+            continue
+        boss_hits = ([s["pattern"][i % len(s["pattern"])] for i in range(s.get("hp", 0))]
+                     if s.get("pattern") else [s.get("station")] * s.get("hp", 0))
         hits = ({"collect": s.get("stations"), "puzzle": s.get("pattern"),
                  "charge": [s.get("station")] * s.get("hits", 0),
-                 "boss": [s.get("station")] * s.get("hp", 0)}.get(mode) or [s["station"]])
+                 "boss": boss_hits}.get(mode) or [s["station"]])
         touched.update(hits)
         for n in hits:
             r = g.hit(n)
@@ -320,4 +437,20 @@ if campaign_file.exists():
         c = Campaign(json.loads(campaign_file.read_text()), campaign_file, tmp)
         assert c.state()["phase"] == "intro" and len(c.chapters) == 5
         assert sorted(l["chapter"] for l in c.lands) == [0, 1, 2, 3, 4]
+        if c.stations_config:
+            visited = set()
+            for _ in range(1000):
+                st = c.state()
+                if st["phase"] == "finished":
+                    break
+                if st["phase"] != "play" or st["mode"] == "dialogue":
+                    c.next(st["gen"])
+                else:
+                    target = st["targets"][0]
+                    visited.add(target)
+                    assert c.hit(target) in ("heal", "done")
+            else:
+                raise AssertionError("campaign never finished")
+            assert visited == {1, 2, 3}, visited
+            assert len(c.state()["chapters_done"]) == len(c.chapters)
 print("ok")

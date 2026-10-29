@@ -54,6 +54,7 @@ def main(argv):
         budget = int(args[i + 1])
         del args[i:i + 2]
     campaign = Path(args[0]) if args else HERE / "adventures" / "campaign.json"
+    progress_file = json.loads(campaign.read_text()).get("progress_file", "progress.json")
     chrome = next((c for c in CHROME_CANDIDATES if c and Path(c).exists()), None)
     if not chrome:
         print("verify FAIL: no Chrome found (set CHROME=/path/to/chrome)")
@@ -115,7 +116,7 @@ def main(argv):
             if i >= 0:
                 j = txt.find(">", i)
                 dom_result = txt[j + 1: txt.find("<", j)].strip()
-        print(f"temp dir: {tmp}  (progress: {state_dir / 'progress.json'})")
+        print(f"temp dir: {tmp}  (progress: {state_dir / progress_file})")
         if errors:
             print("verify FAIL: " + errors[0])
             rc = 1
@@ -133,7 +134,7 @@ def main(argv):
             print(passes[0])
             if shot:
                 print(f"screenshot: {shot} ({Path(shot).stat().st_size if Path(shot).exists() else 0} bytes)")
-            p = state_dir / "progress.json"
+            p = state_dir / progress_file
             if p.exists():
                 d = json.loads(p.read_text())
                 print(f"checkpoint: chapters_done={d.get('chapters_done')} fingerprint={d.get('fingerprint')}")

@@ -1,0 +1,17 @@
+{
+  "generated": "2026-10-28",
+  "tool": "built-in image_gen",
+  "original_art": true,
+  "assets": [
+    {
+      "file": "realm-atlas.png",
+      "layout": "3 columns x 2 rows: castle, pools, caves / mountain, unicorn, fire",
+      "prompt": "art-prompt.txt"
+    },
+    {
+      "file": "characters-atlas.png",
+      "layout": "3 columns x 2 rows: Luma, Pip, Orielle / Willow, Emberwing, Black Briar",
+      "prompt": "characters-prompt.txt"
+    }
+  ]
+}

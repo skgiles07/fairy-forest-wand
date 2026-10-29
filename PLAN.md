@@ -1,3 +1,5 @@
+> **Superseded 2026-10-28:** Active game now uses three sensors and the Heartlight Quest story/format. See `README.md`, `docs/GAME-PLAN.md`, and `docs/story/heartlight-design.md`. Content below preserves prototype decisions; five-station quantities and timings are historical.
+
 # Fairy Forest Wand: Plan & Decisions
 
 Companion to `README.md` (how to set up and run). This file holds the why,

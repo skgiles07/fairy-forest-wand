@@ -1,17 +1,162 @@
 {
   "title": "The Unicorn Forest",
+  "subtitle": "The witch in the shining bubble",
   "scene": "pools",
-  "mentor": "Good Witch",
-  "cheer": "Pop! A unicorn is free at {spot}!",
-  "opening": "The Unicorn Forest got zapped! The magic is gone and the unicorns are hiding in bubbles. Help restore the magic. Then find the Good Witch!",
-  "not_yet": "Zzzap! The magic is too weak there. Follow the clue!",
+  "mentor": "Good Witch Willow",
+  "opening": "The unicorn paths are dark. Deep between the trees, a huge bubble shines with little hoofprints inside.",
+  "ending": "The unicorns dance beneath the trees. Willow clears the rockslide with her wand. Beyond it rises Fire Mountain, and all the clues finally point to one place.",
+  "not_yet": "That place is resting. Follow the glowing landmark on your quest card.",
+  "cheer": "{spot} answers your wand!",
   "steps": [
-    { "station": 2, "spot": "The Lily Pool",      "clue": "Start at the Lily Pool where the frogs live. A unicorn hides in a bubble. Wave your wand and bring the magic back!" },
-    { "station": 4, "spot": "The Starlight Pool", "clue": "Now the Starlight Pool. It used to twinkle. Wave your wand and make it shine again!" },
-    { "station": 1, "spot": "The Moonlight Pool", "clue": "The Moonlight Pool is dark and quiet. A little unicorn waits there. Wave your wand and free it!" },
-    { "station": 3, "spot": "The Sparkle Pool",   "clue": "The Sparkle Pool lost its fizz. Wave your wand and watch it bubble!" },
-    { "mode": "charge", "station": 5, "hits": 5, "spot": "The Big Bubble",
-      "clue": "Look! A big bubble at the top. The Good Witch is inside! Wave your wand five times to pop it!" }
-  ],
-  "ending": "POP! The Good Witch comes out of the bubble. She was protecting the unicorns. The magic is back! She points her wand at Fire Mountain. Rocks block the path, so she clears the rockslide with one big wave!"
+    {
+      "mode": "dialogue",
+      "kind": "mentor",
+      "title": "A voice from the bubble",
+      "speaker": "Good Witch Willow",
+      "clue": "Liza! It is Willow. My bubble kept the unicorns safe when the forest was zapped. I cannot leave it yet. Wake our three paths, then help me open the bubble gently."
+    },
+    {
+      "mode": "collect",
+      "kind": "hunt",
+      "title": "The sleeping paths",
+      "speaker": "Good Witch Willow",
+      "stations": [
+        1,
+        2,
+        3
+      ],
+      "spots": {
+        "1": "Moon Crystal",
+        "2": "Elder Tree",
+        "3": "Treasure Chest"
+      },
+      "items_by_station": {
+        "1": "Rainbow Thread",
+        "2": "Root Key",
+        "3": "Wind Ribbon"
+      },
+      "clue": "Find a Rainbow Thread at the Moon Crystal, a Root Key at the Elder Tree, and a Wind Ribbon at the Treasure Chest. These will stitch our paths together."
+    },
+    {
+      "mode": "dialogue",
+      "kind": "forge",
+      "title": "The Wayweave spell",
+      "speaker": "Good Witch Willow",
+      "clue": "Thread, key, and ribbon: let lost paths meet. Wayweave opens a safe road through tangled places. Follow its green light from landmark to landmark.",
+      "reward": {
+        "spell": "Wayweave",
+        "icon": "⌘"
+      }
+    },
+    {
+      "mode": "puzzle",
+      "kind": "encounter",
+      "title": "Stitch the forest together",
+      "clue": "Carry Wayweave from the Elder Tree to the Moon Crystal, then to the Treasure Chest. The three paths will meet beneath my bubble.",
+      "pattern": [
+        2,
+        1,
+        3
+      ],
+      "spots": {
+        "1": "Moon Crystal",
+        "2": "Elder Tree",
+        "3": "Treasure Chest"
+      },
+      "speaker": "Good Witch Willow",
+      "spell": "Wayweave"
+    },
+    {
+      "mode": "dialogue",
+      "kind": "mentor",
+      "title": "One small unicorn",
+      "speaker": "Good Witch Willow",
+      "clue": "The paths are bright! But a little unicorn is afraid to step outside. A loud pop would frighten her. Let us open the bubble with a soft song instead."
+    },
+    {
+      "mode": "collect",
+      "kind": "hunt",
+      "title": "A song without a sound",
+      "speaker": "Good Witch Willow",
+      "stations": [
+        1,
+        2,
+        3
+      ],
+      "spots": {
+        "1": "Moon Crystal",
+        "2": "Elder Tree",
+        "3": "Treasure Chest"
+      },
+      "items_by_station": {
+        "1": "Star Petal",
+        "2": "Humming Seed",
+        "3": "Tiny Music Box"
+      },
+      "clue": "Collect a Star Petal at the Moon Crystal, a Humming Seed at the Elder Tree, and a Tiny Music Box at the Treasure Chest. Bring the song back to the TV."
+    },
+    {
+      "mode": "dialogue",
+      "kind": "forge",
+      "title": "The Starcall spell",
+      "speaker": "Good Witch Willow",
+      "clue": "A petal, a seed, a music box: wake the courage in a small heart. Starcall carries a friend’s voice across the dark. Listen; every unicorn knows your name.",
+      "reward": {
+        "spell": "Starcall",
+        "icon": "✧"
+      }
+    },
+    {
+      "mode": "puzzle",
+      "kind": "encounter",
+      "title": "Open the shining bubble",
+      "clue": "Sing with your wand: Treasure Chest, Elder Tree, Moon Crystal. Each wave loosens one ribbon of the bubble. No popping. Just a gentle opening.",
+      "pattern": [
+        3,
+        2,
+        1
+      ],
+      "spots": {
+        "1": "Moon Crystal",
+        "2": "Elder Tree",
+        "3": "Treasure Chest"
+      },
+      "speaker": "Good Witch Willow",
+      "spell": "Starcall"
+    },
+    {
+      "mode": "dialogue",
+      "kind": "reveal",
+      "title": "Willow steps into the light",
+      "speaker": "Good Witch Willow",
+      "clue": "Here they come! One, two, all our unicorns. Thank you, Liza. I saw the same black vine in the pools, the caves, and my forest. It follows the Heart Crystal."
+    },
+    {
+      "mode": "ordered",
+      "kind": "encounter",
+      "station": 2,
+      "spot": "Elder Tree",
+      "title": "Clear the rockslide",
+      "speaker": "Good Witch Willow",
+      "clue": "Go to the Elder Tree. Cast Wayweave, and I will lift the stones with you. There is our road up Fire Mountain!",
+      "spell": "Wayweave"
+    },
+    {
+      "mode": "ordered",
+      "kind": "encounter",
+      "station": 1,
+      "spot": "Moon Crystal",
+      "title": "The mark on every vine",
+      "speaker": "Good Witch Willow",
+      "clue": "Visit the Moon Crystal. Use Truthlight on a black leaf. A tiny heart shape appears. Remember that mark; it is the clue we have been missing.",
+      "spell": "Truthlight"
+    },
+    {
+      "mode": "dialogue",
+      "kind": "reveal",
+      "title": "All our roads meet",
+      "speaker": "Good Witch Willow",
+      "clue": "Take your spells up the mountain. Luma, Pip, Queen Orielle, and I will be with you in spirit. Find Emberwing. Find out what her egg really needs."
+    }
+  ]
 }

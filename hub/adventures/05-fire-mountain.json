@@ -1,17 +1,144 @@
 {
   "title": "Fire Mountain",
+  "subtitle": "The light we share",
   "scene": "dragon",
-  "villain": "Dragon",
-  "cheer": "Zap! Past {spot}! Keep climbing!",
-  "opening": "The rockslide is gone. Now we climb Fire Mountain! A dragon sleeps at the top. Its smoke is what made everything sick. Chase it away!",
-  "not_yet": "Not that way! The rocks are too hot. Follow the clue!",
+  "mentor": "Emberwing",
+  "opening": "Above the cleared rockslide, Fire Mountain glows red. Emberwing curls around an egg while black vines tighten around the Heart Crystal.",
+  "ending": "The Heart Crystal shines in its cradle. The pools sing, the cave crystals ring, the snow sparkles, and the unicorns run free. Emberwing’s hatchling opens its eyes. Liza is the Keeper of the Heartlight.",
+  "not_yet": "That place is resting. Follow the glowing landmark on your quest card.",
+  "cheer": "{spot} answers your wand!",
   "steps": [
-    { "station": 4, "spot": "The Cool Waterfall",  "clue": "Start at the Cool Waterfall. Fill your wand with water. Dragons hate getting wet!" },
-    { "station": 1, "spot": "The Burnt Oak",       "clue": "Next, the Burnt Oak. Wave your wand and the leaves grow back green!" },
-    { "station": 3, "spot": "The Smoky Cave",      "clue": "The Smoky Cave is full of dragon smoke. Shine your wand and blow it out!" },
-    { "station": 2, "spot": "The Lava Mushrooms",  "clue": "Almost at the top. The Lava Mushrooms are glowing hot. Cool them off with a wave!" },
-    { "mode": "boss", "station": 5, "hp": 8, "window_s": 90, "spot": "The Dragon Lair",
-      "clue": "Here is the Dragon Lair! The dragon has eight leaves of power. Zap it again and again until the leaves are gone. Hurry, or it breathes fire and grows them back!" }
-  ],
-  "ending": "WHOOSH! The dragon flies away over the rainbow. The smoke is gone. The water is clean, the caves glow, and the unicorns dance. The whole realm is healed. Liza, you are a Master Magi!"
+    {
+      "mode": "dialogue",
+      "kind": "mentor",
+      "title": "The dragon who needed help",
+      "speaker": "Emberwing",
+      "clue": "Please stay back! My egg was cold, so I asked Pip for the crystal. But these vines grew around it. Now I cannot let go. I do not want to hurt anyone."
+    },
+    {
+      "mode": "collect",
+      "kind": "hunt",
+      "title": "The three forgotten signs",
+      "speaker": "Luma",
+      "stations": [
+        1,
+        2,
+        3
+      ],
+      "spots": {
+        "1": "Moon Crystal",
+        "2": "Elder Tree",
+        "3": "Treasure Chest"
+      },
+      "items_by_station": {
+        "1": "Pool Mark",
+        "2": "Forest Mark",
+        "3": "Cave Mark"
+      },
+      "clue": "Every landmark kept a piece of this mystery. Find the Pool Mark at the Moon Crystal, the Forest Mark at the Elder Tree, and the Cave Mark at the Treasure Chest. Bring them back together."
+    },
+    {
+      "mode": "dialogue",
+      "kind": "forge",
+      "title": "The Heartglow spell",
+      "speaker": "Luma",
+      "clue": "The signs fit together! The Heart Crystal shares light; it cannot make light alone. Heartglow follows the kindness joining every living thing. You have been learning it all along.",
+      "reward": {
+        "spell": "Heartglow",
+        "icon": "♡"
+      }
+    },
+    {
+      "mode": "dialogue",
+      "kind": "reveal",
+      "title": "The Black Briar’s secret",
+      "speaker": "Black Briar",
+      "clue": "I took the crystal’s light for myself. Without a way home, it grew into me: the Black Briar. Your little spells cannot untangle a whole mountain!"
+    },
+    {
+      "mode": "ordered",
+      "kind": "encounter",
+      "station": 2,
+      "spot": "Elder Tree",
+      "title": "A road through the roots",
+      "speaker": "Good Witch Willow",
+      "clue": "At the Elder Tree, use Wayweave to open a path through the roots. Willow holds the road steady while you travel.",
+      "spell": "Wayweave"
+    },
+    {
+      "mode": "ordered",
+      "kind": "encounter",
+      "station": 1,
+      "spot": "Moon Crystal",
+      "title": "Cool the burning stones",
+      "speaker": "Frost Queen Orielle",
+      "clue": "At the Moon Crystal, use Frostbind to cool the stones around Emberwing’s egg. Queen Orielle keeps the cold gentle.",
+      "spell": "Frostbind"
+    },
+    {
+      "mode": "boss",
+      "kind": "encounter",
+      "title": "Untangle the Heart Crystal",
+      "speaker": "Luma",
+      "station": 3,
+      "pattern": [
+        3,
+        1,
+        2,
+        3,
+        1,
+        2
+      ],
+      "spots": {
+        "1": "Moon Crystal",
+        "2": "Elder Tree",
+        "3": "Treasure Chest"
+      },
+      "hp": 6,
+      "spell": "Heartglow",
+      "clue": "Follow the light: Treasure Chest, Moon Crystal, Elder Tree. Then repeat that journey. Every wave loosens one of the six briar knots. We will wait while you travel."
+    },
+    {
+      "mode": "dialogue",
+      "kind": "reveal",
+      "title": "Warmth that can be shared",
+      "speaker": "Emberwing",
+      "clue": "The vines are falling away! My egg is warm because you stayed to help me. It needs my warmth, not a stolen crystal. Please, Liza. Take the Heart Crystal home."
+    },
+    {
+      "mode": "ordered",
+      "kind": "encounter",
+      "station": 3,
+      "spot": "Treasure Chest",
+      "title": "The crystal comes free",
+      "speaker": "Pip",
+      "clue": "Visit the Treasure Chest. Use Glowmend to lift the Heart Crystal without breaking its cradle. Pip is holding the basket open for you.",
+      "spell": "Glowmend"
+    },
+    {
+      "mode": "puzzle",
+      "kind": "encounter",
+      "title": "Carry the light home",
+      "clue": "Moon Crystal, Elder Tree, Treasure Chest. Share Heartglow with every landmark. The crystal returns to the pools, and a new Heart Seed begins to grow.",
+      "pattern": [
+        1,
+        2,
+        3
+      ],
+      "spots": {
+        "1": "Moon Crystal",
+        "2": "Elder Tree",
+        "3": "Treasure Chest"
+      },
+      "speaker": "Luma",
+      "spell": "Heartglow"
+    },
+    {
+      "mode": "dialogue",
+      "kind": "reveal",
+      "title": "Liza, Keeper of the Heartlight",
+      "speaker": "Luma",
+      "clue": "You healed the fairies. You listened to Pip. You solved the queen’s riddle and freed the unicorns. You helped a frightened dragon. The realm is bright because you shared your light. This is your story, Liza."
+    }
+  ]
 }

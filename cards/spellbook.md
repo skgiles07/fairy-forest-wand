@@ -1,92 +1,54 @@
-# Liza's Spellbook
+# Liza’s Heartlight Spellbook
 
-Print one page per chapter. When a land is healed, Liza sticks a sticker
-in the box and the grown-up writes the date. The wand id is on the hub
-screen (`wand_id` in `/state`) or in the hub log after the first wave.
+Six spells. Five restored lands. One very brave keeper.
 
-Wand id: `________________`   Master Magi name: `________________`
+## My spells
 
----
+- [ ] Glowmend
+- [ ] Truthlight
+- [ ] Frostbind
+- [ ] Wayweave
+- [ ] Starcall
+- [ ] Heartglow
 
-## Page 1: The Fairy Pools
+## My story
 
-The fairies were all sick. Something was poisoning the water.
-I cleaned five pools with my wand, one by one.
-The water ran clear and the fairies woke up!
+### 1. The Fairy Pools
 
-```
-+----------------------------+
-|                            |
-|   stick your sticker here  |
-|                            |
-+----------------------------+
-```
-Healed on: `__________`   Wand id: `________________`
+Three pools sparkle again. The fairies can fly, but their Heart Crystal is still missing. A warm silver scale points toward the Crystal Caves.
 
----
+My sticker: __________________
 
-## Page 2: The Crystal Caves
+### 2. The Crystal Caves
 
-Who stole the crystal? I found four clues in the caves.
-A footprint, a sock, a spoon, and a giggle in a jar.
-It was the goblin! He said sorry and gave it back.
+Pip opens the mountain trail. The stolen crystal went to Emberwing, but her fire is tangled in black vines. Only the Frost Queen knows how to get close.
 
-```
-+----------------------------+
-|                            |
-|   stick your sticker here  |
-|                            |
-+----------------------------+
-```
-Healed on: `__________`   Wand id: `________________`
+My sticker: __________________
 
----
+### 3. The Frozen Mountain
 
-## Page 3: The Frozen Mountain
+The Frost Queen lowers her staff. A path of blue light reaches the Unicorn Forest. Its magic has gone quiet, but something bright is hiding inside a bubble.
 
-I climbed the Frozen Mountain in the snow.
-The Frost Queen gave me a riddle: Bridge, Grove, Summit.
-I solved it and the sun came out!
+My sticker: __________________
 
-```
-+----------------------------+
-|                            |
-|   stick your sticker here  |
-|                            |
-+----------------------------+
-```
-Healed on: `__________`   Wand id: `________________`
+### 4. The Unicorn Forest
 
----
+The unicorns dance beneath the trees. Willow clears the rockslide with her wand. Beyond it rises Fire Mountain, and all the clues finally point to one place.
 
-## Page 4: The Unicorn Forest
+My sticker: __________________
 
-The Unicorn Forest got zapped and the unicorns hid in bubbles.
-I brought the magic back, pool by pool.
-I popped the big bubble and the Good Witch came out!
+### 5. Fire Mountain
 
-```
-+----------------------------+
-|                            |
-|   stick your sticker here  |
-|                            |
-+----------------------------+
-```
-Healed on: `__________`   Wand id: `________________`
+The Heart Crystal shines in its cradle. The pools sing, the cave crystals ring, the snow sparkles, and the unicorns run free. Emberwing’s hatchling opens its eyes. Liza is the Keeper of the Heartlight.
 
----
+My sticker: __________________
 
-## Page 5: Fire Mountain
+## My three landmarks
 
-The Good Witch cleared the rockslide with her wand.
-I climbed Fire Mountain and zapped the dragon's eight leaves.
-WHOOSH! It flew away. The realm is healed. I am a Master Magi!
+Moon Crystal — room: __________________
 
-```
-+----------------------------+
-|                            |
-|   stick your sticker here  |
-|                            |
-+----------------------------+
-```
-Healed on: `__________`   Wand id: `________________`
+Elder Tree — room: __________________
+
+Treasure Chest — room: __________________
+
+These three places stay the same throughout every chapter.

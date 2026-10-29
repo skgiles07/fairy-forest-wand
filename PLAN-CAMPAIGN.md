@@ -1,3 +1,5 @@
+> **Historical prototype plan. Superseded 2026-10-28:** Active Heartlight Quest uses three sensors, deliberate TV dialogue, six spells, and five rewritten chapters. See `docs/GAME-PLAN.md` and `docs/story/heartlight-design.md`. Five-station specs below are retained as history.
+
 # Plan: Liza's Magi Quest campaign (hub engine + content + printables)
 _Locked via claudex-loop — by Claude + Scott, 2026-10-27 (all recommendations accepted). Round 3 revision._
 

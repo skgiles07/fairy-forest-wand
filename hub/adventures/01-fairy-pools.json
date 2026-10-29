@@ -1,16 +1,112 @@
 {
   "title": "The Fairy Pools",
+  "subtitle": "A light goes missing",
   "scene": "forest",
-  "mentor": "Fairy Guide",
-  "cheer": "Splash! {spot} runs clear!",
-  "opening": "The fairies are all sick. Something is poisoning the water! Your wand holds fairy light. Clean the five pools, one by one.",
-  "not_yet": "Not that pool. The fairies are still sick. Follow the clue!",
+  "mentor": "Luma",
+  "opening": "Liza, your wand has woken the castle gate. Beyond it, the fairies are all sick. Something is poisoning the water.",
+  "ending": "Three pools sparkle again. The fairies can fly, but their Heart Crystal is still missing. A warm silver scale points toward the Crystal Caves.",
+  "not_yet": "That place is resting. Follow the glowing landmark on your quest card.",
+  "cheer": "{spot} answers your wand!",
   "steps": [
-    { "station": 1, "spot": "The Old Oak Pool",   "clue": "Start at the pool under the Old Oak. The water is dark and still. Wave your wand and make it sparkle!" },
-    { "station": 2, "spot": "The Mushroom Spring", "clue": "Next, the spring by the Mushroom Ring. The frogs stopped singing. Wave your wand and wake them up!" },
-    { "station": 3, "spot": "The Cave Pool",       "clue": "Now the pool inside the Dark Cave. It smells funny in there. Hold your wand high and clean it!" },
-    { "station": 4, "spot": "The Waterfall Pool",  "clue": "The Waterfall is dripping black goo. Stand where the water falls. Wave your wand and wash it away!" },
-    { "station": 5, "spot": "The Fairy Spring",    "clue": "One pool left. The Fairy Spring by the Throne. Clean it and the fairies will wake up!" }
-  ],
-  "ending": "The water runs clear! The fairies open their eyes and stretch their wings. But who poisoned the water? The Fairy Guide says a crystal is missing from the Crystal Caves. Let's go find out who stole it!"
+    {
+      "mode": "dialogue",
+      "kind": "mentor",
+      "title": "A whisper beyond the castle",
+      "speaker": "Luma",
+      "clue": "Liza! I am Luma, keeper of the Fairy Pools. Our water has turned dark. Find three little lights around the house, then come back to me at the TV."
+    },
+    {
+      "mode": "collect",
+      "kind": "hunt",
+      "title": "Three little lights",
+      "speaker": "Luma",
+      "stations": [
+        1,
+        2,
+        3
+      ],
+      "spots": {
+        "1": "Moon Crystal",
+        "2": "Elder Tree",
+        "3": "Treasure Chest"
+      },
+      "items_by_station": {
+        "1": "Moon Dewdrop",
+        "2": "Silverleaf",
+        "3": "Sunbell"
+      },
+      "clue": "Visit all three landmarks. Find a Moon Dewdrop at the Moon Crystal, a Silverleaf at the Elder Tree, and a Sunbell at the Treasure Chest."
+    },
+    {
+      "mode": "dialogue",
+      "kind": "forge",
+      "title": "The Glowmend spell",
+      "speaker": "Luma",
+      "clue": "You brought them! Moonlight, leaflight, sunlight: join together. This is Glowmend. It repairs what is hurt. Come close and learn its sign.",
+      "reward": {
+        "spell": "Glowmend",
+        "icon": "✦"
+      }
+    },
+    {
+      "mode": "puzzle",
+      "kind": "encounter",
+      "title": "Wake the three pools",
+      "clue": "Carry Glowmend from the Moon Crystal to the Elder Tree, then to the Treasure Chest. Each wave clears one pool. Take your time; the fairies will wait.",
+      "pattern": [
+        1,
+        2,
+        3
+      ],
+      "spots": {
+        "1": "Moon Crystal",
+        "2": "Elder Tree",
+        "3": "Treasure Chest"
+      },
+      "speaker": "Luma",
+      "spell": "Glowmend"
+    },
+    {
+      "mode": "dialogue",
+      "kind": "reveal",
+      "title": "The empty cradle",
+      "speaker": "Luma",
+      "clue": "The fairies are opening their wings! But look beneath the water. The cradle for the Heart Crystal is empty. The pools need that crystal to stay well."
+    },
+    {
+      "mode": "ordered",
+      "kind": "encounter",
+      "station": 2,
+      "spot": "Elder Tree",
+      "title": "A bent fern",
+      "speaker": "Luma",
+      "clue": "Go to the Elder Tree. A fern has been bent by tiny muddy boots. Wave to uncover the trail.",
+      "spell": "Glowmend"
+    },
+    {
+      "mode": "ordered",
+      "kind": "encounter",
+      "station": 3,
+      "spot": "Treasure Chest",
+      "title": "A knot of blue ribbon",
+      "speaker": "Luma",
+      "clue": "Search the Treasure Chest. Someone dropped a blue ribbon with a tiny bell. Let your wand lift it."
+    },
+    {
+      "mode": "ordered",
+      "kind": "encounter",
+      "station": 1,
+      "spot": "Moon Crystal",
+      "title": "The warm silver scale",
+      "speaker": "Luma",
+      "clue": "Visit the Moon Crystal. A silver scale is caught in a crack. It feels warm, even in this cold water. Wave to collect it."
+    },
+    {
+      "mode": "dialogue",
+      "kind": "reveal",
+      "title": "A trail into the mountain",
+      "speaker": "Luma",
+      "clue": "Tiny boots. A blue ribbon. A warm scale. Someone carried our crystal into the Crystal Caves. You made the fairies well enough to follow. Meet me at the realm map."
+    }
+  ]
 }

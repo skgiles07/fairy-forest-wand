@@ -33,8 +33,9 @@
 #include "magiquest.h"
 
 // ---- per-station config ----------------------------------------------------
-static const int STATION = 1;              // <-- change per board, 1..5
-static const int FINAL_STATION = 5;
+static const int STATION = 1;              // <-- change per board, 1..3
+static const int FINAL_STATION = 3;
+static_assert(STATION >= 1 && STATION <= 3, "STATION must be 1, 2, or 3");
 static const char* WIFI_SSID = "YOUR_WIFI";
 static const char* WIFI_PASS = "YOUR_PASSWORD";
 static const char* HUB_URL = "http://192.168.1.10:8000";  // Mac running hub/server.py

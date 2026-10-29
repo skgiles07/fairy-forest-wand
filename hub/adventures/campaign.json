@@ -1,6 +1,28 @@
 {
-  "title": "Liza's Magi Quest",
-  "intro": "You got your wand at the castle. The whole realm needs your help! Wave your wand to begin.",
+  "title": "Liza’s Heartlight Quest",
+  "intro": "Your wand has chosen you, Liza. Beyond the castle, five lands have lost their light. Meet your friends, learn six spells, and carry the magic from room to room.",
+  "wait_for_next": true,
+  "progress_file": "progress-v2.json",
+  "stations": [
+    {
+      "id": 1,
+      "name": "Moon Crystal",
+      "room": "Choose a room",
+      "icon": "◇"
+    },
+    {
+      "id": 2,
+      "name": "Elder Tree",
+      "room": "Choose a room",
+      "icon": "♧"
+    },
+    {
+      "id": 3,
+      "name": "Treasure Chest",
+      "room": "Choose a room",
+      "icon": "▣"
+    }
+  ],
   "chapters": [
     "01-fairy-pools.json",
     "02-crystal-caves.json",

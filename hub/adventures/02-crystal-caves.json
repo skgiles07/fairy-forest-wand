@@ -1,15 +1,132 @@
 {
   "title": "The Crystal Caves",
+  "subtitle": "Clues before guesses",
   "scene": "cave",
-  "villain": "Goblin",
-  "cheer": "You found {spot}!",
-  "opening": "Who stole the crystal that made the fairies sick? The clues are down in the Crystal Caves. Find all four clues, then catch the thief!",
-  "not_yet": "Hee hee! No clue there. Keep looking!",
+  "mentor": "Pip",
+  "opening": "The cave crystals have lost their song. Somewhere below the mountain, a tiny bell rings.",
+  "ending": "Pip opens the mountain trail. The stolen crystal went to Emberwing, but her fire is tangled in black vines. Only the Frost Queen knows how to get close.",
+  "not_yet": "That place is resting. Follow the glowing landmark on your quest card.",
+  "cheer": "{spot} answers your wand!",
   "steps": [
-    { "mode": "collect", "stations": [1, 2, 3, 4], "spot": "The Clue Hunt",
-      "spots": { "1": "The Muddy Footprint", "2": "The Torn Sock", "3": "The Dropped Spoon", "4": "The Giggle Jar" },
-      "clue": "Look for four clues. A muddy footprint, a torn sock, a dropped spoon, and a giggle in a jar. Wave your wand at each one!" },
-    { "station": 5, "spot": "The Crystal Pedestal", "clue": "A footprint, a sock, a spoon, and a giggle. It was the goblin! He is hiding by the Crystal Pedestal. Zap him with fairy light!" }
-  ],
-  "ending": "Gotcha! The goblin says sorry. He gives the crystal back and it glows on the pedestal again. But the cave is still cold. We need help from the Frost Queen on the Frozen Mountain!"
+    {
+      "mode": "dialogue",
+      "kind": "mentor",
+      "title": "The cave that forgot its song",
+      "speaker": "Luma",
+      "clue": "I hear someone hiding, Liza. Follow the clues at our three landmarks. Find out who took the crystal before you decide why."
+    },
+    {
+      "mode": "collect",
+      "kind": "hunt",
+      "title": "Follow the little thief",
+      "speaker": "Luma",
+      "stations": [
+        1,
+        2,
+        3
+      ],
+      "spots": {
+        "1": "Moon Crystal",
+        "2": "Elder Tree",
+        "3": "Treasure Chest"
+      },
+      "items_by_station": {
+        "1": "Sooty Footprint",
+        "2": "Blue Thread",
+        "3": "Bent Spoon"
+      },
+      "clue": "Search every landmark for a clue. The Moon Crystal holds a Sooty Footprint, the Elder Tree a Blue Thread, and the Treasure Chest a Bent Spoon."
+    },
+    {
+      "mode": "dialogue",
+      "kind": "reveal",
+      "title": "Pip tells the truth",
+      "speaker": "Pip",
+      "clue": "Please do not zap me! I am Pip. I carried the Heart Crystal to Emberwing. She said her egg was getting cold. I thought I was helping. I did not know the pools would get sick."
+    },
+    {
+      "mode": "collect",
+      "kind": "hunt",
+      "title": "A lantern for hidden things",
+      "speaker": "Pip",
+      "stations": [
+        1,
+        2,
+        3
+      ],
+      "spots": {
+        "1": "Moon Crystal",
+        "2": "Elder Tree",
+        "3": "Treasure Chest"
+      },
+      "items_by_station": {
+        "1": "Prism Chip",
+        "2": "Listening Leaf",
+        "3": "Looking Glass"
+      },
+      "clue": "Pip knows how to make a seeing spell. Find a Prism Chip at the Moon Crystal, a Listening Leaf at the Elder Tree, and a Looking Glass at the Treasure Chest."
+    },
+    {
+      "mode": "dialogue",
+      "kind": "forge",
+      "title": "The Truthlight spell",
+      "speaker": "Pip",
+      "clue": "Back already? Prism, leaf, and looking glass: show us what the shadows hide. Your new spell is Truthlight. A clue is better than a guess.",
+      "reward": {
+        "spell": "Truthlight",
+        "icon": "◇"
+      }
+    },
+    {
+      "mode": "puzzle",
+      "kind": "encounter",
+      "title": "Light the crystal echoes",
+      "clue": "Take Truthlight to the Treasure Chest, then the Moon Crystal, then the Elder Tree. Three echoes will show the journey of our missing crystal.",
+      "pattern": [
+        3,
+        1,
+        2
+      ],
+      "spots": {
+        "1": "Moon Crystal",
+        "2": "Elder Tree",
+        "3": "Treasure Chest"
+      },
+      "speaker": "Pip",
+      "spell": "Truthlight"
+    },
+    {
+      "mode": "dialogue",
+      "kind": "reveal",
+      "title": "A shadow in the picture",
+      "speaker": "Luma",
+      "clue": "There! The crystal is beside a dragon egg. But those black vines were not there before. Something is drinking its light. I can hear Emberwing asking for help."
+    },
+    {
+      "mode": "ordered",
+      "kind": "encounter",
+      "station": 3,
+      "spot": "Treasure Chest",
+      "title": "Pip lends his bell",
+      "speaker": "Pip",
+      "clue": "Visit the Treasure Chest and take Pip’s Copper Bell. Ring it with your wand so the mountain knows you are a friend."
+    },
+    {
+      "mode": "ordered",
+      "kind": "encounter",
+      "station": 1,
+      "spot": "Moon Crystal",
+      "title": "The hidden stair",
+      "speaker": "Pip",
+      "clue": "Go back to the Moon Crystal. Truthlight reveals a stair behind the stone. Wave to open the way up Frozen Mountain.",
+      "spell": "Truthlight"
+    },
+    {
+      "mode": "dialogue",
+      "kind": "reveal",
+      "title": "A promise to put things right",
+      "speaker": "Pip",
+      "clue": "I will help the fairies mend their pools while you find the Frost Queen. Please tell Emberwing I am sorry. Next time, I will ask before I borrow."
+    }
+  ]
 }
