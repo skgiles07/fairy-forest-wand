@@ -115,11 +115,46 @@ One part per station, nothing to wire. ~$29 each (RobotShop $28.90 US),
   Liza's story, Frost Queen + Good Witch + castle intro, printable sleeves,
   generated clue cards, spellbook, item cards. `hub/test_server.py` ok;
   `hub/verify.py` (headless-Chrome self-drive) `verify ok, skipped: []`.
-- In hand: 1 Adafruit board (needs a micro-USB data cable). M5StickS3
-  arrives Thu 10/29.
-- Not verified: decoder timing against the real wand; 38 kHz receiver
-  hearing the 36 kHz wand; StickS3 IR window position (sleeves carry a
-  placeholder); 48 x 24 x 14 mm sleeve size.
+- In hand: 1 Adafruit board (needs a micro-USB data cable), 1 M5StickS3
+  (arrived 10/29, tested, see below).
+- Not verified: StickS3 IR window position (sleeves carry a placeholder);
+  48 x 24 x 14 mm sleeve size; Button A alone registering a hit at the hub
+  (the hub saw a hit, but its `wand_id` was the wand's, not Button A's 0x0).
+
+### M5StickS3 hardware test (2026-10-29)
+
+- `station.ino` compiles clean for `m5stack:esp32:m5stack_sticks3`
+  (arduino-cli, `m5stack:esp32` core 3.3.10, M5Unified 0.2.28; 1.26 MB,
+  37% of flash).
+- Wand IR works on the stick's receiver. The 36 kHz wand vs 38 kHz receiver
+  worry is settled. Mark timings: zero ~245-275 us, one ~500-560 us (spec
+  288 / 576), so the decoder thresholds in `magiquest.h` hold.
+- Wand ID: `0xAF0E4902`. Seen as `0xAF0E0902` at the hub (one flipped bit),
+  so exact-ID matching would need tolerance. The hub only stores `wand_id`
+  (`server.py:189`), so play is not affected.
+- Decode yield is low on casual waves: about 1 clean decode in 6 wand-sized
+  frames. Failures are short frames (42-55 pairs of 56), the beam sweeping
+  off the receiver mid-frame, not a timing fault. Hold the wand steady 6-12
+  in away and pause on each flick. Did not relax the decoder to accept
+  55-pair frames (risk of wrong IDs).
+- Stick joins 2.4 GHz WiFi and POSTs `/hit` to the Mac hub (hub `rev`
+  advanced). Hub listens on `*:8000`.
+- Flashing gotchas (native USB, macOS):
+  - `arduino-cli upload` fails: `termios.error: (6, 'Device not
+    configured')`. The reset toggle makes the port disappear.
+  - Put the stick in download mode (hold the side button next to the green
+    LED about 3 s, screen goes black, LED flashes), then flash with esptool
+    and no reset:
+    `esptool --chip esp32s3 -p /dev/cu.usbmodem* -b 460800 --before no-reset
+    --after hard-reset write-flash 0x0 <sketch>.ino.merged.bin`
+    (get the merged bin from `arduino-cli compile --export-binaries`).
+  - After flashing the stick stays in download mode: unplug and replug the
+    cable, no buttons.
+  - arduino-cli needs the sketch folder named like the `.ino`; compile from a
+    copy. macOS has no `timeout`; use `perl -e 'alarm N; exec @ARGV'`.
+  - Serial prints only on events; a heartbeat line helps confirm the link.
+- WiFi SSID, password, and `HUB_URL` (Mac LAN IP) are set in a scratch copy
+  of the sketch, not in the repo. `station.ino` still has the placeholders.
 
 ### Chapters (TV hub, 2026-10-28)
 
@@ -144,9 +179,10 @@ realm map, 20 s or any wave.
    `CIRCUITPY` or `CPLAYBOOT` drive.
 2. Run the wand test (README Step 1). Green flash = order 4 more. Blue flash =
    paste serial output for a decoder timing fix. Nothing = M5Stack fallback.
-3. StickS3 arrives 10/29: flash `station.ino`, find the IR receiver edge
-   (phone camera + TV remote), fix the IR window in `cards/cutouts/*.svg`
-   and confirm the 48 x 24 x 14 mm sleeve.
+3. StickS3 flashed and wand-tested 10/29. Still to do: find the IR receiver
+   edge (phone camera + TV remote), fix the IR window in
+   `cards/cutouts/*.svg`, confirm the 48 x 24 x 14 mm sleeve, and buy the
+   other stations (wand test passed, so order 4 more).
 4. Read the five chapters aloud with Liza; confirm the RESOLVED-pending-
    confirmation choices in `wargames/LEDGER.md` (spot names, chapter 5's
    "dragon smoke made everything sick" tie-in, intro line).
