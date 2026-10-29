@@ -1,5 +1,13 @@
-/* Motion changes artwork only; the portrait's layout box never moves. */
-#mentor-art.luma-hover .portrait-sprite{animation:luma-art-hover 4.8s ease-in-out infinite;transform-origin:50% 50%}
-#mentor-art.luma-flying .portrait-sprite{animation:none}
+/* Transform artwork inside its layout box; story text and controls stay fixed. */
+#mentor-art.character-idle .portrait-sprite{animation:character-breathe 6s ease-in-out infinite;transform-origin:50% 65%}
+#mentor-art.character-idle[data-character=luma] .portrait-sprite{animation:luma-art-hover 4.8s ease-in-out infinite}
+#mentor-art.character-idle[data-character=queen] .portrait-sprite{animation:queen-art-glide 6.5s ease-in-out infinite}
+#mentor-art.character-idle[data-character=willow] .portrait-sprite{animation:willow-art-sway 6s ease-in-out infinite}
+#mentor-art.character-idle[data-character=briar] .portrait-sprite{animation:briar-art-sway 8s ease-in-out infinite}
+#mentor-art.character-entering .portrait-sprite{animation:none}
 @keyframes luma-art-hover{0%,100%{transform:translateY(0) rotate(-.5deg)}50%{transform:translateY(-7px) rotate(.5deg)}}
-@media(prefers-reduced-motion:reduce){#mentor-art.luma-hover .portrait-sprite{animation:none}}
+@keyframes queen-art-glide{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes willow-art-sway{0%,100%{transform:rotate(-.4deg)}50%{transform:rotate(.6deg)}}
+@keyframes briar-art-sway{0%,100%{transform:rotate(-.3deg) scale(1)}50%{transform:rotate(.4deg) scale(1.006)}}
+@keyframes character-breathe{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-2px) scale(1.004)}}
+@media(prefers-reduced-motion:reduce){#mentor-art.character-idle .portrait-sprite{animation:none}}

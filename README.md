@@ -107,3 +107,7 @@ Original environment and character illustrations remain in `hub/static/assets/`,
 The illustrated Luma remains active, with OpenAI narration. An experimental procedural 3D character was rejected during visual review and is not loaded by the game. Its source remains available locally for reference; a replacement needs a finished character asset matching the existing artwork.
 
 Luma’s illustrated art flies into view on page load and when entering a new Luma chapter or tutorial, then gently hovers. Sensor hits and subsequent dialogue lines do not replay the entrance. Parent Motion-off and reduced-motion preferences disable the effect. No additional model downloads or external generation are needed.
+
+Every illustrated character now has an entrance: Luma flies in, Pip bounds in, Queen Orielle glides upward, Willow swirls into place, Emberwing swoops into a soft landing, and Black Briar slowly emerges. Entrances run when the visible speaker or chapter changes, with small character-specific idle movements afterward. The parent Motion toggle applies to all characters. `node hub/test_portrait_motion.cjs` checks transitions, cancellation, repeat-update suppression, motion preferences and story-panel clearance.
+
+Open `/characters.html` (also linked in parent settings) to replay all six entrances and hear their voices without advancing the saved adventure.
