@@ -10,7 +10,7 @@ Current story and reference comparison: [`docs/story/heartlight-design.md`](docs
 python3 hub/server.py
 ```
 
-Open `http://localhost:8000/` on the Mac. For a TV browser or cast tab, use `http://<mac-ip>:8000/` on the same local network. Tap the game once to enable audio. Browser voice depends on the installed voices and browser support.
+Open `http://localhost:8000/` on the Mac. For a TV browser or cast tab, use `http://<mac-ip>:8000/` on the same local network. Voice defaults on. Click **Tap to hear story**, **Begin**, or a game control to permit audio playback. Voice off remembers an explicit mute choice. Narration uses bundled MP3s, so playback does not need an installed browser speech voice or an external service.
 
 - **1, 2, 3:** simulate Moon Crystal, Elder Tree, Treasure Chest.
 - **Continue / Enter:** advance a TV dialogue, start a chapter, or leave the realm map.
@@ -18,6 +18,16 @@ Open `http://localhost:8000/` on the Mac. For a TV browser or cast tab, use `htt
 - Campaign restart is a parent action; it clears saved campaign progress.
 
 Sensor hits do not skip mentor dialogue. Hunts accept any order; route puzzles show the order to follow. Chapter maps wait for you. There is no countdown for walking around the house.
+
+## Wand Hall tutorial and sensor practice
+
+Choose **Wand practice** in the top bar, **Visit the Wand Hall first** before a new adventure, or the Wand Hall entry in parent settings. Liza receives her wand at Great Wolf Lodge, tries each of the three landmarks, practices three separate waves, follows a short route, and graduates from an any-order hunt. The twelve-beat lesson can be replayed independently of the five story chapters.
+
+For physical testing, switch **Preview mode** to **Wand mode**. The three signal runes show received messages; **Wand signals** opens parent diagnostics with separate preview, station-button, and reported-wand counts plus the last message time. A button or preview click is not proof that the infrared receiver works. Use the actual wand to check all three station IDs and repeat waves about two seconds apart.
+
+**Practice again** clears only the lesson and its signal counters. **Return to your adventure** restores the exact suspended story position. The lesson never rewrites the story checkpoint and is not inserted into the saved chapter sequence. Restarting the server resumes the main adventure; use Wand practice to start a fresh test.
+
+Print the [sensor test sheet](cards/tutorial.md). Story notes: [tutorial structure](docs/story/tutorial.md). The original lodge illustration and its generation prompt live in `hub/static/assets/lodge-hall.png` and `lodge-hall-prompt.txt`.
 
 ## Three household landmarks
 
@@ -71,10 +81,23 @@ The older Circuit Playground Express files under `firmware/` are a standalone IR
 python3 hub/test_server.py
 python3 hub/cards.py hub/adventures/campaign.json --check
 python3 firmware/test_magiquest.py
+python3 hub/build_narration.py --check
+node hub/test_narration.js
+node hub/test_motion.cjs
 ```
 
 `hub/verify.py` provides browser walkthrough checks when its browser dependencies are available; it starts a separate temporary-state server so family progress is not touched.
 
+`python3 hub/verify.py --training` checks the complete Wand Hall lesson and exact return to the suspended adventure. `python3 hub/test_server.py --http` also checks sensor-source diagnostics and the training HTTP routes with temporary state.
+
 The JSON defines the story. `dialogue` beats wait for Continue; `collect` finds all station ingredients; `ordered` visits one landmark; `puzzle` follows a landmark sequence; `boss` follows a repeated route to remove knots. Spell rewards belong to completed forge scenes. `/hit` keeps the station firmware response contract `heal | wrong | done`; `/state` supplies the richer TV state.
 
-Original environment and character art lives in `hub/static/assets/`, alongside the generation prompts and provenance. These are illustrated scenes with web effects and optional browser speech; character animation and recorded voice acting are future work. Hardware reception still needs a real sensor test.
+## Voice and animated assets
+
+`hub/build_narration.py` creates offline narration with the installed macOS Samantha voice and ffmpeg. The 59 story passages share 58 content-hashed MP3s under `hub/static/audio/`. Rerun the builder after changing dialogue; `--check` detects stale passages. The game cancels old audio on story changes, supports replay and mute, and shows a tap action if browser autoplay is blocked.
+
+Three original Blender models animate live inside the rune wheel and during landmark actions: floating Moon Crystal, swaying Elder Tree, and opening Treasure Chest. `landmarks3d.js` plays their four-second GLB animations with locally bundled model-viewer 4.4.0. The parent **Motion** setting pauses motion; reduced-motion preferences apply by default. All runtime files are local.
+
+Editable source, builder, and preview: `assets/blender/`. These assets were created through the local [MCP for Blender](https://github.com/ahujasid/mcp-for-blender) connection, using Blender 5.2.3 and pinned MCP package 2.2.6. See `assets/blender/README.md` for reproducible authoring and export details. Blender MCP is configured for Codex; its native tools appear after restarting Codex. The verified SDK bridge can author assets in the current session.
+
+Original environment and character illustrations remain in `hub/static/assets/`, alongside prompts and provenance. The landmark models are real animated 3D meshes; mentor portraits are still illustrations. Rigged character bodies, face animation, and lip-sync are not included yet. Optional rendered-video support is ready, but the initial external fairy-video generation failed and no clip is shipped. Hardware reception still needs a real sensor test.

@@ -1,0 +1,296 @@
+{
+  "version": 1,
+  "voice": "Samantha",
+  "rate": 155,
+  "generator": "macOS say; ffmpeg MP3",
+  "entries": {
+    "intro": {
+      "text": "Your wand has chosen you, Liza. Beyond the castle, five lands have lost their light. Meet your friends, learn six spells, and carry the magic from room to room.",
+      "file": "audio/4fe3e604c58bf5e6384f.mp3"
+    },
+    "tutorial:beat:0": {
+      "text": "Welcome to Great Wolf Lodge, Liza. This is the Wand Hall! Here is your wand. Hold the handle and point the tip toward a clear landmark. Shall we see which magic answers?",
+      "file": "audio/b2e594b7e3e0f8e82647.mp3"
+    },
+    "tutorial:beat:1": {
+      "text": "Visit the Moon Crystal. Point your wand at its little listening window and give one gentle wave. Watch for a sparkle.",
+      "file": "audio/3ce42f28b38ca2fe74ff.mp3"
+    },
+    "tutorial:beat:2": {
+      "text": "It answered! Your wand chose you, Liza. A small wave is enough. You do not need to touch the landmark. Let us meet the other two.",
+      "file": "audio/b6be94cd5f64c80acf19.mp3"
+    },
+    "tutorial:beat:3": {
+      "text": "Find the Elder Tree. Point at its listening window and wave once. The old tree has been waiting to say hello.",
+      "file": "audio/dc5c664b021c574c770c.mp3"
+    },
+    "tutorial:beat:4": {
+      "text": "Now find the Treasure Chest. Point at its listening window and wave once. Something bright is hiding inside!",
+      "file": "audio/71121b3531ac3b1ee622.mp3"
+    },
+    "tutorial:beat:5": {
+      "text": "All three landmarks know your wand. Now we will practice Glowmend. We will build it with three slow, separate waves at the Moon Crystal. Let the sparkle settle between waves.",
+      "file": "audio/9ad25e5cd485076fc5f0.mp3"
+    },
+    "tutorial:beat:6": {
+      "text": "At the Moon Crystal, wave three separate times. Let the sparkle settle; count one, two before each new wave. Watch your practice spell fill.",
+      "file": "audio/96bb232d53970d8712bb.mp3"
+    },
+    "tutorial:beat:7": {
+      "text": "You made a little healing light! Come back to me at the TV whenever a friend has something to say. When a clue names a landmark, carry your wand to that place. Our next trail is Elder Tree, Treasure Chest, Moon Crystal.",
+      "file": "audio/2946fe72d6bc5ed33bb7.mp3"
+    },
+    "tutorial:beat:8": {
+      "text": "First the Elder Tree, then the Treasure Chest, then the Moon Crystal. Wave once at each in that order. A different landmark starts this little trail again. We can try as often as you like.",
+      "file": "audio/f1b39ca8a7ad6acab7d3.mp3"
+    },
+    "tutorial:beat:9": {
+      "text": "You followed the whole trail! This time, choose your own order. A Moon Spark, a Leaf Spark, and a Treasure Spark are waiting at our three landmarks. Find all three, then come back to the TV.",
+      "file": "audio/23fd8326f80dea49d619.mp3"
+    },
+    "tutorial:beat:10": {
+      "text": "Find one spark at each landmark. Moon Crystal, Elder Tree, Treasure Chest: any order you like. Wave once at each. A spark you already found will stay safe.",
+      "file": "audio/e3def8f119c546250e42.mp3"
+    },
+    "tutorial:beat:11": {
+      "text": "Three sparks, one wonderful wand keeper! You can wake a landmark, build a spell, follow a trail, and find things your own way. Your practice Glowmend can rest now. The fairies will teach you its full magic when your real adventure begins.",
+      "file": "audio/23eadf55e869a967c841.mp3"
+    },
+    "tutorial:ending": {
+      "text": "Thank you, Liza. All three landmarks know your wand, and the Wand Hall is glowing. You are ready for the Fairy Pools! Come back to practice whenever you like.",
+      "file": "audio/94b0e057f8a70854c6fe.mp3"
+    },
+    "chapter:0:beat:0": {
+      "text": "Liza! I am Luma, keeper of the Fairy Pools. Our water has turned dark. Find three little lights around the house, then come back to me at the TV.",
+      "file": "audio/114874d8a1118c304def.mp3"
+    },
+    "chapter:0:beat:1": {
+      "text": "Visit all three landmarks. Find a Moon Dewdrop at the Moon Crystal, a Silverleaf at the Elder Tree, and a Sunbell at the Treasure Chest.",
+      "file": "audio/f737228b14556acc2147.mp3"
+    },
+    "chapter:0:beat:2": {
+      "text": "You brought them! Moonlight, leaflight, sunlight: join together. This is Glowmend. It repairs what is hurt. Come close and learn its sign.",
+      "file": "audio/eb6169616e70fab254bc.mp3"
+    },
+    "chapter:0:beat:3": {
+      "text": "Carry Glowmend from the Moon Crystal to the Elder Tree, then to the Treasure Chest. Each wave clears one pool. Take your time; the fairies will wait.",
+      "file": "audio/7939e09b61fd82e65493.mp3"
+    },
+    "chapter:0:beat:4": {
+      "text": "The fairies are opening their wings! But look beneath the water. The cradle for the Heart Crystal is empty. The pools need that crystal to stay well.",
+      "file": "audio/8406a9ae4b6774a14d96.mp3"
+    },
+    "chapter:0:beat:5": {
+      "text": "Go to the Elder Tree. A fern has been bent by tiny muddy boots. Wave to uncover the trail.",
+      "file": "audio/fcd030c9107f08cd8373.mp3"
+    },
+    "chapter:0:beat:6": {
+      "text": "Search the Treasure Chest. Someone dropped a blue ribbon with a tiny bell. Let your wand lift it.",
+      "file": "audio/ba5b0f88e00b4c8a3f83.mp3"
+    },
+    "chapter:0:beat:7": {
+      "text": "Visit the Moon Crystal. A silver scale is caught in a crack. It feels warm, even in this cold water. Wave to collect it.",
+      "file": "audio/3629a61e6c7902440c0a.mp3"
+    },
+    "chapter:0:beat:8": {
+      "text": "Tiny boots. A blue ribbon. A warm scale. Someone carried our crystal into the Crystal Caves. You made the fairies well enough to follow. Meet me at the realm map.",
+      "file": "audio/e928c59ce8e0286794b4.mp3"
+    },
+    "chapter:0:ending": {
+      "text": "Three pools sparkle again. The fairies can fly, but their Heart Crystal is still missing. A warm silver scale points toward the Crystal Caves.",
+      "file": "audio/16c6f46c7b9577d9d8b2.mp3"
+    },
+    "chapter:1:beat:0": {
+      "text": "I hear someone hiding, Liza. Follow the clues at our three landmarks. Find out who took the crystal before you decide why.",
+      "file": "audio/8798a6782628357ee964.mp3"
+    },
+    "chapter:1:beat:1": {
+      "text": "Search every landmark for a clue. The Moon Crystal holds a Sooty Footprint, the Elder Tree a Blue Thread, and the Treasure Chest a Bent Spoon.",
+      "file": "audio/d49ab0d5a7cceeb9f35d.mp3"
+    },
+    "chapter:1:beat:2": {
+      "text": "Please do not zap me! I am Pip. I carried the Heart Crystal to Emberwing. She said her egg was getting cold. I thought I was helping. I did not know the pools would get sick.",
+      "file": "audio/26f2ed4e6313e0ecf689.mp3"
+    },
+    "chapter:1:beat:3": {
+      "text": "Pip knows how to make a seeing spell. Find a Prism Chip at the Moon Crystal, a Listening Leaf at the Elder Tree, and a Looking Glass at the Treasure Chest.",
+      "file": "audio/0c6bf1fb80553dd16bc3.mp3"
+    },
+    "chapter:1:beat:4": {
+      "text": "Back already? Prism, leaf, and looking glass: show us what the shadows hide. Your new spell is Truthlight. A clue is better than a guess.",
+      "file": "audio/b8064626cc4641460f81.mp3"
+    },
+    "chapter:1:beat:5": {
+      "text": "Take Truthlight to the Treasure Chest, then the Moon Crystal, then the Elder Tree. Three echoes will show the journey of our missing crystal.",
+      "file": "audio/2d6ce3d7052f76ba1de1.mp3"
+    },
+    "chapter:1:beat:6": {
+      "text": "There! The crystal is beside a dragon egg. But those black vines were not there before. Something is drinking its light. I can hear Emberwing asking for help.",
+      "file": "audio/839da0cbb8f93b1a6398.mp3"
+    },
+    "chapter:1:beat:7": {
+      "text": "Visit the Treasure Chest and take Pip’s Copper Bell. Ring it with your wand so the mountain knows you are a friend.",
+      "file": "audio/0d7c421cab50ab957584.mp3"
+    },
+    "chapter:1:beat:8": {
+      "text": "Go back to the Moon Crystal. Truthlight reveals a stair behind the stone. Wave to open the way up Frozen Mountain.",
+      "file": "audio/4344b537c49dfd4d9b9b.mp3"
+    },
+    "chapter:1:beat:9": {
+      "text": "I will help the fairies mend their pools while you find the Frost Queen. Please tell Emberwing I am sorry. Next time, I will ask before I borrow.",
+      "file": "audio/49b1e5bbd847addc0583.mp3"
+    },
+    "chapter:1:ending": {
+      "text": "Pip opens the mountain trail. The stolen crystal went to Emberwing, but her fire is tangled in black vines. Only the Frost Queen knows how to get close.",
+      "file": "audio/40f5b034cca39e131d97.mp3"
+    },
+    "chapter:2:beat:0": {
+      "text": "Welcome, Liza. I am Queen Orielle. Strong magic needs a gentle hand. Bring me three gifts of winter, and I will teach you how to cool a dragon’s fire.",
+      "file": "audio/f4f6b3f22f450cd402d3.mp3"
+    },
+    "chapter:2:beat:1": {
+      "text": "Find a Snow Pearl at the Moon Crystal, a Frost Fern at the Elder Tree, and a Winter Chime at the Treasure Chest. Return to the queen when all three are yours.",
+      "file": "audio/81bfcf9683b7cffa88cb.mp3"
+    },
+    "chapter:2:beat:2": {
+      "text": "Snow Pearl, Frost Fern, Winter Chime: hold the heat and still its climb. This is Frostbind. It cools what burns without hurting what lives.",
+      "file": "audio/1663a51e7ea018e79a59.mp3"
+    },
+    "chapter:2:beat:3": {
+      "text": "Repeat my winter song: Moon Crystal, Treasure Chest, Elder Tree, Moon Crystal. Wave once at each, in that order. If you forget, we can sing it again.",
+      "file": "audio/cd7951153498625488ec.mp3"
+    },
+    "chapter:2:beat:4": {
+      "text": "You remembered. The last note came home to the first. Magic is strongest when you return what you borrow. Remember that when you meet Emberwing.",
+      "file": "audio/6cfbcc09f091e5a443ea.mp3"
+    },
+    "chapter:2:beat:5": {
+      "text": "Visit the Elder Tree. Use Glowmend to repair the bridge instead of breaking the ice. A family of snow mice is sleeping underneath.",
+      "file": "audio/cd6ffa58024c22fbaf50.mp3"
+    },
+    "chapter:2:beat:6": {
+      "text": "Go to the Treasure Chest. Truthlight can wake the queen’s mirror. Wave and look for the unicorns.",
+      "file": "audio/6cdbd6176e9e26e98588.mp3"
+    },
+    "chapter:2:beat:7": {
+      "text": "The Unicorn Forest has been zapped! Black vines have tangled its paths. Willow, the Good Witch, is keeping the unicorns safe inside her great shining bubble.",
+      "file": "audio/26648e0e3a43aa53f358.mp3"
+    },
+    "chapter:2:beat:8": {
+      "text": "Take Frostbind to the Moon Crystal. Cool a little star into a lantern. Its blue light will guide you down the other side of the mountain.",
+      "file": "audio/a49558b65e7a48bc450e.mp3"
+    },
+    "chapter:2:beat:9": {
+      "text": "Your path is ready. Find Willow in the Unicorn Forest. She knows a way up Fire Mountain, but first she needs someone brave enough to help her friends.",
+      "file": "audio/a6737916e9a126c38637.mp3"
+    },
+    "chapter:2:ending": {
+      "text": "The Frost Queen lowers her staff. A path of blue light reaches the Unicorn Forest. Its magic has gone quiet, but something bright is hiding inside a bubble.",
+      "file": "audio/696d18482ed494ecdfba.mp3"
+    },
+    "chapter:3:beat:0": {
+      "text": "Liza! It is Willow. My bubble kept the unicorns safe when the forest was zapped. I cannot leave it yet. Wake our three paths, then help me open the bubble gently.",
+      "file": "audio/197734770dbd4196fb1f.mp3"
+    },
+    "chapter:3:beat:1": {
+      "text": "Find a Rainbow Thread at the Moon Crystal, a Root Key at the Elder Tree, and a Wind Ribbon at the Treasure Chest. These will stitch our paths together.",
+      "file": "audio/b3a9cee5f16781fb38a6.mp3"
+    },
+    "chapter:3:beat:2": {
+      "text": "Thread, key, and ribbon: let lost paths meet. Wayweave opens a safe road through tangled places. Follow its green light from landmark to landmark.",
+      "file": "audio/b78d99538908e6dab1fe.mp3"
+    },
+    "chapter:3:beat:3": {
+      "text": "Carry Wayweave from the Elder Tree to the Moon Crystal, then to the Treasure Chest. The three paths will meet beneath my bubble.",
+      "file": "audio/76343fc00541c5e27c28.mp3"
+    },
+    "chapter:3:beat:4": {
+      "text": "The paths are bright! But a little unicorn is afraid to step outside. A loud pop would frighten her. Let us open the bubble with a soft song instead.",
+      "file": "audio/f4dd3c0b5a60e63ce90f.mp3"
+    },
+    "chapter:3:beat:5": {
+      "text": "Collect a Star Petal at the Moon Crystal, a Humming Seed at the Elder Tree, and a Tiny Music Box at the Treasure Chest. Bring the song back to the TV.",
+      "file": "audio/8d9ea84bd54afd009690.mp3"
+    },
+    "chapter:3:beat:6": {
+      "text": "A petal, a seed, a music box: wake the courage in a small heart. Starcall carries a friend’s voice across the dark. Listen; every unicorn knows your name.",
+      "file": "audio/a7364b0bc0edceb2340f.mp3"
+    },
+    "chapter:3:beat:7": {
+      "text": "Sing with your wand: Treasure Chest, Elder Tree, Moon Crystal. Each wave loosens one ribbon of the bubble. No popping. Just a gentle opening.",
+      "file": "audio/7b0caa49c01c74e9ef10.mp3"
+    },
+    "chapter:3:beat:8": {
+      "text": "Here they come! One, two, all our unicorns. Thank you, Liza. I saw the same black vine in the pools, the caves, and my forest. It follows the Heart Crystal.",
+      "file": "audio/08a09a96e81180367649.mp3"
+    },
+    "chapter:3:beat:9": {
+      "text": "Go to the Elder Tree. Cast Wayweave, and I will lift the stones with you. There is our road up Fire Mountain!",
+      "file": "audio/1766a79f067c101e6026.mp3"
+    },
+    "chapter:3:beat:10": {
+      "text": "Visit the Moon Crystal. Use Truthlight on a black leaf. A tiny heart shape appears. Remember that mark; it is the clue we have been missing.",
+      "file": "audio/34fab84f3f843f29bc4a.mp3"
+    },
+    "chapter:3:beat:11": {
+      "text": "Take your spells up the mountain. Luma, Pip, Queen Orielle, and I will be with you in spirit. Find Emberwing. Find out what her egg really needs.",
+      "file": "audio/bc7d0f214d26884094f7.mp3"
+    },
+    "chapter:3:ending": {
+      "text": "The unicorns dance beneath the trees. Willow clears the rockslide with her wand. Beyond it rises Fire Mountain, and all the clues finally point to one place.",
+      "file": "audio/1cf6ccb1aa01ec1a9738.mp3"
+    },
+    "chapter:4:beat:0": {
+      "text": "Please stay back! My egg was cold, so I asked Pip for the crystal. But these vines grew around it. Now I cannot let go. I do not want to hurt anyone.",
+      "file": "audio/3896ab75c809cfa2411c.mp3"
+    },
+    "chapter:4:beat:1": {
+      "text": "Every landmark kept a piece of this mystery. Find the Pool Mark at the Moon Crystal, the Forest Mark at the Elder Tree, and the Cave Mark at the Treasure Chest. Bring them back together.",
+      "file": "audio/9cf0e844c8de92111907.mp3"
+    },
+    "chapter:4:beat:2": {
+      "text": "The signs fit together! The Heart Crystal shares light; it cannot make light alone. Heartglow follows the kindness joining every living thing. You have been learning it all along.",
+      "file": "audio/6d9bd7841e69ef40bda5.mp3"
+    },
+    "chapter:4:beat:3": {
+      "text": "I took the crystal’s light for myself. Without a way home, it grew into me: the Black Briar. Your little spells cannot untangle a whole mountain!",
+      "file": "audio/91e42d1c66bcd9f41e33.mp3"
+    },
+    "chapter:4:beat:4": {
+      "text": "At the Elder Tree, use Wayweave to open a path through the roots. Willow holds the road steady while you travel.",
+      "file": "audio/84b37c3eee304c58f6a9.mp3"
+    },
+    "chapter:4:beat:5": {
+      "text": "At the Moon Crystal, use Frostbind to cool the stones around Emberwing’s egg. Queen Orielle keeps the cold gentle.",
+      "file": "audio/ceb7ad7e64a8c5a1b5b6.mp3"
+    },
+    "chapter:4:beat:6": {
+      "text": "Follow the light: Treasure Chest, Moon Crystal, Elder Tree. Then repeat that journey. Every wave loosens one of the six briar knots. We will wait while you travel.",
+      "file": "audio/5aca6db43ab835965381.mp3"
+    },
+    "chapter:4:beat:7": {
+      "text": "The vines are falling away! My egg is warm because you stayed to help me. It needs my warmth, not a stolen crystal. Please, Liza. Take the Heart Crystal home.",
+      "file": "audio/fa198cce5864fdc43724.mp3"
+    },
+    "chapter:4:beat:8": {
+      "text": "Visit the Treasure Chest. Use Glowmend to lift the Heart Crystal without breaking its cradle. Pip is holding the basket open for you.",
+      "file": "audio/bd68afcba26a90b70f15.mp3"
+    },
+    "chapter:4:beat:9": {
+      "text": "Moon Crystal, Elder Tree, Treasure Chest. Share Heartglow with every landmark. The crystal returns to the pools, and a new Heart Seed begins to grow.",
+      "file": "audio/6fec4f11564e68ac1164.mp3"
+    },
+    "chapter:4:beat:10": {
+      "text": "You healed the fairies. You listened to Pip. You solved the queen’s riddle and freed the unicorns. You helped a frightened dragon. The realm is bright because you shared your light. This is your story, Liza.",
+      "file": "audio/5577b7f38b15e571ced0.mp3"
+    },
+    "chapter:4:ending": {
+      "text": "The Heart Crystal shines in its cradle. The pools sing, the cave crystals ring, the snow sparkles, and the unicorns run free. Emberwing’s hatchling opens its eyes. Liza is the Keeper of the Heartlight.",
+      "file": "audio/d39b8773182ece67238e.mp3"
+    },
+    "finished": {
+      "text": "The Heart Crystal shines in its cradle. The pools sing, the cave crystals ring, the snow sparkles, and the unicorns run free. Emberwing’s hatchling opens its eyes. Liza is the Keeper of the Heartlight.",
+      "file": "audio/d39b8773182ece67238e.mp3"
+    }
+  }
+}

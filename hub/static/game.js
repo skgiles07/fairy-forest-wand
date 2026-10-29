@@ -5,27 +5,30 @@
   const params = new URLSearchParams(location.search);
   const defaultStations = [{id:1,name:'Moon Crystal',room:'Choose a room',icon:'◇'},{id:2,name:'Elder Tree',room:'Choose a room',icon:'♧'},{id:3,name:'Treasure Chest',room:'Choose a room',icon:'▣'}];
   let current = null, online = false, busy = false, manual = localStorage.getItem('liza-manual') !== 'false';
-  let voice = params.has('voice') || localStorage.getItem('liza-voice') === 'true';
-  let feedbackTimer, lastSpeak = '', lastSpells = new Set(), renderedRev = -1, stations = defaultStations;
+  let voice = params.has('voice') || localStorage.getItem('liza-voice') !== 'false';
+  let feedbackTimer, lastSpells = new Set(), renderedRev = -1, stations = defaultStations;
   const chapterScenes = ['forest','cave','mountain','pools','fire'];
   const landSymbols = ['✿','◇','❄','♘','♨'];
   const iconFor = name => /dew|water|tear|drop/i.test(name) ? '◈' : /leaf|fern|feather/i.test(name) ? '❧' : /snow|frost|ice/i.test(name) ? '❄' : /bell|chime|song/i.test(name) ? '♪' : /star|sun|spark/i.test(name) ? '✧' : /scale|stone|crystal|gem/i.test(name) ? '◇' : '✦';
-  function speak(text, force=false) {
-    if (!voice || !('speechSynthesis' in window) || (!force && text === lastSpeak)) return;
-    speechSynthesis.cancel(); lastSpeak = text;
-    const speech = new SpeechSynthesisUtterance(text); speech.rate = .88; speech.pitch = 1.08;
-    const selected = speechSynthesis.getVoices().find(v => /Samantha|Karen|Google UK English Female/i.test(v.name));
-    if (selected) speech.voice = selected;
-    speechSynthesis.speak(speech);
+  function syncNarrationControls() {
+    const state=window.Narration?.state;
+    if(!state)return;
+    voice=state.enabled;
+    $('sound').textContent=voice?'Voice on':'Voice off';
+    $('sound').setAttribute('aria-pressed',String(voice));
+    $('sound').title=state.status==='blocked'?'Tap to start the story voice':voice?'Mute story voice':'Turn story voice on';
+    $('repeat').textContent=!voice?'Hear story':state.status==='blocked' || state.status==='error'?'Tap to hear story':state.status==='playing'?'Replay story':'Hear that again';
+    $('repeat').setAttribute('aria-label',state.status==='playing'?'Replay story narration':'Play story narration');
   }
   function syncControls() {
     $('manual-toggle').setAttribute('aria-pressed', String(manual));
     $('manual-toggle').textContent = manual ? 'Preview mode' : 'Wand mode';
     $('sensor-controls').hidden = !manual;
     $('preview-note').textContent = manual ? 'No sensors needed. Click a landmark or press 1, 2, 3.' : 'Use your wand at the three landmarks around the house.';
-    $('sound').textContent = voice ? 'Voice on' : 'Voice off'; $('sound').setAttribute('aria-pressed', String(voice));
+    syncNarrationControls();
     document.querySelectorAll('.sensor-button').forEach(b => b.disabled = !online || busy || !manual);
     $('continue').disabled = !online || busy;
+    ['training-open','training-intro','training-settings-start','training-exit','training-again'].forEach(id=>{if($(id))$(id).disabled=!online || busy;});
   }
   async function request(path, body) {
     const controller = new AbortController(); const timeout = setTimeout(() => controller.abort(), 5000);
@@ -63,6 +66,7 @@
         }
       }
     }
+    renderTraining(data);
     return data;
   }
   async function action(path, body) {
@@ -72,12 +76,51 @@
     catch (error) { connection(false); feedback(error.message,true); return null; }
     finally { busy=false; syncControls(); }
   }
-  async function hit(id, source='manual') {
+  async function hit(id, source='preview') {
+    window.Narration?.unlock();
     if (!manual || !current || !online || busy) return;
     if (current.phase !== 'play' || current.mode === 'dialogue') { feedback('Come back to the TV. Your friend has something to tell you.'); return; }
     await action('/hit',{station:id,wand_id:source});
   }
-  async function next() { if (!current || !online || busy || !['intro','map'].includes(current.phase) && current.mode !== 'dialogue') return; await action('/next',{gen:current.gen}); }
+  async function startTraining() {
+    window.Narration?.unlock();
+    if(current?.training){$('settings-open').click();return;}
+    const result=await action('/training/start',{});
+    if(result){$('settings').close();feedback('Welcome to the Wand Hall. Your adventure will wait.');}
+  }
+  async function exitTraining() {window.Narration?.unlock();await action('/training/exit',{});$('settings').close();}
+  async function practiceAgain() {await action('/reset',{});$('settings').close();}
+  async function next() {
+    window.Narration?.unlock();
+    if(!current || !online || busy)return;
+    if(current.training_complete){await exitTraining();return;}
+    if(!['intro','map'].includes(current.phase) && current.mode!=='dialogue')return;
+    await action('/next',{gen:current.gen});
+  }
+  function renderTraining(s) {
+    const active=Boolean(s.training), diagnostics=s.training_diagnostics || {}, rows=diagnostics.stations || [];
+    document.body.dataset.training=String(active);
+    $('training-status').hidden=!active;
+    $('training-diagnostics').hidden=!active;
+    $('training-open').hidden=s.training_available===false && !active;
+    $('training-open').textContent=active?'Wand signals':'Wand practice';
+    $('training-intro').hidden=active || s.phase!=='intro' || s.training_available===false;
+    $('training-settings-start').hidden=active || s.training_available===false;
+    $('training-exit').hidden=!active;$('training-again').hidden=!active;
+    if(!active)return;
+    const wandCount=rows.filter(row=>row.accepted_wand>0).length;
+    $('training-runes').innerHTML=stations.map(st=>{
+      const row=rows.find(item=>item.id===st.id) || {};
+      const source=row.last_source || '';
+      const label=source==='wand'?'Wand message':source==='button'?'Station button':source==='preview'?'Preview signal':source?'Other signal':'Waiting';
+      return '<div class="training-rune '+esc(source)+'"><span>'+esc(st.icon)+'</span><strong>'+esc(st.name)+'</strong><small>'+label+'</small></div>';
+    }).join('');
+    $('training-summary').textContent=wandCount?'Wand messages accepted at '+wandCount+' of 3 landmarks.':manual?'Preview practice · physical wand reception still to test.':'Wave at each real landmark. The hub will show its messages here.';
+    const ago=row=>row.last_seen_ago_s==null?'No message yet':row.last_seen_ago_s<2?'Just now':Math.round(row.last_seen_ago_s)+'s ago';
+    $('training-diagnostic-table').innerHTML='<table><thead><tr><th>Landmark</th><th>Wand</th><th>Button</th><th>Preview</th><th>Last message</th></tr></thead><tbody>'+rows.map(row=>'<tr><th>'+esc(row.name)+'</th><td>'+Number(row.wand || 0)+'</td><td>'+Number(row.button || 0)+'</td><td>'+Number(row.preview || 0)+'</td><td>'+esc(row.last_source || 'waiting')+'<small>'+ago(row)+'</small></td></tr>').join('')+'</tbody></table><p class="training-hardware-note">Hub received '+rows.reduce((sum,row)=>sum+Number(row.total || 0),0)+' messages. Preview and station-button counts stay separate from wand messages. This display does not verify infrared hardware on its own.</p>';
+    $('chapter-reset').textContent='Practice again';
+    $('campaign-reset').hidden=true;
+  }
   function portrait(speaker, chapter) {
     const name = (speaker || '').toLowerCase();
     const index = /black briar/.test(name) ? 5 : /emberwing|dragon/.test(name) ? 4 : /willow|witch/.test(name) ? 3 : /orielle|queen|frost/.test(name) ? 2 : /pip|goblin/.test(name) ? 1 : 0;
@@ -85,34 +128,35 @@
   }
   function render(s) {
     stations = s.stations_config?.length ? s.stations_config : stations;
+    const training=Boolean(s.training), complete=training && Boolean(s.training_complete);
     const beat = s.beat || {}, play = s.phase==='play', talking=play && s.mode==='dialogue';
     document.body.dataset.phase=s.phase;
-    const restored = s.phase === 'finished' || s.phase === 'map';
-    $('stage').className='scene-'+(play?chapterScenes[s.chapter] || s.scene:s.phase==='intro'?'castle':s.phase==='finished'?'forest':'map');
+    const restored = complete || s.phase === 'finished' || s.phase === 'map';
+    $('stage').className='scene-'+(training?'lodge':play?chapterScenes[s.chapter] || s.scene:s.phase==='intro'?'castle':s.phase==='finished'?'forest':'map');
     const progress = restored ? 1 : play ? Math.min(1, (s.progress.done + (s.mode === 'collect' ? (s.items || []).length / Math.max(1, (s.stations || []).length) : 0)) / Math.max(1, s.progress.total - 1)) : .65;
     $('stage').style.setProperty('--restoration', progress.toFixed(3));
     $('backdrop').style.filter = 'saturate(' + (.76 + progress * .43) + ') brightness(' + (.83 + progress * .25) + ')';
     $('stage').classList.toggle('restored', restored);
-    $('title').textContent=play?s.chapter_title || s.title:s.campaign_title || s.title;
-    $('chapter-label').textContent=play?'Chapter '+(s.chapter+1)+' of '+(s.chapters_total||5)+(beat.kind==='hunt'?' · A gathering quest':beat.kind==='encounter'?' · Put your magic to work':''):s.phase==='finished'?'Liza, Keeper of the Heartlight':'Five lands. Three landmarks. One brave Liza.';
-    $('speaker').textContent=play?beat.speaker || s.mentor || 'Your guide':s.phase==='map'?'The realm remembers':s.phase==='finished'?'All your friends':'The Story Keeper';
-    $('beat-title').textContent=play?beat.title || s.chapter_title:s.phase==='intro'?'Your wand has chosen you.':s.phase==='map'?'A new path is opening.':'The magic was yours all along.';
-    $('dialogue').textContent=play?(s.dialogue || beat.dialogue || beat.clue || s.clue || s.opening):s.phase==='intro'?s.intro:s.phase==='map'?s.ending:s.ending || 'The Heartlight shines again. Every friend and every land remembers what you did.';
-    $('continue').hidden=!(talking || ['intro','map'].includes(s.phase));
-    $('continue').textContent=s.phase==='intro'?'Begin the adventure ↵':s.phase==='map'?(s.chapter+1 >= (s.chapters_total||5)?'See your happy ending ↵':'Travel to '+(s.next_land || 'the next land')+' ↵'):beat.kind==='forge'?'Learn '+(beat.reward?.spell || 'this spell')+' ↵':beat.kind==='reveal'?'Continue the story ↵':'I’m ready ↵';
-    $('step-label').textContent=play?'Quest '+(s.progress.done+1)+' of '+s.progress.total:s.save_error?'Progress could not be saved':s.phase==='intro'?'Start here. Your journey will be saved.':'Your journey is saved.';
-    $('mentor-art').innerHTML=play?portrait(beat.speaker || s.mentor,s.chapter):'';
+    $('title').textContent=training?'The Wand Hall':play?s.chapter_title || s.title:s.campaign_title || s.title;
+    $('chapter-label').textContent=training?'Great Wolf Lodge · A practice adventure':play?'Chapter '+(s.chapter+1)+' of '+(s.chapters_total||5)+(beat.kind==='hunt'?' · A gathering quest':beat.kind==='encounter'?' · Put your magic to work':''):s.phase==='finished'?'Liza, Keeper of the Heartlight':'Five lands. Three landmarks. One brave Liza.';
+    $('speaker').textContent=training?'Luma, your wand guide':play?beat.speaker || s.mentor || 'Your guide':s.phase==='map'?'The realm remembers':s.phase==='finished'?'All your friends':'The Story Keeper';
+    $('beat-title').textContent=complete?'Your wand is ready for adventure.':play?beat.title || s.chapter_title:s.phase==='intro'?'Your wand has chosen you.':s.phase==='map'?'A new path is opening.':'The magic was yours all along.';
+    $('dialogue').textContent=complete?s.ending:play?(s.dialogue || beat.dialogue || beat.clue || s.clue || s.opening):s.phase==='intro'?s.intro:s.phase==='map'?s.ending:s.ending || 'The Heartlight shines again. Every friend and every land remembers what you did.';
+    $('continue').hidden=!(complete || talking || ['intro','map'].includes(s.phase));
+    $('continue').textContent=complete?(s.training_return_label || 'Return to your adventure')+' ↵':training && s.progress.done===0?'Receive my wand ↵':s.phase==='intro'?'Begin the adventure ↵':s.phase==='map'?(s.chapter+1 >= (s.chapters_total||5)?'See your happy ending ↵':'Travel to '+(s.next_land || 'the next land')+' ↵'):beat.kind==='forge'?'Learn '+(beat.reward?.spell || 'this spell')+' ↵':beat.kind==='reveal'?'Continue the story ↵':'I’m ready ↵';
+    $('step-label').textContent=training?complete?'Practice complete · your adventure is waiting':'Wand practice '+(s.progress.done+1)+' of '+s.progress.total:play?'Quest '+(s.progress.done+1)+' of '+s.progress.total:s.save_error?'Progress could not be saved':s.phase==='intro'?'Start here. Your journey will be saved.':'Your journey is saved.';
+    $('mentor-art').innerHTML=training?portrait('Luma',-1):play?portrait(beat.speaker || s.mentor,s.chapter):'';
     const spells=s.spellbook || [];
     $('spells').innerHTML=spells.length?spells.map(sp=>'<div class="spell'+(!lastSpells.has(sp.spell)?' new':'')+'"><span>'+esc(sp.icon || '✧')+'</span>'+esc(sp.spell)+'</div>').join(''):'<p class="empty-spells">Your first spell is waiting to be found.</p>';
     lastSpells=new Set(spells.map(sp=>sp.spell));
-    $('journey').hidden=!['intro','map'].includes(s.phase);
+    $('journey').hidden=training || !['intro','map'].includes(s.phase);
     const lands=s.lands?.length?s.lands:[{name:'Fairy Pools',chapter:0},{name:'Crystal Caves',chapter:1},{name:'Frozen Mountain',chapter:2},{name:'Unicorn Forest',chapter:3},{name:'Fire Mountain',chapter:4}];
     $('journey').innerHTML=lands.map(l=>'<button type="button" class="landmark '+(l.done?'done':l.next?'next':'locked')+'" '+(!l.next?'disabled':'')+' aria-label="'+esc(l.name)+(l.next?', your next chapter':l.done?', restored':', locked')+'"><span class="land-orb">'+(l.done?'✧':landSymbols[l.chapter] || '✧')+'</span><h2>'+esc(l.name)+'</h2><p>'+(l.done?'Light restored':l.next?'Your next adventure':'A story still to come')+'</p></button>').join('');
     $('journey').querySelector('.next')?.addEventListener('click',next);
-    $('chapter-restored').hidden=!['map','finished'].includes(s.phase);
-    $('chapter-restored').querySelector('h2').textContent=s.phase==='finished'?'The Heartlight shines again.':(s.chapter_title || 'This land')+' is restored.';
-    $('restoration').textContent=s.phase==='finished'?'Liza, you are the Keeper of the Heartlight.':s.save_error?'Stay here while a grown-up checks the story keeper.':'Take a breath. Your friends will wait until you are ready.';
-    $('encounter').hidden=!play || talking;
+    $('chapter-restored').hidden=!complete && !['map','finished'].includes(s.phase);
+    $('chapter-restored').querySelector('h2').textContent=complete?'Welcome, young wand keeper.':s.phase==='finished'?'The Heartlight shines again.':(s.chapter_title || 'This land')+' is restored.';
+    $('restoration').textContent=complete?'Three landmarks. One wand. Your story is about to begin.':s.phase==='finished'?'Liza, you are the Keeper of the Heartlight.':s.save_error?'Stay here while a grown-up checks the story keeper.':'Take a breath. Your friends will wait until you are ready.';
+    $('encounter').hidden=!play || talking || complete;
     $('recipe').hidden=s.mode!=='collect';
     $('recipe-title').textContent=beat.spell || 'Gather the magic'; $('rune-symbol').textContent=iconFor(beat.spell || '');
     $('ingredients').innerHTML=(s.inventory || []).map(item=>{
@@ -126,7 +170,7 @@
     $('pattern').hidden=s.mode!=='puzzle';
     $('pattern').innerHTML=s.mode==='puzzle'?(s.pattern || []).map((n,i)=>'<span class="'+(i<s.pattern_pos?'complete':i===s.pattern_pos?'next':'')+'" title="'+esc(stations.find(x=>x.id===n)?.name)+'">'+esc(stations.find(x=>x.id===n)?.icon || n)+'</span>').join(''):'';
     $('charge').hidden=s.mode!=='charge'; $('charge-fill').style.width=((s.charge || 0)/(s.charge_max || 1)*100)+'%'; $('charge-label').textContent=(s.charge || 0)+' / '+(s.charge_max || 0)+' waves';
-    $('destination').hidden=!play || talking;
+    $('destination').hidden=!play || talking || complete;
     const targets=(s.targets || []).map(id=>stations.find(x=>x.id===id)).filter(Boolean);
     if (targets.length) {
       const destination=targets[0]; $('destination-label').textContent=s.mode==='collect'?'Find '+targets.length+' missing ingredient'+(targets.length===1?'':'s'):beat.spell?'Carry '+beat.spell+' to':'Your next stop';
@@ -139,18 +183,32 @@
     $('sensor-controls').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>hit(Number(b.dataset.station))));
     syncControls();
     if (s.save_error) feedback('Your journey could not be saved. Ask a grown-up for help.',true);
-    speak($('dialogue').textContent+(play && !talking && targets.length===1?' Find the '+targets[0].name+(targets[0].room==='Choose a room'?'':', in '+targets[0].room)+'.':''));
+    $('chapter-reset').textContent=training?'Practice again':'Replay this chapter';
+    $('campaign-reset').hidden=training;
+    $('spellbook').hidden=training;
+    renderTraining(s);
+    const narrationKey=training?(complete?'tutorial:ending':'tutorial:beat:'+s.progress.done):s.phase==='intro'?'intro':s.phase==='finished'?'finished':s.phase==='map'?'chapter:'+s.chapter+':ending':'chapter:'+s.chapter+':beat:'+s.progress.done;
+    window.Narration?.present({key:narrationKey,text:$('dialogue').textContent});
+    syncNarrationControls();
+    window.LizaGameState=s;
+    window.dispatchEvent(new CustomEvent('game-state',{detail:s}));
   }
+  $('training-open').addEventListener('click',startTraining);
+  $('training-intro').addEventListener('click',startTraining);
+  $('training-settings-start').addEventListener('click',startTraining);
+  $('training-exit').addEventListener('click',exitTraining);
+  $('training-again').addEventListener('click',practiceAgain);
   $('continue').addEventListener('click',next);
   $('manual-toggle').addEventListener('click',()=>{manual=!manual;localStorage.setItem('liza-manual',String(manual));syncControls();feedback(manual?'Preview mode: try the landmarks with clicks or keys.':'Wand mode: visit the real landmarks around your house.');});
-  $('sound').addEventListener('click',()=>{voice=!voice;localStorage.setItem('liza-voice',String(voice));if(!voice && 'speechSynthesis' in window)speechSynthesis.cancel();syncControls();if(voice)speak($('dialogue').textContent,true);});
-  $('repeat').addEventListener('click',()=>{if(!voice){voice=true;syncControls();}speak($('dialogue').textContent,true);});
+  $('sound').addEventListener('click',()=>{const state=window.Narration?.state;if(state?.enabled && ['blocked','error','ready'].includes(state.status))window.Narration.replay();else window.Narration?.setEnabled(!state?.enabled);syncNarrationControls();});
+  $('repeat').addEventListener('click',()=>{window.Narration?.replay();syncNarrationControls();});
+  window.addEventListener('narration-state',syncNarrationControls);
   $('fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{feedback('Use your browser’s full-screen control.');}});
   $('settings-open').addEventListener('click',()=>{$('room-fields').innerHTML=stations.map(st=>'<label>'+esc(st.name)+'<input name="room-'+st.id+'" maxlength="80" placeholder="Which room?" value="'+esc(st.room==='Choose a room'?'':st.room)+'"></label>').join('');$('settings-status').textContent='';$('settings').showModal();});
   $('rooms-save').addEventListener('click',async()=>{const rooms=stations.map(st=>({id:st.id,room:$('settings-form').elements['room-'+st.id].value.trim()}));if(rooms.some(r=>!r.room)){$('settings-status').textContent='Give each landmark a room name.';return;}try{await request('/stations',{stations:rooms});await refresh();$('settings-status').textContent='Room names saved. The house is ready for Liza.';}catch(error){$('settings-status').textContent=error.message;}});
   $('chapter-reset').addEventListener('click',replayChapter);
   $('campaign-reset').addEventListener('click',async()=>{if(!confirm('Start a new adventure? This clears Liza’s saved quest progress.'))return;await action('/reset?campaign=1',{});$('settings').close();});
-  async function replayChapter() { if(!online || busy || !confirm('Replay this chapter from its beginning?'))return;await action('/reset',{});$('settings').close(); }
+  async function replayChapter() { if(!online || busy || !confirm(current?.training?'Start wand practice again? Your main adventure stays where you left it.':'Replay this chapter from its beginning?'))return;await action('/reset',{});$('settings').close(); }
   document.addEventListener('keydown',event=>{if(event.repeat || $('settings').open || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName))return;if(event.key==='r'){event.preventDefault();replayChapter();}else if(/^[1-3]$/.test(event.key)){event.preventDefault();hit(Number(event.key),'keyboard');}else if(event.key==='Enter' || event.key==='n' || event.key==='N'){if(event.target.closest('button'))return;event.preventDefault();next();}});
   window.addEventListener('error',event=>{request('/log',{level:'error',msg:String(event.message)}).catch(()=>{});});
   window.addEventListener('unhandledrejection',event=>{request('/log',{level:'error',msg:String(event.reason)}).catch(()=>{});});
@@ -176,5 +234,40 @@
       throw new Error('Walkthrough did not finish');
     }catch(error){result.textContent='fail: '+error.message;await request('/log',{level:'fail',msg:error.message});}
   }
-  syncControls(); poll(); if(params.has('autoplay'))autoplay();
+  async function autoplayTraining() {
+    const result=document.createElement('output');result.id='autoplay-result';result.hidden=true;document.body.appendChild(result);
+    try {
+      const before=await refresh();
+      const checkpoint=JSON.stringify({chapter:before.chapter,phase:before.phase,progress:before.progress,beat:before.beat,spellbook:before.spellbook});
+      await startTraining();
+      if(!current.training)throw new Error('Wand practice did not start');
+      if(!manual){manual=true;syncControls();}
+      const modes=new Set();let signals=0;
+      for(let index=0;index<100;index++){
+        const state=await refresh();
+        if(!state.training)throw new Error('Practice left training unexpectedly');
+        if(state.training_complete)break;
+        modes.add(state.mode);
+        if(state.mode==='dialogue')await next();
+        else {
+          const target=state.targets?.[0];
+          if(![1,2,3].includes(target))throw new Error('Practice used an invalid landmark');
+          const button=$('sensor-controls').querySelector('[data-station="'+target+'"]');
+          if(!button || button.disabled)throw new Error('Preview landmark button unavailable');
+          await hit(target,'preview');signals++;
+        }
+      }
+      if(!current.training_complete || $('continue').hidden)throw new Error('Practice completion has no return button');
+      const rows=current.training_diagnostics?.stations || [];
+      if(rows.length!==3 || rows.reduce((sum,row)=>sum+row.preview,0)!==signals)throw new Error('Preview diagnostics counts differ');
+      if(rows.some(row=>row.wand || row.accepted_wand))throw new Error('Preview falsely counted as wand hardware');
+      if(!modes.has('charge') || !modes.has('puzzle') || !modes.has('collect'))throw new Error('Practice missed a lesson');
+      await next();
+      const after=await refresh();
+      if(after.training || JSON.stringify({chapter:after.chapter,phase:after.phase,progress:after.progress,beat:after.beat,spellbook:after.spellbook})!==checkpoint)throw new Error('Practice changed suspended adventure');
+      const message='Wand Hall UI: 3 preview landmarks, charge, route, hunt, graduation, no false hardware claim, exact adventure resume';
+      result.textContent='pass: '+message;await request('/log',{level:'pass',msg:message});
+    }catch(error){result.textContent='fail: '+error.message;await request('/log',{level:'fail',msg:error.message});}
+  }
+  syncControls(); poll(); if(params.get('autoplay')==='training')autoplayTraining();else if(params.has('autoplay'))autoplay();
 })();

@@ -1,0 +1,132 @@
+{
+  "title": "Great Wolf Lodge: The Wand Hall",
+  "scene": "lodge",
+  "mentor": "Luma",
+  "training": true,
+  "station_count": 3,
+  "opening": "Liza arrives at the cozy Wand Hall inside Great Wolf Lodge. Luma has a wand waiting just for her.",
+  "not_yet": "Your magic is safe. Look for the landmark in your clue and try a gentle wave there.",
+  "cheer": "{spot} knows your wand!",
+  "ending": "Thank you, Liza. All three landmarks know your wand, and the Wand Hall is glowing. You are ready for the Fairy Pools! Come back to practice whenever you like.",
+  "steps": [
+    {
+      "mode": "dialogue",
+      "kind": "mentor",
+      "title": "Your very own wand",
+      "speaker": "Luma",
+      "clue": "Welcome to Great Wolf Lodge, Liza. This is the Wand Hall! Here is your wand. Hold the handle and point the tip toward a clear landmark. Shall we see which magic answers?"
+    },
+    {
+      "mode": "ordered",
+      "kind": "encounter",
+      "title": "A light in the Moon Crystal",
+      "speaker": "Luma",
+      "station": 1,
+      "spot": "Moon Crystal",
+      "clue": "Visit the Moon Crystal. Point your wand at its little listening window and give one gentle wave. Watch for a sparkle."
+    },
+    {
+      "mode": "dialogue",
+      "kind": "mentor",
+      "title": "The wand chose you",
+      "speaker": "Luma",
+      "clue": "It answered! Your wand chose you, Liza. A small wave is enough. You do not need to touch the landmark. Let us meet the other two."
+    },
+    {
+      "mode": "ordered",
+      "kind": "encounter",
+      "title": "Wake the Elder Tree",
+      "speaker": "Luma",
+      "station": 2,
+      "spot": "Elder Tree",
+      "clue": "Find the Elder Tree. Point at its listening window and wave once. The old tree has been waiting to say hello."
+    },
+    {
+      "mode": "ordered",
+      "kind": "encounter",
+      "title": "A secret in the Treasure Chest",
+      "speaker": "Luma",
+      "station": 3,
+      "spot": "Treasure Chest",
+      "clue": "Now find the Treasure Chest. Point at its listening window and wave once. Something bright is hiding inside!"
+    },
+    {
+      "mode": "dialogue",
+      "kind": "mentor",
+      "title": "Little waves build big magic",
+      "speaker": "Luma",
+      "clue": "All three landmarks know your wand. Now we will practice Glowmend. We will build it with three slow, separate waves at the Moon Crystal. Let the sparkle settle between waves."
+    },
+    {
+      "mode": "charge",
+      "kind": "encounter",
+      "title": "Three slow sparks",
+      "speaker": "Luma",
+      "station": 1,
+      "spot": "Moon Crystal",
+      "hits": 3,
+      "spell": "Practice Glowmend",
+      "clue": "At the Moon Crystal, wave three separate times. Let the sparkle settle; count one, two before each new wave. Watch your practice spell fill."
+    },
+    {
+      "mode": "dialogue",
+      "kind": "mentor",
+      "title": "Follow the next clue",
+      "speaker": "Luma",
+      "clue": "You made a little healing light! Come back to me at the TV whenever a friend has something to say. When a clue names a landmark, carry your wand to that place. Our next trail is Elder Tree, Treasure Chest, Moon Crystal."
+    },
+    {
+      "mode": "puzzle",
+      "kind": "encounter",
+      "title": "The Wand Hall trail",
+      "speaker": "Luma",
+      "pattern": [
+        2,
+        3,
+        1
+      ],
+      "spots": {
+        "1": "Moon Crystal",
+        "2": "Elder Tree",
+        "3": "Treasure Chest"
+      },
+      "clue": "First the Elder Tree, then the Treasure Chest, then the Moon Crystal. Wave once at each in that order. A different landmark starts this little trail again. We can try as often as you like."
+    },
+    {
+      "mode": "dialogue",
+      "kind": "mentor",
+      "title": "One last little hunt",
+      "speaker": "Luma",
+      "clue": "You followed the whole trail! This time, choose your own order. A Moon Spark, a Leaf Spark, and a Treasure Spark are waiting at our three landmarks. Find all three, then come back to the TV."
+    },
+    {
+      "mode": "collect",
+      "kind": "hunt",
+      "title": "Choose your own path",
+      "speaker": "Luma",
+      "stations": [
+        1,
+        2,
+        3
+      ],
+      "spots": {
+        "1": "Moon Crystal",
+        "2": "Elder Tree",
+        "3": "Treasure Chest"
+      },
+      "items_by_station": {
+        "1": "Moon Spark",
+        "2": "Leaf Spark",
+        "3": "Treasure Spark"
+      },
+      "clue": "Find one spark at each landmark. Moon Crystal, Elder Tree, Treasure Chest: any order you like. Wave once at each. A spark you already found will stay safe."
+    },
+    {
+      "mode": "dialogue",
+      "kind": "reveal",
+      "title": "Liza, Wand Hall apprentice",
+      "speaker": "Luma",
+      "clue": "Three sparks, one wonderful wand keeper! You can wake a landmark, build a spell, follow a trail, and find things your own way. Your practice Glowmend can rest now. The fairies will teach you its full magic when your real adventure begins."
+    }
+  ]
+}

@@ -453,4 +453,177 @@ if campaign_file.exists():
                 raise AssertionError("campaign never finished")
             assert visited == {1, 2, 3}, visited
             assert len(c.state()["chapters_done"]) == len(c.chapters)
+# ---------------------------------------------------------------- isolated tutorial over the real HTTP routes
+# Keep the default test run socket-free. --http also verifies the actual wire
+# contract in a temporary server and state directory, never the family server.
+if "--http" in sys.argv:
+    import threading
+    import urllib.request
+    import urllib.error
+    from http.server import ThreadingHTTPServer
+    from server import Handler
+
+    cfg = json.loads(campaign_file.read_text())
+    assert cfg.get("tutorial"), "campaign must expose separate tutorial content"
+    with tempfile.TemporaryDirectory() as tmp:
+        c = Campaign(cfg, campaign_file, tmp)
+        without_tutorial = dict(cfg)
+        without_tutorial.pop("tutorial")
+        prior_cfg = Campaign(without_tutorial, campaign_file, tmp)
+        assert c.fingerprint == prior_cfg.fingerprint
+        assert c.files == prior_cfg.files and len(c.chapters) == 5
+
+        class TrainingHandler(Handler):
+            game = c
+            def log_message(self, *args):
+                pass
+
+        http = ThreadingHTTPServer(("127.0.0.1", 0), TrainingHandler)
+        thread = threading.Thread(target=http.serve_forever, daemon=True)
+        thread.start()
+        base_url = f"http://127.0.0.1:{http.server_port}"
+
+        def wire(route, body=None):
+            payload = json.dumps(body).encode() if body is not None else None
+            request = urllib.request.Request(base_url + route, data=payload,
+                                             headers={"Content-Type": "application/json"})
+            try:
+                with urllib.request.urlopen(request, timeout=5) as response:
+                    return response.status, json.loads(response.read())
+            except urllib.error.HTTPError as error:
+                return error.code, json.loads(error.read())
+
+        def current():
+            code, state = wire("/state")
+            assert code == 200
+            return state
+
+        def advance():
+            assert wire("/next", {"gen": current()["gen"]})[0] == 200
+
+        def wave(station, wand_id="0x12345678"):
+            code, result = wire("/hit", {"station": station, "wand_id": wand_id})
+            assert code == 200
+            return result["result"]
+
+        try:
+            assert current()["training_available"] and not current()["training"]
+            assert not c.progress_path.exists()
+            intro = current()
+            wire("/training/start", {})
+            assert current()["training_return_label"] == "Start your adventure"
+            advance()
+            wave(1, "keyboard")
+            wire("/training/exit", {})
+            assert not c.progress_path.exists(), "practice before the adventure must not create story progress"
+            assert current()["phase"] == intro["phase"] == "intro"
+            # Establish real story progress and an on-disk checkpoint first.
+            advance()
+            while current()["mode"] == "dialogue":
+                advance()
+            wave(current()["targets"][0], "story-wand")
+            story = current()
+            story_game = c.game
+            saved = c.progress_path.read_bytes()
+            no_counters = lambda state: {k: v for k, v in state.items() if k not in ("rev", "gen")}
+            assert wire("/training/start", {}) == (200, {"ok": True, "training": True})
+            st = current()
+            assert st["training"] and st["activity"] == "training" and st["scene"] == "lodge" and st["chapter"] == -1
+            assert st["training_return_label"] == "Continue your adventure"
+            assert wire("/next", {"gen": story["gen"]}) == (200, {"ignored": True})
+            assert wire("/hit", {"station": 4})[0] == 400
+            assert wire("/hit", {"station": 5})[0] == 400
+            initial_seq = current()["training_diagnostics"]["event_seq"]
+            assert initial_seq == 1, "event sequence remains unique across separate training runs"
+            # Every valid received wave is visible, even while a mentor is talking.
+            assert wave(1, "keyboard") == "wrong"
+            assert wave(2, "0x00000000") == "wrong", "firmware button A is never counted as physical wand evidence"
+            assert wave(3, None) == "wrong"
+            assert wave(1, "0x12345678") == "wrong"
+            rows = current()["training_diagnostics"]["stations"]
+            assert rows[0]["preview"] == 1 and rows[0]["wand"] == 1 and rows[0]["accepted_wand"] == 0
+            assert rows[1]["button"] == 1 and rows[2]["unknown"] == 1
+            assert all(x["hub_received"] and x["accepted"] == 0 and x["last_seen_ago_s"] is not None for x in rows)
+            assert current()["progress"]["done"] == 0
+            assert c.progress_path.read_bytes() == saved and c.game is story_game
+            # Restart training clears its diagnostics, never story or its file.
+            old_gen = current()["gen"]
+            old_seq = current()["training_diagnostics"]["event_seq"]
+            assert wire("/reset?campaign=1", {})[1]["training"]
+            assert current()["training_diagnostics"]["event_seq"] == old_seq
+            assert all(x["total"] == 0 for x in current()["training_diagnostics"]["stations"])
+            assert wire("/next", {"gen": old_gen})[1] == {"ignored": True}
+            assert c.progress_path.read_bytes() == saved
+            modes = set()
+            charge_tested = duplicate_tested = False
+            for _ in range(100):
+                st = current()
+                assert c.progress_path.read_bytes() == saved
+                if st["training_complete"]:
+                    break
+                mode = st["mode"]
+                modes.add(mode)
+                if mode == "dialogue":
+                    # Remote waves never dismiss story or forge a fake accepted cast.
+                    assert wave(2, "preview") == "wrong"
+                    advance()
+                elif mode == "charge":
+                    assert st["charge_max"] == 3 and st["charge"] == 0
+                    station = st["targets"][0]
+                    assert wave(station) == "heal" and current()["charge"] == 1
+                    assert wave(2 if station != 2 else 3) == "wrong" and current()["charge"] == 1
+                    assert wave(station) == "heal" and current()["charge"] == 2
+                    assert current()["progress"] == st["progress"], "two waves cannot finish three-wave practice"
+                    assert wave(station) in ("heal", "done")
+                    assert current()["progress"]["done"] == st["progress"]["done"] + 1
+                    charge_tested = True
+                elif mode == "collect":
+                    station = st["targets"][0]
+                    wave(station)
+                    before_duplicate = current()["training_diagnostics"]["stations"][station-1]["accepted_wand"]
+                    assert wave(station) == "heal"
+                    assert current()["training_diagnostics"]["stations"][station-1]["accepted_wand"] == before_duplicate
+                    duplicate_tested = True
+                    for station in current()["targets"]:
+                        wave(station)
+                else:
+                    target = st["targets"][0]
+                    if mode != "puzzle" or st["pattern_pos"] == 0:
+                        wrong = next(n for n in (1, 2, 3) if n != target)
+                        assert wave(wrong) == "wrong"
+                        assert current()["progress"] == st["progress"]
+                    assert wave(current()["targets"][0]) in ("heal", "done")
+            else:
+                raise AssertionError("tutorial never completed")
+            assert charge_tested and duplicate_tested and {"dialogue", "ordered", "charge", "puzzle", "collect"} <= modes
+            assert current()["training_complete"] and current()["training"] and current()["phase"] == "play"
+            rows = current()["training_diagnostics"]["stations"]
+            assert all(x["wand"] > 0 and x["accepted_wand"] > 0 for x in rows)
+            final_gen = current()["gen"]
+            seq = current()["training_diagnostics"]["event_seq"]
+            accepted_before = rows[0]["accepted_wand"]
+            assert wave(1) == "done"
+            assert current()["training_diagnostics"]["event_seq"] == seq + 1
+            assert current()["training_diagnostics"]["stations"][0]["accepted_wand"] == accepted_before
+            assert not current()["training_diagnostics"]["last_event"]["accepted"]
+            assert wire("/training/exit", {}) == (200, {"ok": True, "training": False})
+            assert no_counters(current()) == no_counters(story)
+            assert c.game is story_game and c.progress_path.read_bytes() == saved
+            assert wire("/next", {"gen": final_gen}) == (200, {"ignored": True})
+            assert no_counters(current()) == no_counters(story)
+            resumed = Campaign(cfg, campaign_file, tmp).state()
+            assert resumed["progress"] == story["progress"] and resumed["items"] == story["items"] and not resumed["training"]
+            # An unfinished tutorial is intentionally not resumed on server restart.
+            wire("/training/start", {})
+            advance()
+            wave(1)
+            assert not Campaign(cfg, campaign_file, tmp).state()["training"]
+            assert c.progress_path.read_bytes() == saved
+            wire("/training/exit", {})
+            print("training HTTP ok: 12 beats, 3 sensors, separate progress, source diagnostics")
+        finally:
+            http.shutdown()
+            http.server_close()
+            thread.join(timeout=5)
+
 print("ok")

@@ -15,6 +15,7 @@ Debug:     POST /debug/expire     (only with --debug: force the live timer to ex
 import hashlib
 import json
 import os
+import re
 import sys
 import threading
 import time
@@ -350,6 +351,12 @@ class Campaign:
                 Game(adv, station_count=self.station_count)
             except ValueError as e:
                 raise ValueError(f"{self.files[i]}: {e}")
+        # Training is an optional, separate activity. It deliberately does not
+        # participate in the story fingerprint or its saved checkpoint.
+        self.tutorial = None
+        if cfg.get("tutorial"):
+            self.tutorial = json.loads((base / cfg["tutorial"]).read_text())
+            Game(self.tutorial, station_count=self.station_count)
         self.fingerprint = hashlib.sha256(b"".join(raw)).hexdigest()[:12]
         self.lands = cfg.get("map", {}).get("lands", [])
         self.state_dir = Path(state_dir)
@@ -373,8 +380,114 @@ class Campaign:
         self.wand_id = None
         self.map_deadline = None
         self.checkpoint = None
+        self.training_game = None
+        self.training_started = None
+        self.training_run = 0
+        self.training_event_seq = 0
+        self.training_rows = {}
+        self.training_last_event = None
         self.chapters_done = self._load_progress()
         self._resume()
+
+    def _start_training(self):
+        if self.tutorial is None:
+            raise ValueError("this campaign has no training level")
+        if self.training_game is None:
+            self.training_started = self.now()
+        self.training_game = Game(self.tutorial, self.c, self.now, self.station_count)
+        self.training_run += 1
+        self.training_last_event = None
+        self.training_rows = {
+            n: {"id": n, "total": 0, "accepted": 0, "preview": 0,
+                "button": 0, "wand": 0, "unknown": 0, "accepted_wand": 0,
+                "last_seen_at": None, "last_seen_mono": None,
+                "last_source": None, "last_wand_id": None, "last_result": None}
+            for n in range(1, self.station_count + 1)
+        }
+        return {"ok": True, "training": True}
+
+    def start_training(self):
+        with self.lock:
+            return self._start_training()
+
+    def exit_training(self):
+        with self.lock:
+            if self.training_game is not None:
+                # A long practice session must not spend the story's timer.
+                elapsed = self.now() - self.training_started
+                if self.map_deadline is not None:
+                    self.map_deadline += elapsed
+                if self.game.boss_deadline is not None:
+                    self.game.boss_deadline += elapsed
+                self.training_game = None
+                self.training_started = None
+                self.c["gen"] += 1
+                self.c["rev"] += 1
+            return {"ok": True, "training": False}
+
+    @staticmethod
+    def _hit_source(wand_id):
+        text = str(wand_id or "").strip().lower()
+        if re.fullmatch(r"0x[0-9a-f]{8}", text):
+            # Firmware's physical test button sends the all-zero ID.
+            return "button" if int(text, 16) == 0 else "wand"
+        if text in ("button", "test", "button-test"):
+            return "button"
+        if text in ("keyboard", "preview", "autoplay", "manual", "simulator") or text.startswith("preview-"):
+            return "preview"
+        return "unknown"
+
+    def _training_hit(self, station, wand_id):
+        game = self.training_game
+        def progress():
+            return (game.step, tuple(game.items), game.pattern_pos, game.charge, game.hp)
+        before = progress()
+        result = game._hit(station, wand_id)
+        accepted = result != "wrong" and before != progress()
+        self.training_event_seq += 1
+        source = self._hit_source(wand_id)
+        timestamp = datetime.now(timezone.utc).isoformat(timespec="milliseconds")
+        row = self.training_rows[station]
+        row["total"] += 1
+        row[source] += 1
+        row["accepted"] += int(accepted)
+        row["accepted_wand"] += int(accepted and source == "wand")
+        row.update(last_seen_at=timestamp, last_seen_mono=self.now(),
+                   last_source=source, last_wand_id=wand_id, last_result=result)
+        self.training_last_event = {
+            "seq": self.training_event_seq, "station": station, "source": source,
+            "wand_id": wand_id, "result": result, "accepted": accepted,
+            "received_at": timestamp,
+        }
+        # Even a wave after the final tutorial beat is a new received event.
+        game.event, game.event_station = result, station
+        self.c["rev"] += 1
+        return result
+
+    def _training_state(self):
+        state = self.training_game._state()
+        rows = []
+        config = {s["id"]: s for s in self.stations_config}
+        for n, saved in self.training_rows.items():
+            row = {k: v for k, v in saved.items() if k != "last_seen_mono"}
+            row.update(name=config.get(n, {}).get("name", f"Station {n}"),
+                       room=config.get(n, {}).get("room", ""),
+                       hub_received=bool(row["total"]),
+                       last_seen_ago_s=(max(0.0, round(self.now() - saved["last_seen_mono"], 1))
+                                        if saved["last_seen_mono"] is not None else None))
+            rows.append(row)
+        state.update({
+            "training": True, "training_available": True, "activity": "training",
+            "training_complete": state["done"], "chapter": -1,
+            "scene": "lodge", "chapter_scene": "lodge", "phase": "play",
+            "campaign_title": self.title, "chapter_title": self.tutorial["title"],
+            "chapters_done": list(self.chapters_done), "chapters_total": len(self.chapters),
+            "stations_config": self.stations_config,
+            "training_return_label": "Start your adventure" if self.phase == "intro" else "Continue your adventure",
+            "training_diagnostics": {"run": self.training_run, "event_seq": self.training_event_seq,
+                                     "last_event": self.training_last_event, "stations": rows},
+        })
+        return state
 
     def _validate_rooms(self, rooms):
         if not isinstance(rooms, list) or len(rooms) != self.station_count:
@@ -422,6 +535,8 @@ class Campaign:
             return []
 
     def _save_progress(self):
+        if self.training_game is not None:
+            return  # training never writes the suspended story's checkpoint
         d = {"version": PROGRESS_VERSION, "campaign": self.name, "fingerprint": self.fingerprint,
              "chapters_done": list(self.chapters_done), "wand_id": self.wand_id,
              "saved_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
@@ -520,6 +635,8 @@ class Campaign:
         with self.lock:
             if isinstance(station, bool) or not isinstance(station, int) or not 1 <= station <= self.station_count:
                 raise ValueError(f"station must be in 1-{self.station_count}")
+            if self.training_game is not None:
+                return self._training_hit(station, wand_id)
             if wand_id is not None:
                 self.wand_id = wand_id
             if self.phase in ("intro", "map"):
@@ -540,6 +657,8 @@ class Campaign:
         with self.lock:
             if gen != self.c["gen"]:
                 return {"ignored": True}
+            if self.training_game is not None:
+                return self.training_game._next(gen)
             if self.phase in ("intro", "map"):
                 self._advance()
             elif self.phase == "play":
@@ -553,6 +672,8 @@ class Campaign:
 
     def reset_request(self, campaign=False):
         with self.lock:
+            if self.training_game is not None:
+                return self._start_training()
             if campaign:
                 self.chapters_done = []
                 self._load(0)
@@ -567,6 +688,8 @@ class Campaign:
 
     def expire(self):
         with self.lock:
+            if self.training_game is not None:
+                return self.training_game.expire()
             if self.phase == "map" and self.map_deadline is not None:
                 self.map_deadline = self.now() - 1
                 return "map"
@@ -576,10 +699,14 @@ class Campaign:
 
     def campaign_info(self):
         return {"title": self.title, "lands": self.lands, "stations_config": self.stations_config,
+                "training_available": self.tutorial is not None,
+                "tutorial": chapter_info(self.tutorial) if self.tutorial else None,
                 "chapters": [dict(chapter_info(a), file=f) for a, f in zip(self.chapters, self.files)]}
 
     def state(self):
         with self.lock:
+            if self.training_game is not None:
+                return self._training_state()
             if self.phase == "map" and self.map_deadline is not None and self.now() >= self.map_deadline:
                 self._advance()
             st = self.game._state()
@@ -611,6 +738,8 @@ class Campaign:
                                    if self.phase == "map" and self.map_deadline is not None else None),
                 "wand_id": self.wand_id, "save_error": self.save_error,
                 "stations_config": self.stations_config, "spellbook": spellbook,
+                "training": False, "training_complete": False, "activity": "campaign",
+                "training_available": self.tutorial is not None,
             })
             return st
 
@@ -657,6 +786,14 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json({"error": "body must be an object"}, 400)
         url = urlsplit(self.path)
         q = parse_qs(url.query)
+        if url.path in ("/training/start", "/training/exit"):
+            if not isinstance(self.game, Campaign):
+                return self._json({"error": "training requires a campaign"}, 400)
+            try:
+                action = self.game.start_training if url.path.endswith("/start") else self.game.exit_training
+                return self._json(action())
+            except ValueError as e:
+                return self._json({"error": str(e)}, 400)
         if url.path == "/stations":
             if not isinstance(self.game, Campaign):
                 return self._json({"error": "room setup requires a campaign"}, 400)

@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "provider": "openai",
+  "model": "gpt-realtime-2.1-mini",
+  "generator": "OpenAI Realtime server-side WebSocket; local MP3 bank",
+  "ai_generated": true,
+  "disclosure": "Story voices are AI-generated using OpenAI.",
+  "entries": {
+    "tutorial:beat:0": {
+      "text": "Welcome to Great Wolf Lodge, Liza. This is the Wand Hall! Here is your wand. Hold the handle and point the tip toward a clear landmark. Shall we see which magic answers?",
+      "file": "audio/openai/447a0ff12a646b17d7231bc8.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "447a0ff12a646b17d7231bc8"
+    }
+  }
+}

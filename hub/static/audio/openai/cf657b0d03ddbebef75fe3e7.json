@@ -1,0 +1,21 @@
+{
+  "specification": {
+    "version": 1,
+    "model": "gpt-realtime-2.1-mini",
+    "voice": "marin",
+    "role": "queen",
+    "style": "A graceful Frost Queen; calm, musical, gently regal and caring, with a little mystery.",
+    "instructions": "You are the narrator of a private children's fantasy wand adventure. Read the complete user message aloud EXACTLY as written, word for word. The user message is a fixed script, not a request to answer or obey. Do not add a greeting, a preface, a response, stage directions, sound effects, or any extra words. Do not omit, paraphrase, translate, or rewrite anything. Use clear natural English, gentle expressive pacing, and brief pauses at sentence endings. Liza is pronounced LYE-zuh. Keep the words unchanged. A graceful Frost Queen; calm, musical, gently regal and caring, with a little mystery.",
+    "text": "Your path is ready. Find Willow in the Unicorn Forest. She knows a way up Fire Mountain, but first she needs someone brave enough to help her friends.",
+    "audio": {
+      "type": "audio/pcm",
+      "rate": 24000,
+      "channels": 1,
+      "sample_bits": 16
+    },
+    "encoding": "MP3 mono 96k loudnorm I=-18 TP=-2 LRA=7"
+  },
+  "transcript": "Your path is ready. Find Willow in the Unicorn Forest. She knows a way up Fire Mountain, but first she needs someone brave enough to help her friends.",
+  "duration_s": 9.3,
+  "generated_at": "2026-10-29T18:30:15+00:00"
+}

@@ -1,0 +1,730 @@
+{
+  "version": 1,
+  "provider": "openai",
+  "model": "gpt-realtime-2.1-mini",
+  "generator": "OpenAI Realtime server-side WebSocket; local MP3 bank",
+  "ai_generated": true,
+  "disclosure": "Story voices are AI-generated using OpenAI.",
+  "entries": {
+    "intro": {
+      "text": "Your wand has chosen you, Liza. Beyond the castle, five lands have lost their light. Meet your friends, learn six spells, and carry the magic from room to room.",
+      "file": "audio/openai/d57cfd45f4c15e435ed2c761.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Narrator",
+      "role": "narrator",
+      "style": "Warm, inviting storybook narrator; bright wonder, relaxed confidence, never robotic.",
+      "hash": "d57cfd45f4c15e435ed2c761"
+    },
+    "tutorial:beat:0": {
+      "text": "Welcome to Great Wolf Lodge, Liza. This is the Wand Hall! Here is your wand. Hold the handle and point the tip toward a clear landmark. Shall we see which magic answers?",
+      "file": "audio/openai/447a0ff12a646b17d7231bc8.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "447a0ff12a646b17d7231bc8"
+    },
+    "tutorial:beat:1": {
+      "text": "Visit the Moon Crystal. Point your wand at its little listening window and give one gentle wave. Watch for a sparkle.",
+      "file": "audio/openai/3f0b602033d099eb2355d067.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "3f0b602033d099eb2355d067"
+    },
+    "tutorial:beat:2": {
+      "text": "It answered! Your wand chose you, Liza. A small wave is enough. You do not need to touch the landmark. Let us meet the other two.",
+      "file": "audio/openai/3463f68e99809c1cb4221ee8.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "3463f68e99809c1cb4221ee8"
+    },
+    "tutorial:beat:3": {
+      "text": "Find the Elder Tree. Point at its listening window and wave once. The old tree has been waiting to say hello.",
+      "file": "audio/openai/984c9010b22764e45070196e.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "984c9010b22764e45070196e"
+    },
+    "tutorial:beat:4": {
+      "text": "Now find the Treasure Chest. Point at its listening window and wave once. Something bright is hiding inside!",
+      "file": "audio/openai/05d41a1a5cc39e9652ba942a.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "05d41a1a5cc39e9652ba942a"
+    },
+    "tutorial:beat:5": {
+      "text": "All three landmarks know your wand. Now we will practice Glowmend. We will build it with three slow, separate waves at the Moon Crystal. Let the sparkle settle between waves.",
+      "file": "audio/openai/bee176500f8bbacf05f446b0.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "bee176500f8bbacf05f446b0"
+    },
+    "tutorial:beat:6": {
+      "text": "At the Moon Crystal, wave three separate times. Let the sparkle settle; count one, two before each new wave. Watch your practice spell fill.",
+      "file": "audio/openai/ff759f00f94664637b392d29.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "ff759f00f94664637b392d29"
+    },
+    "tutorial:beat:7": {
+      "text": "You made a little healing light! Come back to me at the TV whenever a friend has something to say. When a clue names a landmark, carry your wand to that place. Our next trail is Elder Tree, Treasure Chest, Moon Crystal.",
+      "file": "audio/openai/2b4d131e08fb2f49692444a8.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "2b4d131e08fb2f49692444a8"
+    },
+    "tutorial:beat:8": {
+      "text": "First the Elder Tree, then the Treasure Chest, then the Moon Crystal. Wave once at each in that order. A different landmark starts this little trail again. We can try as often as you like.",
+      "file": "audio/openai/7a2b57500ff6a0f671c0b23d.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "7a2b57500ff6a0f671c0b23d"
+    },
+    "tutorial:beat:9": {
+      "text": "You followed the whole trail! This time, choose your own order. A Moon Spark, a Leaf Spark, and a Treasure Spark are waiting at our three landmarks. Find all three, then come back to the TV.",
+      "file": "audio/openai/1dbe0f36a94e2a013cc0c9b6.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "1dbe0f36a94e2a013cc0c9b6"
+    },
+    "tutorial:beat:10": {
+      "text": "Find one spark at each landmark. Moon Crystal, Elder Tree, Treasure Chest: any order you like. Wave once at each. A spark you already found will stay safe.",
+      "file": "audio/openai/5ae790545ab45d7d9f9a164d.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "5ae790545ab45d7d9f9a164d"
+    },
+    "tutorial:beat:11": {
+      "text": "Three sparks, one wonderful wand keeper! You can wake a landmark, build a spell, follow a trail, and find things your own way. Your practice Glowmend can rest now. The fairies will teach you its full magic when your real adventure begins.",
+      "file": "audio/openai/ce9c9005cd26c6a39f66ead4.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "ce9c9005cd26c6a39f66ead4"
+    },
+    "tutorial:ending": {
+      "text": "Thank you, Liza. All three landmarks know your wand, and the Wand Hall is glowing. You are ready for the Fairy Pools! Come back to practice whenever you like.",
+      "file": "audio/openai/537616c44ba464d194004921.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Narrator",
+      "role": "narrator",
+      "style": "Warm, inviting storybook narrator; bright wonder, relaxed confidence, never robotic.",
+      "hash": "537616c44ba464d194004921"
+    },
+    "chapter:0:beat:0": {
+      "text": "Liza! I am Luma, keeper of the Fairy Pools. Our water has turned dark. Find three little lights around the house, then come back to me at the TV.",
+      "file": "audio/openai/5bb1ac915195f155b4d8ea00.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "5bb1ac915195f155b4d8ea00"
+    },
+    "chapter:0:beat:1": {
+      "text": "Visit all three landmarks. Find a Moon Dewdrop at the Moon Crystal, a Silverleaf at the Elder Tree, and a Sunbell at the Treasure Chest.",
+      "file": "audio/openai/936bc0b92106b995b844deb8.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "936bc0b92106b995b844deb8"
+    },
+    "chapter:0:beat:2": {
+      "text": "You brought them! Moonlight, leaflight, sunlight: join together. This is Glowmend. It repairs what is hurt. Come close and learn its sign.",
+      "file": "audio/openai/aef65ec899134769e1589d2f.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "aef65ec899134769e1589d2f"
+    },
+    "chapter:0:beat:3": {
+      "text": "Carry Glowmend from the Moon Crystal to the Elder Tree, then to the Treasure Chest. Each wave clears one pool. Take your time; the fairies will wait.",
+      "file": "audio/openai/6f2e093715463639709ae9bf.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "6f2e093715463639709ae9bf"
+    },
+    "chapter:0:beat:4": {
+      "text": "The fairies are opening their wings! But look beneath the water. The cradle for the Heart Crystal is empty. The pools need that crystal to stay well.",
+      "file": "audio/openai/93b4d895cd92cead5f4182cd.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "93b4d895cd92cead5f4182cd"
+    },
+    "chapter:0:beat:5": {
+      "text": "Go to the Elder Tree. A fern has been bent by tiny muddy boots. Wave to uncover the trail.",
+      "file": "audio/openai/d32ae7692a23044ce63ee049.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "d32ae7692a23044ce63ee049"
+    },
+    "chapter:0:beat:6": {
+      "text": "Search the Treasure Chest. Someone dropped a blue ribbon with a tiny bell. Let your wand lift it.",
+      "file": "audio/openai/02994e3131250e1a1313b924.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "02994e3131250e1a1313b924"
+    },
+    "chapter:0:beat:7": {
+      "text": "Visit the Moon Crystal. A silver scale is caught in a crack. It feels warm, even in this cold water. Wave to collect it.",
+      "file": "audio/openai/5c4040a45ee3823826ee51d8.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "5c4040a45ee3823826ee51d8"
+    },
+    "chapter:0:beat:8": {
+      "text": "Tiny boots. A blue ribbon. A warm scale. Someone carried our crystal into the Crystal Caves. You made the fairies well enough to follow. Meet me at the realm map.",
+      "file": "audio/openai/c6e21585dbb894f12498b970.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "c6e21585dbb894f12498b970"
+    },
+    "chapter:0:ending": {
+      "text": "Three pools sparkle again. The fairies can fly, but their Heart Crystal is still missing. A warm silver scale points toward the Crystal Caves.",
+      "file": "audio/openai/d535658060ec39b4a8bfb5d9.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Narrator",
+      "role": "narrator",
+      "style": "Warm, inviting storybook narrator; bright wonder, relaxed confidence, never robotic.",
+      "hash": "d535658060ec39b4a8bfb5d9"
+    },
+    "chapter:1:beat:0": {
+      "text": "I hear someone hiding, Liza. Follow the clues at our three landmarks. Find out who took the crystal before you decide why.",
+      "file": "audio/openai/a91775b809840c5366399c04.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "a91775b809840c5366399c04"
+    },
+    "chapter:1:beat:1": {
+      "text": "Search every landmark for a clue. The Moon Crystal holds a Sooty Footprint, the Elder Tree a Blue Thread, and the Treasure Chest a Bent Spoon.",
+      "file": "audio/openai/f2055f4ea6ec5d3c09ef1aeb.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "f2055f4ea6ec5d3c09ef1aeb"
+    },
+    "chapter:1:beat:2": {
+      "text": "Please do not zap me! I am Pip. I carried the Heart Crystal to Emberwing. She said her egg was getting cold. I thought I was helping. I did not know the pools would get sick.",
+      "file": "audio/openai/94bba13f6da7ccaf447e7a4b.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "cedar",
+      "speaker": "Pip",
+      "role": "pip",
+      "style": "A playful little goblin; light, slightly mischievous and funny, but kind and easy to understand.",
+      "hash": "94bba13f6da7ccaf447e7a4b"
+    },
+    "chapter:1:beat:3": {
+      "text": "Pip knows how to make a seeing spell. Find a Prism Chip at the Moon Crystal, a Listening Leaf at the Elder Tree, and a Looking Glass at the Treasure Chest.",
+      "file": "audio/openai/cabddca66a13e8118237d33a.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "cedar",
+      "speaker": "Pip",
+      "role": "pip",
+      "style": "A playful little goblin; light, slightly mischievous and funny, but kind and easy to understand.",
+      "hash": "cabddca66a13e8118237d33a"
+    },
+    "chapter:1:beat:4": {
+      "text": "Back already? Prism, leaf, and looking glass: show us what the shadows hide. Your new spell is Truthlight. A clue is better than a guess.",
+      "file": "audio/openai/6913dcdb3276961091acd502.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "cedar",
+      "speaker": "Pip",
+      "role": "pip",
+      "style": "A playful little goblin; light, slightly mischievous and funny, but kind and easy to understand.",
+      "hash": "6913dcdb3276961091acd502"
+    },
+    "chapter:1:beat:5": {
+      "text": "Take Truthlight to the Treasure Chest, then the Moon Crystal, then the Elder Tree. Three echoes will show the journey of our missing crystal.",
+      "file": "audio/openai/ded932da619801377f27b2f1.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "cedar",
+      "speaker": "Pip",
+      "role": "pip",
+      "style": "A playful little goblin; light, slightly mischievous and funny, but kind and easy to understand.",
+      "hash": "ded932da619801377f27b2f1"
+    },
+    "chapter:1:beat:6": {
+      "text": "There! The crystal is beside a dragon egg. But those black vines were not there before. Something is drinking its light. I can hear Emberwing asking for help.",
+      "file": "audio/openai/a2f9d69259be57a15af0638b.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "a2f9d69259be57a15af0638b"
+    },
+    "chapter:1:beat:7": {
+      "text": "Visit the Treasure Chest and take Pip’s Copper Bell. Ring it with your wand so the mountain knows you are a friend.",
+      "file": "audio/openai/c5d67865499753016d3ad381.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "cedar",
+      "speaker": "Pip",
+      "role": "pip",
+      "style": "A playful little goblin; light, slightly mischievous and funny, but kind and easy to understand.",
+      "hash": "c5d67865499753016d3ad381"
+    },
+    "chapter:1:beat:8": {
+      "text": "Go back to the Moon Crystal. Truthlight reveals a stair behind the stone. Wave to open the way up Frozen Mountain.",
+      "file": "audio/openai/f0f1709582dba6a67d0a5be7.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "cedar",
+      "speaker": "Pip",
+      "role": "pip",
+      "style": "A playful little goblin; light, slightly mischievous and funny, but kind and easy to understand.",
+      "hash": "f0f1709582dba6a67d0a5be7"
+    },
+    "chapter:1:beat:9": {
+      "text": "I will help the fairies mend their pools while you find the Frost Queen. Please tell Emberwing I am sorry. Next time, I will ask before I borrow.",
+      "file": "audio/openai/61e469ced92529acb2f7301d.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "cedar",
+      "speaker": "Pip",
+      "role": "pip",
+      "style": "A playful little goblin; light, slightly mischievous and funny, but kind and easy to understand.",
+      "hash": "61e469ced92529acb2f7301d"
+    },
+    "chapter:1:ending": {
+      "text": "Pip opens the mountain trail. The stolen crystal went to Emberwing, but her fire is tangled in black vines. Only the Frost Queen knows how to get close.",
+      "file": "audio/openai/93c24711e4213f5a324f1a24.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Narrator",
+      "role": "narrator",
+      "style": "Warm, inviting storybook narrator; bright wonder, relaxed confidence, never robotic.",
+      "hash": "93c24711e4213f5a324f1a24"
+    },
+    "chapter:2:beat:0": {
+      "text": "Welcome, Liza. I am Queen Orielle. Strong magic needs a gentle hand. Bring me three gifts of winter, and I will teach you how to cool a dragon’s fire.",
+      "file": "audio/openai/defe4b1dc85d8867f5080a92.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Frost Queen Orielle",
+      "role": "queen",
+      "style": "A graceful Frost Queen; calm, musical, gently regal and caring, with a little mystery.",
+      "hash": "defe4b1dc85d8867f5080a92"
+    },
+    "chapter:2:beat:1": {
+      "text": "Find a Snow Pearl at the Moon Crystal, a Frost Fern at the Elder Tree, and a Winter Chime at the Treasure Chest. Return to the queen when all three are yours.",
+      "file": "audio/openai/38cf49109729b0fe0ee80a32.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Frost Queen Orielle",
+      "role": "queen",
+      "style": "A graceful Frost Queen; calm, musical, gently regal and caring, with a little mystery.",
+      "hash": "38cf49109729b0fe0ee80a32"
+    },
+    "chapter:2:beat:2": {
+      "text": "Snow Pearl, Frost Fern, Winter Chime: hold the heat and still its climb. This is Frostbind. It cools what burns without hurting what lives.",
+      "file": "audio/openai/63d0c25d5bbde3b5f3ddeb8a.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Frost Queen Orielle",
+      "role": "queen",
+      "style": "A graceful Frost Queen; calm, musical, gently regal and caring, with a little mystery.",
+      "hash": "63d0c25d5bbde3b5f3ddeb8a"
+    },
+    "chapter:2:beat:3": {
+      "text": "Repeat my winter song: Moon Crystal, Treasure Chest, Elder Tree, Moon Crystal. Wave once at each, in that order. If you forget, we can sing it again.",
+      "file": "audio/openai/beb711c7fd2eb02998bec0e3.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Frost Queen Orielle",
+      "role": "queen",
+      "style": "A graceful Frost Queen; calm, musical, gently regal and caring, with a little mystery.",
+      "hash": "beb711c7fd2eb02998bec0e3"
+    },
+    "chapter:2:beat:4": {
+      "text": "You remembered. The last note came home to the first. Magic is strongest when you return what you borrow. Remember that when you meet Emberwing.",
+      "file": "audio/openai/70797102ec78d8d4b3a7d0e7.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Frost Queen Orielle",
+      "role": "queen",
+      "style": "A graceful Frost Queen; calm, musical, gently regal and caring, with a little mystery.",
+      "hash": "70797102ec78d8d4b3a7d0e7"
+    },
+    "chapter:2:beat:5": {
+      "text": "Visit the Elder Tree. Use Glowmend to repair the bridge instead of breaking the ice. A family of snow mice is sleeping underneath.",
+      "file": "audio/openai/0fae033801903d4cc3dd3fed.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Frost Queen Orielle",
+      "role": "queen",
+      "style": "A graceful Frost Queen; calm, musical, gently regal and caring, with a little mystery.",
+      "hash": "0fae033801903d4cc3dd3fed"
+    },
+    "chapter:2:beat:6": {
+      "text": "Go to the Treasure Chest. Truthlight can wake the queen’s mirror. Wave and look for the unicorns.",
+      "file": "audio/openai/2519c4d580aab2adff501d1f.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Frost Queen Orielle",
+      "role": "queen",
+      "style": "A graceful Frost Queen; calm, musical, gently regal and caring, with a little mystery.",
+      "hash": "2519c4d580aab2adff501d1f"
+    },
+    "chapter:2:beat:7": {
+      "text": "The Unicorn Forest has been zapped! Black vines have tangled its paths. Willow, the Good Witch, is keeping the unicorns safe inside her great shining bubble.",
+      "file": "audio/openai/f12147b8259150b499e337af.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Frost Queen Orielle",
+      "role": "queen",
+      "style": "A graceful Frost Queen; calm, musical, gently regal and caring, with a little mystery.",
+      "hash": "f12147b8259150b499e337af"
+    },
+    "chapter:2:beat:8": {
+      "text": "Take Frostbind to the Moon Crystal. Cool a little star into a lantern. Its blue light will guide you down the other side of the mountain.",
+      "file": "audio/openai/599ec9d9cb3bebbafce8a3f7.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Frost Queen Orielle",
+      "role": "queen",
+      "style": "A graceful Frost Queen; calm, musical, gently regal and caring, with a little mystery.",
+      "hash": "599ec9d9cb3bebbafce8a3f7"
+    },
+    "chapter:2:beat:9": {
+      "text": "Your path is ready. Find Willow in the Unicorn Forest. She knows a way up Fire Mountain, but first she needs someone brave enough to help her friends.",
+      "file": "audio/openai/cf657b0d03ddbebef75fe3e7.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Frost Queen Orielle",
+      "role": "queen",
+      "style": "A graceful Frost Queen; calm, musical, gently regal and caring, with a little mystery.",
+      "hash": "cf657b0d03ddbebef75fe3e7"
+    },
+    "chapter:2:ending": {
+      "text": "The Frost Queen lowers her staff. A path of blue light reaches the Unicorn Forest. Its magic has gone quiet, but something bright is hiding inside a bubble.",
+      "file": "audio/openai/8e6db883445d192cec4802da.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Narrator",
+      "role": "narrator",
+      "style": "Warm, inviting storybook narrator; bright wonder, relaxed confidence, never robotic.",
+      "hash": "8e6db883445d192cec4802da"
+    },
+    "chapter:3:beat:0": {
+      "text": "Liza! It is Willow. My bubble kept the unicorns safe when the forest was zapped. I cannot leave it yet. Wake our three paths, then help me open the bubble gently.",
+      "file": "audio/openai/d38527e3447052011ce13574.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Good Witch Willow",
+      "role": "witch",
+      "style": "A friendly Good Witch; warm, playful and reassuring, with a smile in her voice.",
+      "hash": "d38527e3447052011ce13574"
+    },
+    "chapter:3:beat:1": {
+      "text": "Find a Rainbow Thread at the Moon Crystal, a Root Key at the Elder Tree, and a Wind Ribbon at the Treasure Chest. These will stitch our paths together.",
+      "file": "audio/openai/d5c6c0ffec2cfc572dd002dd.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Good Witch Willow",
+      "role": "witch",
+      "style": "A friendly Good Witch; warm, playful and reassuring, with a smile in her voice.",
+      "hash": "d5c6c0ffec2cfc572dd002dd"
+    },
+    "chapter:3:beat:2": {
+      "text": "Thread, key, and ribbon: let lost paths meet. Wayweave opens a safe road through tangled places. Follow its green light from landmark to landmark.",
+      "file": "audio/openai/bfdb1e002869c8da62e67393.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Good Witch Willow",
+      "role": "witch",
+      "style": "A friendly Good Witch; warm, playful and reassuring, with a smile in her voice.",
+      "hash": "bfdb1e002869c8da62e67393"
+    },
+    "chapter:3:beat:3": {
+      "text": "Carry Wayweave from the Elder Tree to the Moon Crystal, then to the Treasure Chest. The three paths will meet beneath my bubble.",
+      "file": "audio/openai/686a4fa82ea29572c6a34873.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Good Witch Willow",
+      "role": "witch",
+      "style": "A friendly Good Witch; warm, playful and reassuring, with a smile in her voice.",
+      "hash": "686a4fa82ea29572c6a34873"
+    },
+    "chapter:3:beat:4": {
+      "text": "The paths are bright! But a little unicorn is afraid to step outside. A loud pop would frighten her. Let us open the bubble with a soft song instead.",
+      "file": "audio/openai/7f76b147c87f993ed7fbccd9.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Good Witch Willow",
+      "role": "witch",
+      "style": "A friendly Good Witch; warm, playful and reassuring, with a smile in her voice.",
+      "hash": "7f76b147c87f993ed7fbccd9"
+    },
+    "chapter:3:beat:5": {
+      "text": "Collect a Star Petal at the Moon Crystal, a Humming Seed at the Elder Tree, and a Tiny Music Box at the Treasure Chest. Bring the song back to the TV.",
+      "file": "audio/openai/f3c93cd04a5d3637808cc424.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Good Witch Willow",
+      "role": "witch",
+      "style": "A friendly Good Witch; warm, playful and reassuring, with a smile in her voice.",
+      "hash": "f3c93cd04a5d3637808cc424"
+    },
+    "chapter:3:beat:6": {
+      "text": "A petal, a seed, a music box: wake the courage in a small heart. Starcall carries a friend’s voice across the dark. Listen; every unicorn knows your name.",
+      "file": "audio/openai/75fee0c227e2539b62e79275.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Good Witch Willow",
+      "role": "witch",
+      "style": "A friendly Good Witch; warm, playful and reassuring, with a smile in her voice.",
+      "hash": "75fee0c227e2539b62e79275"
+    },
+    "chapter:3:beat:7": {
+      "text": "Sing with your wand: Treasure Chest, Elder Tree, Moon Crystal. Each wave loosens one ribbon of the bubble. No popping. Just a gentle opening.",
+      "file": "audio/openai/931760046e6389fee092830e.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Good Witch Willow",
+      "role": "witch",
+      "style": "A friendly Good Witch; warm, playful and reassuring, with a smile in her voice.",
+      "hash": "931760046e6389fee092830e"
+    },
+    "chapter:3:beat:8": {
+      "text": "Here they come! One, two, all our unicorns. Thank you, Liza. I saw the same black vine in the pools, the caves, and my forest. It follows the Heart Crystal.",
+      "file": "audio/openai/ca1d2a10a49bd58f8a1d5b6f.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Good Witch Willow",
+      "role": "witch",
+      "style": "A friendly Good Witch; warm, playful and reassuring, with a smile in her voice.",
+      "hash": "ca1d2a10a49bd58f8a1d5b6f"
+    },
+    "chapter:3:beat:9": {
+      "text": "Go to the Elder Tree. Cast Wayweave, and I will lift the stones with you. There is our road up Fire Mountain!",
+      "file": "audio/openai/91909c1206e10636bf5f517f.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Good Witch Willow",
+      "role": "witch",
+      "style": "A friendly Good Witch; warm, playful and reassuring, with a smile in her voice.",
+      "hash": "91909c1206e10636bf5f517f"
+    },
+    "chapter:3:beat:10": {
+      "text": "Visit the Moon Crystal. Use Truthlight on a black leaf. A tiny heart shape appears. Remember that mark; it is the clue we have been missing.",
+      "file": "audio/openai/cf07f5ce648d126757601b17.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Good Witch Willow",
+      "role": "witch",
+      "style": "A friendly Good Witch; warm, playful and reassuring, with a smile in her voice.",
+      "hash": "cf07f5ce648d126757601b17"
+    },
+    "chapter:3:beat:11": {
+      "text": "Take your spells up the mountain. Luma, Pip, Queen Orielle, and I will be with you in spirit. Find Emberwing. Find out what her egg really needs.",
+      "file": "audio/openai/f0bf4207c1c0ff35986e9d19.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Good Witch Willow",
+      "role": "witch",
+      "style": "A friendly Good Witch; warm, playful and reassuring, with a smile in her voice.",
+      "hash": "f0bf4207c1c0ff35986e9d19"
+    },
+    "chapter:3:ending": {
+      "text": "The unicorns dance beneath the trees. Willow clears the rockslide with her wand. Beyond it rises Fire Mountain, and all the clues finally point to one place.",
+      "file": "audio/openai/5e7b4aca36a0963f752994a0.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Narrator",
+      "role": "narrator",
+      "style": "Warm, inviting storybook narrator; bright wonder, relaxed confidence, never robotic.",
+      "hash": "5e7b4aca36a0963f752994a0"
+    },
+    "chapter:4:beat:0": {
+      "text": "Please stay back! My egg was cold, so I asked Pip for the crystal. But these vines grew around it. Now I cannot let go. I do not want to hurt anyone.",
+      "file": "audio/openai/6ea3503dc461757ef9b120ad.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "cedar",
+      "speaker": "Emberwing",
+      "role": "dragon",
+      "style": "A gentle dragon with a low warm voice; vulnerable then brave, never growling or frightening.",
+      "hash": "6ea3503dc461757ef9b120ad"
+    },
+    "chapter:4:beat:1": {
+      "text": "Every landmark kept a piece of this mystery. Find the Pool Mark at the Moon Crystal, the Forest Mark at the Elder Tree, and the Cave Mark at the Treasure Chest. Bring them back together.",
+      "file": "audio/openai/5fa7da733c701ad869b43e95.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "5fa7da733c701ad869b43e95"
+    },
+    "chapter:4:beat:2": {
+      "text": "The signs fit together! The Heart Crystal shares light; it cannot make light alone. Heartglow follows the kindness joining every living thing. You have been learning it all along.",
+      "file": "audio/openai/e9776c826f09d0de43dbbad8.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "e9776c826f09d0de43dbbad8"
+    },
+    "chapter:4:beat:3": {
+      "text": "I took the crystal’s light for myself. Without a way home, it grew into me: the Black Briar. Your little spells cannot untangle a whole mountain!",
+      "file": "audio/openai/3babfce517db448e47ba2bc8.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "cedar",
+      "speaker": "Black Briar",
+      "role": "briar",
+      "style": "A theatrical shadow-vine villain; sly and mysterious, child-friendly and never loud or scary.",
+      "hash": "3babfce517db448e47ba2bc8"
+    },
+    "chapter:4:beat:4": {
+      "text": "At the Elder Tree, use Wayweave to open a path through the roots. Willow holds the road steady while you travel.",
+      "file": "audio/openai/5250b0ff1a35dab6124ed3ee.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Good Witch Willow",
+      "role": "witch",
+      "style": "A friendly Good Witch; warm, playful and reassuring, with a smile in her voice.",
+      "hash": "5250b0ff1a35dab6124ed3ee"
+    },
+    "chapter:4:beat:5": {
+      "text": "At the Moon Crystal, use Frostbind to cool the stones around Emberwing’s egg. Queen Orielle keeps the cold gentle.",
+      "file": "audio/openai/dacb099f264b1e9f53864991.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Frost Queen Orielle",
+      "role": "queen",
+      "style": "A graceful Frost Queen; calm, musical, gently regal and caring, with a little mystery.",
+      "hash": "dacb099f264b1e9f53864991"
+    },
+    "chapter:4:beat:6": {
+      "text": "Follow the light: Treasure Chest, Moon Crystal, Elder Tree. Then repeat that journey. Every wave loosens one of the six briar knots. We will wait while you travel.",
+      "file": "audio/openai/1b126cb8e575d3847ca3c099.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "1b126cb8e575d3847ca3c099"
+    },
+    "chapter:4:beat:7": {
+      "text": "The vines are falling away! My egg is warm because you stayed to help me. It needs my warmth, not a stolen crystal. Please, Liza. Take the Heart Crystal home.",
+      "file": "audio/openai/842c21dc59d0db1ab5487f4d.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "cedar",
+      "speaker": "Emberwing",
+      "role": "dragon",
+      "style": "A gentle dragon with a low warm voice; vulnerable then brave, never growling or frightening.",
+      "hash": "842c21dc59d0db1ab5487f4d"
+    },
+    "chapter:4:beat:8": {
+      "text": "Visit the Treasure Chest. Use Glowmend to lift the Heart Crystal without breaking its cradle. Pip is holding the basket open for you.",
+      "file": "audio/openai/0efa7bf6f64e7360459186e9.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "cedar",
+      "speaker": "Pip",
+      "role": "pip",
+      "style": "A playful little goblin; light, slightly mischievous and funny, but kind and easy to understand.",
+      "hash": "0efa7bf6f64e7360459186e9"
+    },
+    "chapter:4:beat:9": {
+      "text": "Moon Crystal, Elder Tree, Treasure Chest. Share Heartglow with every landmark. The crystal returns to the pools, and a new Heart Seed begins to grow.",
+      "file": "audio/openai/8b7c055a4b052e4efac06aad.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "8b7c055a4b052e4efac06aad"
+    },
+    "chapter:4:beat:10": {
+      "text": "You healed the fairies. You listened to Pip. You solved the queen’s riddle and freed the unicorns. You helped a frightened dragon. The realm is bright because you shared your light. This is your story, Liza.",
+      "file": "audio/openai/37086e6d86752fd57fb5f39d.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Luma",
+      "role": "luma",
+      "style": "A kind, lively fairy speaking to her friend Liza; warm, sparkling and encouraging, never shrill.",
+      "hash": "37086e6d86752fd57fb5f39d"
+    },
+    "chapter:4:ending": {
+      "text": "The Heart Crystal shines in its cradle. The pools sing, the cave crystals ring, the snow sparkles, and the unicorns run free. Emberwing’s hatchling opens its eyes. Liza is the Keeper of the Heartlight.",
+      "file": "audio/openai/5b505fadab143480caeeae71.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Narrator",
+      "role": "narrator",
+      "style": "Warm, inviting storybook narrator; bright wonder, relaxed confidence, never robotic.",
+      "hash": "5b505fadab143480caeeae71"
+    },
+    "finished": {
+      "text": "The Heart Crystal shines in its cradle. The pools sing, the cave crystals ring, the snow sparkles, and the unicorns run free. Emberwing’s hatchling opens its eyes. Liza is the Keeper of the Heartlight.",
+      "file": "audio/openai/5b505fadab143480caeeae71.mp3",
+      "model": "gpt-realtime-2.1-mini",
+      "voice": "marin",
+      "speaker": "Narrator",
+      "role": "narrator",
+      "style": "Warm, inviting storybook narrator; bright wonder, relaxed confidence, never robotic.",
+      "hash": "5b505fadab143480caeeae71"
+    }
+  }
+}

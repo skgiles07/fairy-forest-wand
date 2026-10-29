@@ -1,0 +1,60 @@
+/* Real rendered video stays below every game control. Atlas is the fallback. */
+#motion-scene {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .35s ease;
+  background: #101c35;
+}
+#stage.motion-playing #motion-scene {
+  opacity: 1;
+  visibility: visible;
+}
+#motion-scene video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--motion-position, 32% center);
+}
+#stage.motion-portrait #mentor-art {
+  visibility: hidden;
+}
+.motion-preference {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 0;
+  margin-top: 16px;
+  border-top: 1px solid #6f796b;
+  border-bottom: 1px solid #6f796b;
+}
+.motion-preference label {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.motion-preference input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: #8be4f4;
+}
+.motion-preference small {
+  display: block;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #bbc6c2;
+  margin-top: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  #motion-scene { transition: none; }
+}

@@ -12,6 +12,11 @@
       "file": "characters-atlas.png",
       "layout": "3 columns x 2 rows: Luma, Pip, Orielle / Willow, Emberwing, Black Briar",
       "prompt": "characters-prompt.txt"
+    },
+    {
+      "file": "lodge-hall.png",
+      "layout": "16:9 Great Wolf Lodge-inspired Wand Hall, original illustration",
+      "prompt": "lodge-hall-prompt.txt"
     }
   ]
 }

@@ -2,6 +2,7 @@
   "title": "Liza’s Heartlight Quest",
   "intro": "Your wand has chosen you, Liza. Beyond the castle, five lands have lost their light. Meet your friends, learn six spells, and carry the magic from room to room.",
   "wait_for_next": true,
+  "tutorial": "00-great-wolf-lodge.json",
   "progress_file": "progress-v2.json",
   "stations": [
     {

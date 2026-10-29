@@ -1,0 +1,8 @@
+#landmark-model{pointer-events:none;opacity:0;transition:opacity .45s;--poster-color:transparent;background:transparent;filter:drop-shadow(0 8px 14px #06122555)}
+#landmark-model.model-ready{opacity:1}
+#landmark-model.recipe-model{position:absolute;inset:-20% -16% 10%;width:132%;height:110%;z-index:1}
+.rune-center.has-model #rune-symbol{visibility:hidden}
+.rune-center.has-model #recipe-title{position:absolute;bottom:5%;z-index:2;text-shadow:0 2px 5px #071425}
+#landmark-model.quest-model{position:absolute;inset:0 0 15%;width:100%;height:85%;z-index:0}
+#boss,#pattern,#charge{z-index:2}
+@media(prefers-reduced-motion:reduce){#landmark-model{transition:none}}

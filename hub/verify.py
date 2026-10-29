@@ -39,6 +39,9 @@ def main(argv):
     keep = "--keep" in args
     if keep:
         args.remove("--keep")
+    training = "--training" in args
+    if training:
+        args.remove("--training")
     shot = stop_at = None
     for flag in ("--shot", "--stop-at"):
         if flag in args:
@@ -93,9 +96,9 @@ def main(argv):
                "--window-size=1920,1080", "--hide-scrollbars"]
         if shot:
             Path(shot).parent.mkdir(parents=True, exist_ok=True)
-            cmd += [f"--screenshot={Path(shot).resolve()}", f"{url}/?autoplay=1&stop_at={stop_at or 'map'}"]
+            cmd += [f"--screenshot={Path(shot).resolve()}", f"{url}/?autoplay={'training' if training else '1'}&stop_at={stop_at or 'map'}"]
         else:
-            cmd += ["--dump-dom", f"{url}/?autoplay=1"]
+            cmd += ["--dump-dom", f"{url}/?autoplay={'training' if training else '1'}"]
         with open(dom, "w") as out, open(tmp / "chrome.log", "w") as cerr:
             try:
                 subprocess.run(cmd, stdout=out, stderr=cerr, timeout=max(120, budget // 500))
