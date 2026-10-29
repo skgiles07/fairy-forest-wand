@@ -101,3 +101,9 @@ Three original Blender models animate live inside the rune wheel and during land
 Editable source, builder, and preview: `assets/blender/`. These assets were created through the local [MCP for Blender](https://github.com/ahujasid/mcp-for-blender) connection, using Blender 5.2.3 and pinned MCP package 2.2.6. See `assets/blender/README.md` for reproducible authoring and export details. Blender MCP is configured for Codex; its native tools appear after restarting Codex. The verified SDK bridge can author assets in the current session.
 
 Original environment and character illustrations remain in `hub/static/assets/`, alongside prompts and provenance. The landmark models are real animated 3D meshes; mentor portraits are still illustrations. Rigged character bodies, face animation, and lip-sync are not included yet. Optional rendered-video support is ready, but the initial external fairy-video generation failed and no clip is shipped. Hardware reception still needs a real sensor test.
+
+### Luma character
+
+The illustrated Luma remains active, with OpenAI narration. An experimental procedural 3D character was rejected during visual review and is not loaded by the game. Its source remains available locally for reference; a replacement needs a finished character asset matching the existing artwork.
+
+Luma’s illustrated art flies into view on page load and when entering a new Luma chapter or tutorial, then gently hovers. Sensor hits and subsequent dialogue lines do not replay the entrance. Parent Motion-off and reduced-motion preferences disable the effect. No additional model downloads or external generation are needed.

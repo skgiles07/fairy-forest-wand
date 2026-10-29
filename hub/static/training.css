@@ -13,3 +13,11 @@ body[data-training=true] #mentor-art{left:13vw;width:min(29vw,440px)}body[data-t
 /* Keep the guide below the signal labels, including inside the narrow app panel. */
 body[data-training=true] #mentor-art{left:10vw;width:min(24vw,360px);height:34vh;bottom:20vh}
 @media(max-width:650px){body[data-training=true] #mentor-art{left:0;top:275px;bottom:auto;width:44vw;height:230px}}
+
+/* Give illustrated guide her own scene area, clear of signals and dialogue. */
+body[data-training=true] #stage.mentor-dialogue #mentor-art{left:40vw;top:19vh;bottom:auto;width:min(40vw,40vh);height:min(40vw,40vh);max-height:none}
+body[data-training=true] #stage.mentor-dialogue #mentor-art .portrait-sprite{width:100%;height:100%;aspect-ratio:1;flex:none}
+@media(max-width:650px){
+ body[data-training=true] #stage{min-height:900px}
+ body[data-training=true] #stage.mentor-dialogue #mentor-art{left:30vw;top:270px;bottom:auto;width:min(62vw,250px);height:min(62vw,250px)}
+}

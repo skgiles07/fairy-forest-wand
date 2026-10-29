@@ -1,0 +1,5 @@
+/* Motion changes artwork only; the portrait's layout box never moves. */
+#mentor-art.luma-hover .portrait-sprite{animation:luma-art-hover 4.8s ease-in-out infinite;transform-origin:50% 50%}
+#mentor-art.luma-flying .portrait-sprite{animation:none}
+@keyframes luma-art-hover{0%,100%{transform:translateY(0) rotate(-.5deg)}50%{transform:translateY(-7px) rotate(.5deg)}}
+@media(prefers-reduced-motion:reduce){#mentor-art.luma-hover .portrait-sprite{animation:none}}

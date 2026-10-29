@@ -5,3 +5,6 @@ __pycache__/
 
 # Local generation receipts and isolated hosting trials
 output/
+
+# Blender automatic local backups
+*.blend1

@@ -137,6 +137,7 @@
     $('stage').style.setProperty('--restoration', progress.toFixed(3));
     $('backdrop').style.filter = 'saturate(' + (.76 + progress * .43) + ') brightness(' + (.83 + progress * .25) + ')';
     $('stage').classList.toggle('restored', restored);
+    $('stage').classList.toggle('mentor-dialogue', talking);
     $('title').textContent=training?'The Wand Hall':play?s.chapter_title || s.title:s.campaign_title || s.title;
     $('chapter-label').textContent=training?'Great Wolf Lodge · A practice adventure':play?'Chapter '+(s.chapter+1)+' of '+(s.chapters_total||5)+(beat.kind==='hunt'?' · A gathering quest':beat.kind==='encounter'?' · Put your magic to work':''):s.phase==='finished'?'Liza, Keeper of the Heartlight':'Five lands. Three landmarks. One brave Liza.';
     $('speaker').textContent=training?'Luma, your wand guide':play?beat.speaker || s.mentor || 'Your guide':s.phase==='map'?'The realm remembers':s.phase==='finished'?'All your friends':'The Story Keeper';
