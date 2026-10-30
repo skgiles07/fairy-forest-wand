@@ -183,9 +183,14 @@ One part per station, nothing to wire. ~$29 each (RobotShop $28.90 US),
     --after hard-reset write-flash 0x0 <sketch>.ino.merged.bin`
     (get the merged bin from `arduino-cli compile --export-binaries`).
   - After flashing the stick stays in download mode: unplug and replug the
-    cable, no buttons. If it is still black with the LED flashing, press the
-    side button once (reset); if that fails, hold it ~6 s to power off, then
-    press once to power on. `esptool ... run` did not get it out.
+    cable, then press the side button once (reset). `esptool ... run` did
+    not get it out.
+  - Power off: the StickS3's side button is reset only (hold = download
+    mode); the right-side button does nothing; there is no hardware
+    power-off. Firmware: **hold Button A 3 s** -> "power off" ->
+    `M5.Power.powerOff()` (verified on all three sticks). Side button once
+    powers back on. Button A hits now fire on release of a short press so a
+    power-off hold is not a hit.
   - Hub endpoints used for testing: `POST /training/start`,
     `/training/exit`, `/next {"gen": N}`, `/reset?campaign=1` (clears
     progress, back to the chapter 1 intro), `/hit {"station", "wand_id"}`.

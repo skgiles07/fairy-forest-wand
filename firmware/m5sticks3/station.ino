@@ -16,7 +16,10 @@
     repeat hits at one station.
     Hub offline : behaves as "heal" (or "done" on FINAL_STATION) so the game
                   still plays with printed cards.
-    Button A    : simulate a wand hit (test without the wand)
+    Button A    : short press = simulate a wand hit (test without the wand)
+                  hold 3 s    = power off (the side button is reset/download
+                  mode on the StickS3, it cannot power the stick off; press
+                  it once to power back on)
 
   Hardware notes (docs.m5stack.com/en/arduino/m5sticks3/ir_nec):
     IR RX is GPIO 42 and MUST use the ESP32 RMT peripheral.
@@ -43,6 +46,7 @@ static const uint32_t HEALED_SECONDS = 30;     // how long the green glow stays 
 static const uint32_t DONE_SECONDS = 60;       // rainbow glow after a chapter ends, then rearm
 static const uint32_t HIT_COOLDOWN_MS = 1500;  // input ignored this long after any hit
                                                // (short: charge/boss steps need repeat waves)
+static const uint32_t POWER_OFF_HOLD_MS = 3000;  // hold Button A this long to power off
 static const uint32_t WRONG_COOLDOWN_MS = 800;  // was 2000: a retry right after a red
                                                 // flash was being ignored (10/29 playtest)
 // Liza's wand. Matched with bit tolerance so weak/short frames still count and
@@ -235,9 +239,17 @@ void loop() {
     M5.update();
     uint32_t now = millis();
 
+    if (M5.BtnA.pressedFor(POWER_OFF_HOLD_MS)) {
+        M5.Display.fillScreen(TFT_BLACK);
+        label("power off", TFT_WHITE);
+        delay(600);
+        M5.Power.powerOff();
+    }
+
     magiquest::Hit hit;
     bool got = read_wand(&hit);
-    if (M5.BtnA.wasPressed()) { got = true; hit.wand_id = 0; }
+    // hit on release of a SHORT press, so starting a power-off hold is not a hit
+    if (M5.BtnA.wasReleased() && !M5.BtnA.wasReleaseFor(1000)) { got = true; hit.wand_id = 0; }
 
     if (now < quiet_until) {
         delay(30);
