@@ -148,11 +148,29 @@ One part per station, nothing to wire. ~$29 each (RobotShop $28.90 US),
 - Yield after the matcher: ~2 clean decodes per 10 frames, playable; the
   full 12-step wand practice was completed with the real wand on station 1
   (stations 2-3 simulated by POSTing `/hit` with `wand_id: "preview-sim"`).
-- Remaining miss signature: after the 8-bit preamble, the first one-bit is
+- Miss signature, now fixed: after the 8-bit preamble, the first one-bit was
   followed by a ~1.8 ms space instead of ~0.6 ms, i.e. the next weak zero
-  pulse is swallowed and one bit goes missing mid-frame, so neither pad
-  guess lines up. Candidate fix: treat a 1.5-2.0 ms space as "this bit plus
-  a lost zero". Not built; do it only if missed waves bother Liza.
+  pulse was swallowed and one bit went missing mid-frame. `match_known()`
+  now reinserts a zero for a 1.5-2.4 ms space and two for 2.4-3.4 ms
+  (`LOST_ONE_US` / `LOST_TWO_US`); frame gap in known-wand mode is 3.4 ms
+  (`KNOWN_GAP_US`). Replay of 38 captured frames: 29 decode (was 3).
+- `WRONG_COOLDOWN_MS` 2000 -> 800: a retry right after a red flash was being
+  ignored, and in a puzzle step the next wave at the wrong station resets
+  the pattern.
+- **Three-station playtest (2026-10-29 evening), all three M5StickS3 flashed
+  as stations 1-3.** Chapter 1 (collect 1 2 3, pattern 1 2 3, ordered 2 3 1)
+  completed with the real wand: 8 hits, 0 wrong, every wave first try, 5-40 s
+  apart.
+- Cross-talk: with the sticks side by side on a table one wave hit two
+  stations in the same second. The wand beam is wide and bounces; placement
+  in separate spots and the sleeve's small IR window are the fix, not
+  firmware.
+- IR window is on the top edge of the StickS3 (by the LED), not the screen
+  face. A stick lying screen-up listens sideways; station 2 went "deaf" until
+  it was aimed at. Sleeve cutouts must open on that edge.
+- Hub server died once mid-play (TV showed "story keeper is disconnected");
+  restart `python3 hub/server.py`, it reloads progress. Run it with output
+  logged so a crash leaves a trace.
 - Stick joins 2.4 GHz WiFi and POSTs `/hit` to the Mac hub (hub `rev`
   advanced). Hub listens on `*:8000`.
 - Flashing gotchas (native USB, macOS):
@@ -200,10 +218,9 @@ realm map, 20 s or any wave.
    `CIRCUITPY` or `CPLAYBOOT` drive.
 2. Run the wand test (README Step 1). Green flash = order 4 more. Blue flash =
    paste serial output for a decoder timing fix. Nothing = M5Stack fallback.
-3. StickS3 flashed and wand-tested 10/29. Still to do: find the IR receiver
-   edge (phone camera + TV remote), fix the IR window in
-   `cards/cutouts/*.svg`, confirm the 48 x 24 x 14 mm sleeve, and buy the
-   other stations (wand test passed, so order 4 more).
+3. Three StickS3 stations flashed and chapter 1 played clean 10/29. Still to
+   do: fix the IR window in `cards/cutouts/*.svg` (top edge, by the LED) and
+   confirm the 48 x 24 x 14 mm sleeve. Play chapter 2 onward.
 4. Read the five chapters aloud with Liza; confirm the RESOLVED-pending-
    confirmation choices in `wargames/LEDGER.md` (spot names, chapter 5's
    "dragon smoke made everything sick" tie-in, intro line).

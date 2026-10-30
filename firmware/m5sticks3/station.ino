@@ -43,7 +43,8 @@ static const uint32_t HEALED_SECONDS = 30;     // how long the green glow stays 
 static const uint32_t DONE_SECONDS = 60;       // rainbow glow after a chapter ends, then rearm
 static const uint32_t HIT_COOLDOWN_MS = 1500;  // input ignored this long after any hit
                                                // (short: charge/boss steps need repeat waves)
-static const uint32_t WRONG_COOLDOWN_MS = 2000;
+static const uint32_t WRONG_COOLDOWN_MS = 800;  // was 2000: a retry right after a red
+                                                // flash was being ignored (10/29 playtest)
 // Liza's wand. Matched with bit tolerance so weak/short frames still count and
 // room IR noise does not. 0 = accept any wand (strict 56-pair decode).
 static const uint32_t KNOWN_WAND_ID = 0xAF0E4902;

@@ -79,6 +79,19 @@ int main() {
     assert(!decode(junk.data(), junk.size(), &h, WAND));
     assert(!decode(clean.data(), 40, &h, WAND));               // too short to hold the ID
 
+    // swallowed zero bits: a weak zero mark lost into the previous space
+    std::vector<Pair> swallowed;
+    int eaten = 0;
+    for (size_t i = 0; i < clean.size(); i++) {
+        if (eaten < 2 && i >= 8 && i + 1 < clean.size() && clean[i].mark > 400 && clean[i + 1].mark < 400) {
+            eaten++;
+            Pair p = clean[i]; p.space += clean[i + 1].mark + clean[i + 1].space;  // eat next zero
+            swallowed.push_back(p); i++;
+        } else swallowed.push_back(clean[i]);
+    }
+    assert(swallowed.size() == clean.size() - 2);
+    assert(decode(swallowed.data(), swallowed.size(), &h, WAND) && h.wand_id == WAND && h.magnitude == 0x01F4);
+
     puts("ok");
     return 0;
 }

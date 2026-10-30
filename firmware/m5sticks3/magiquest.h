@@ -46,6 +46,9 @@ inline bool decode_frame(const Pair* pairs, size_t n, Hit* out) {
 static const size_t MIN_MATCH_PAIRS = 48;   // ID field must be fully present
 static const size_t MAX_MATCH_PAIRS = 128;  // RX_SYMBOLS in station.ino
 static const int MAX_ID_DIST = 6;           // 6 of 32 bits: ~3e-4 chance on random noise
+static const uint32_t LOST_ONE_US = 1500;   // space this long hides one zero bit
+static const uint32_t LOST_TWO_US = 2400;   // ... two zero bits
+static const uint32_t KNOWN_GAP_US = 3400;  // frame gap in known-wand mode (above LOST_TWO)
 
 inline bool match_known(const Pair* pairs, size_t n, uint32_t known_id, Hit* out) {
     if (n < MIN_MATCH_PAIRS || n > MAX_MATCH_PAIRS) return false;
@@ -60,17 +63,27 @@ inline bool match_known(const Pair* pairs, size_t n, uint32_t known_id, Hit* out
     uint32_t lo = sorted[n / 8], hi = sorted[n - 1 - n / 8];
     uint32_t thr = (hi - lo > 120) ? (lo + hi) / 2 : ONE_MARK_MIN_US;
 
-    uint8_t b[MAX_MATCH_PAIRS];
-    for (size_t i = 0; i < n; i++) b[i] = pairs[i].mark > thr ? 1 : 0;
+    // Bits, with swallowed zeros put back. A weak zero mark (288us) that the
+    // receiver misses merges into the previous space: one+lost zero = ~1728us,
+    // zero+lost zero = ~2016us, two lost = ~2880us. Seen on most missed frames
+    // as a ~1.8ms space right after the preamble.
+    uint8_t b[MAX_MATCH_PAIRS * 3];
+    size_t nb = 0;
+    for (size_t i = 0; i < n; i++) {
+        b[nb++] = pairs[i].mark > thr ? 1 : 0;
+        if (pairs[i].space > KNOWN_GAP_US) continue;  // frame gap, not a bit space
+        if (pairs[i].space >= LOST_ONE_US) b[nb++] = 0;
+        if (pairs[i].space >= LOST_TWO_US) b[nb++] = 0;
+    }
 
     // candidate 56-bit words: [0] front-padded or tail of b, [1] back-padded or head of b
     uint64_t cand[2] = {0, 0};
     for (int k = 0; k < FRAME_BITS; k++) {
-        int front = (int)k - (int)(FRAME_BITS - (n < FRAME_BITS ? n : FRAME_BITS));
-        int src0 = n >= FRAME_BITS ? (int)(n - FRAME_BITS) + k : front;  // pad zeros at front
-        int src1 = k;                                                    // pad zeros at back
-        cand[0] = (cand[0] << 1) | (src0 >= 0 && src0 < (int)n ? b[src0] : 0);
-        cand[1] = (cand[1] << 1) | (src1 < (int)n ? b[src1] : 0);
+        int front = (int)k - (int)(FRAME_BITS - (nb < FRAME_BITS ? nb : FRAME_BITS));
+        int src0 = nb >= FRAME_BITS ? (int)(nb - FRAME_BITS) + k : front;  // pad zeros at front
+        int src1 = k;                                                      // pad zeros at back
+        cand[0] = (cand[0] << 1) | (src0 >= 0 && src0 < (int)nb ? b[src0] : 0);
+        cand[1] = (cand[1] << 1) | (src1 < (int)nb ? b[src1] : 0);
     }
     int best = MAX_ID_DIST + 1;
     for (int c = 0; c < 2; c++) {
@@ -87,9 +100,10 @@ inline bool match_known(const Pair* pairs, size_t n, uint32_t known_id, Hit* out
 // known_id != 0: only that wand, tolerant of weak and short frames.
 inline bool decode(const Pair* pairs, size_t n, Hit* out, uint32_t known_id = 0) {
     size_t start = 0;
+    uint32_t gap = known_id ? KNOWN_GAP_US : FRAME_GAP_US;
     for (size_t i = 0; i < n; i++) {
         bool last = (i + 1 == n);
-        if (pairs[i].space > FRAME_GAP_US || last) {
+        if (pairs[i].space > gap || last) {
             bool ok = known_id ? match_known(pairs + start, i + 1 - start, known_id, out)
                                : decode_frame(pairs + start, i + 1 - start, out);
             if (ok) return true;
