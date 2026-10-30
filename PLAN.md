@@ -132,11 +132,27 @@ One part per station, nothing to wire. ~$29 each (RobotShop $28.90 US),
 - Wand ID: `0xAF0E4902`. Seen as `0xAF0E0902` at the hub (one flipped bit),
   so exact-ID matching would need tolerance. The hub only stores `wand_id`
   (`server.py:189`), so play is not affected.
-- Decode yield is low on casual waves: about 1 clean decode in 6 wand-sized
-  frames. Failures are short frames (42-55 pairs of 56), the beam sweeping
-  off the receiver mid-frame, not a timing fault. Hold the wand steady 6-12
-  in away and pause on each flick. Did not relax the decoder to accept
-  55-pair frames (risk of wrong IDs).
+- Decode yield was low on casual waves with the strict decoder: about 1
+  clean decode in 6 wand-sized frames. Failures are short or weak frames
+  (42-55 pairs of 56, marks shrunk to ~140-200 us), the beam far or off-axis,
+  not a timing fault. Hold the wand steady 2-6 in away, tip at the IR window,
+  and pause on each flick.
+- **Known-wand matcher (commit `ccda458`).** `magiquest::match_known()` in
+  `magiquest.h`: per-frame mark threshold, lost pairs padded front or back,
+  frame accepted only if the ID is within 6 bits of `KNOWN_WAND_ID`
+  (`0xAF0E4902` in `station.ino`), and the clean ID is reported. Also stops
+  the junk IDs (`0xA8084800`, `0x03000000`) that room IR produced under the
+  strict path. `KNOWN_WAND_ID = 0` restores strict any-wand decode. Host
+  test: `g++ -std=c++11 -o /tmp/mq firmware/m5sticks3/test_magiquest.cpp &&
+  /tmp/mq`.
+- Yield after the matcher: ~2 clean decodes per 10 frames, playable; the
+  full 12-step wand practice was completed with the real wand on station 1
+  (stations 2-3 simulated by POSTing `/hit` with `wand_id: "preview-sim"`).
+- Remaining miss signature: after the 8-bit preamble, the first one-bit is
+  followed by a ~1.8 ms space instead of ~0.6 ms, i.e. the next weak zero
+  pulse is swallowed and one bit goes missing mid-frame, so neither pad
+  guess lines up. Candidate fix: treat a 1.5-2.0 ms space as "this bit plus
+  a lost zero". Not built; do it only if missed waves bother Liza.
 - Stick joins 2.4 GHz WiFi and POSTs `/hit` to the Mac hub (hub `rev`
   advanced). Hub listens on `*:8000`.
 - Flashing gotchas (native USB, macOS):
@@ -149,7 +165,12 @@ One part per station, nothing to wire. ~$29 each (RobotShop $28.90 US),
     --after hard-reset write-flash 0x0 <sketch>.ino.merged.bin`
     (get the merged bin from `arduino-cli compile --export-binaries`).
   - After flashing the stick stays in download mode: unplug and replug the
-    cable, no buttons.
+    cable, no buttons. If it is still black with the LED flashing, press the
+    side button once (reset); if that fails, hold it ~6 s to power off, then
+    press once to power on. `esptool ... run` did not get it out.
+  - Hub endpoints used for testing: `POST /training/start`,
+    `/training/exit`, `/next {"gen": N}`, `/reset?campaign=1` (clears
+    progress, back to the chapter 1 intro), `/hit {"station", "wand_id"}`.
   - arduino-cli needs the sketch folder named like the `.ino`; compile from a
     copy. macOS has no `timeout`; use `perl -e 'alarm N; exec @ARGV'`.
   - Serial prints only on events; a heartbeat line helps confirm the link.
