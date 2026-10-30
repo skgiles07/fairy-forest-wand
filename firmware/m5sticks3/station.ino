@@ -44,6 +44,9 @@ static const uint32_t DONE_SECONDS = 60;       // rainbow glow after a chapter e
 static const uint32_t HIT_COOLDOWN_MS = 1500;  // input ignored this long after any hit
                                                // (short: charge/boss steps need repeat waves)
 static const uint32_t WRONG_COOLDOWN_MS = 2000;
+// Liza's wand. Matched with bit tolerance so weak/short frames still count and
+// room IR noise does not. 0 = accept any wand (strict 56-pair decode).
+static const uint32_t KNOWN_WAND_ID = 0xAF0E4902;
 // -----------------------------------------------------------------------------
 
 static const gpio_num_t IR_RX_PIN = GPIO_NUM_42;
@@ -92,7 +95,7 @@ static bool read_wand(magiquest::Hit* hit) {
         pairs[i].mark = rx_raw[i].duration0;
         pairs[i].space = rx_raw[i].duration1 ? rx_raw[i].duration1 : 5000;  // 0 = end of frame
     }
-    bool ok = magiquest::decode(pairs, n, hit);
+    bool ok = magiquest::decode(pairs, n, hit, KNOWN_WAND_ID);
     if (ok) {
         Serial.printf("wand id=0x%08X mag=%u\n", hit->wand_id, hit->magnitude);
     } else if (n >= 20) {
